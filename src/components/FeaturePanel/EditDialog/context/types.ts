@@ -9,7 +9,13 @@ export type Member = {
 };
 export type Members = Member[];
 
-export type Section = 'climbing' | 'location' | 'parents' | 'members' | 'tags';
+export type Section =
+  | 'climbing'
+  | 'location'
+  | 'parents'
+  | 'members'
+  | 'tags'
+  | 'images';
 
 // internal type stored in the state
 export type DataItem = {

@@ -3,12 +3,12 @@ import styled from '@emotion/styled';
 import React, { useEffect, useRef } from 'react';
 import Router from 'next/router';
 import { Size } from '../types';
-import { HEIGHT } from '../helpers';
+import { IMAGE_HEIGHT } from '../helpers';
 import { getOsmappLink } from '../../../../services/helpers';
 import { removeFilePrefix } from '../../Climbing/utils/photo';
 import { Feature, ImageDef, isTag } from '../../../../services/types';
 
-export const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
+export const initialSize: Size = { width: 100, height: IMAGE_HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
 export const useImgSizeOnload = () => {
   const imgRef = useRef<HTMLImageElement>(null);

@@ -6,7 +6,7 @@ import {
 } from '../../../../services/images/getImageDefs';
 import { PathsSvg } from '../PathsSvg';
 
-import { HEIGHT } from '../helpers';
+import { IMAGE_HEIGHT } from '../helpers';
 import {
   ImageClickHandler,
   initialSize,
@@ -65,9 +65,10 @@ type Props = {
   image: ImageType;
   onClick: ImageClickHandler;
   alt?: string;
+  children?: React.ReactNode;
 };
 
-export const Image = ({ def, image, onClick, alt }: Props) => {
+export const Image = ({ def, image, onClick, alt, children }: Props) => {
   const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
 
   const hasPaths =
@@ -82,7 +83,7 @@ export const Image = ({ def, image, onClick, alt }: Props) => {
       ) : (
         <Img
           src={image.imageUrl}
-          height={HEIGHT}
+          height={IMAGE_HEIGHT}
           alt={alt || getImageDefId(def)}
           onLoad={onPhotoLoad}
           $hasPaths={hasPaths}
@@ -92,6 +93,7 @@ export const Image = ({ def, image, onClick, alt }: Props) => {
       {hasPaths && <PathsSvg def={def} size={size} />}
       {showInfo && <InfoButton image={image} />}
       {image.uncertainImage && !image.panoramaUrl && <UncertainCover />}
+      {children}
     </ImageWrapper>
   );
 };

@@ -2,13 +2,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { grey } from '@mui/material/colors';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { HEIGHT } from './helpers';
+import { IMAGE_HEIGHT } from './helpers';
 import { iconsLookup } from '../../utils/icons/iconsLookup';
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: ${HEIGHT}px;
+  height: ${IMAGE_HEIGHT}px;
   background: ${({ theme }) =>
     theme.palette.mode === 'dark' ? grey['700'] : grey['100']};
 

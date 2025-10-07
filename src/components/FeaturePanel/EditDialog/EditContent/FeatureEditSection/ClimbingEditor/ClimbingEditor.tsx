@@ -18,7 +18,6 @@ import {
 import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
 import { ClimbingGradesEditor } from './ClimbingGradesEditor';
-import { DrawClimbingRoutesBanner } from './DrawClimbingRoutesBanner';
 import { ClimbingRockSelect } from '../ClimbingRockSelect';
 
 const IconContainer = styled.div`
@@ -131,7 +130,6 @@ export const ClimbingEditor = () => {
             <ClimbingMultiValuesInner />
           </Box>
         </AccordionDetails>
-        <DrawClimbingRoutesBanner />
       </Accordion>
     </>
   );

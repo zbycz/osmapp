@@ -13,7 +13,7 @@ import { Feature, isInstant } from '../../services/types';
 import { ClientOnly, isMobileMode, useMobileMode } from '../helpers';
 import { getHumanPoiType, getLabel } from '../../helpers/featureLabel';
 
-import { Slider, Wrapper } from './FeatureImages/FeatureImages';
+import { Slider, Wrapper } from './FeatureImages/Image/Slider';
 import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
 import { intl, t } from '../../services/intl';
