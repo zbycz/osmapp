@@ -26,7 +26,6 @@ const AutocompleteConfigured = (
     disableClearable
     autoHighlight
     clearOnEscape
-    freeSolo
     slots={{ paper: OptionsPaper, popper: OptionsPopper }}
     {...props} // eslint-disable-line react/jsx-props-no-spreading
   />
