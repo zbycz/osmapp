@@ -3,10 +3,7 @@ import { Feature, FeatureTags, OsmId } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { useSnackbar } from '../../utils/SnackbarContext';
-import {
-  getLastWikimediaCommonsIndex,
-  getWikimediaCommonsKey,
-} from './utils/photo';
+import { getLastCommonKeyIndex, getWikimediaCommonsKey } from './utils/photo';
 import { Setter } from '../../../types';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { fetchFreshItem } from '../EditDialog/context/itemsHelpers';
@@ -15,7 +12,10 @@ import { DataItem } from '../EditDialog/context/types';
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
-  const newIndex = getLastWikimediaCommonsIndex(route.feature.tags);
+  const newIndex = getLastCommonKeyIndex(
+    route.feature.tags,
+    'wikimedia_commons',
+  );
 
   let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
