@@ -30,7 +30,7 @@ import { PROJECT_ID } from '../../../services/project';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import Link from 'next/link';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import { UserHeader } from './UserMenu';
+import { UserHeader } from './UserHeader';
 import { MyTicksMenuItem } from './MyTicksMenuItem';
 import ContrastIcon from '@mui/icons-material/Contrast';
 
