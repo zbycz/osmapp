@@ -20,6 +20,23 @@ const Table = styled.table`
   }
 `;
 
+const StatusText = styled.span<{ status: Status }>`
+  color: ${({ status }) => {
+    switch (status) {
+      case 'opened':
+        return '#4caf50'; // green
+      case 'closed':
+        return '#f44336'; // red
+      case 'opens-soon':
+        return '#ff9800'; // orange
+      case 'closes-soon':
+        return '#ffc107'; // amber/yellow
+      default:
+        return 'inherit';
+    }
+  }};
+`;
+
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
@@ -35,17 +52,30 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
 
   switch (status) {
     case 'opened':
-      return t('opening_hours.open', { todayTime });
+      return {
+        statusText: t('opening_hours.open', { todayTime: '' }).trim(),
+        time: todayTime,
+      };
     case 'closed':
       return isOpenedToday
-        ? t('opening_hours.now_closed_but_today', { todayTime })
-        : t('opening_hours.today_closed');
+        ? {
+            statusText: t('opening_hours.now_closed_but_today', {
+              todayTime: '',
+            }).trim(),
+            time: todayTime,
+          }
+        : { statusText: t('opening_hours.today_closed'), time: null };
     case 'opens-soon':
       return isOpenedToday
-        ? t('opening_hours.opens_soon_today', { todayTime })
-        : t('opening_hours.opens_soon');
+        ? {
+            statusText: t('opening_hours.opens_soon_today', {
+              todayTime: '',
+            }).trim(),
+            time: todayTime,
+          }
+        : { statusText: t('opening_hours.opens_soon'), time: null };
     case 'closes-soon':
-      return t('opening_hours.closes_soon');
+      return { statusText: t('opening_hours.closes_soon'), time: null };
   }
 };
 
@@ -74,11 +104,14 @@ export const OpeningHoursRenderer = ({ v }) => {
     ...timesByDay.slice(0, currentDay),
   ];
 
+  const description = formatDescription(status, daysTable);
+
   return (
     <>
       <AccessTime fontSize="small" />
       <div suppressHydrationWarning>
-        {formatDescription(status, daysTable)}
+        <StatusText status={status}>{description.statusText}</StatusText>
+        {description.time && ` ${description.time}`}
         {maybeReasons.length > 0 && (
           <>
             <br />
