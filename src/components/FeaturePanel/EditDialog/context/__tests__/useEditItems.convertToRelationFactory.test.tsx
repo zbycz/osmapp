@@ -32,6 +32,7 @@ const initialNode: DataItem = addEmptyOriginalState({
   ],
   toBeDeleted: false,
   nodeLonLat: [14, 50],
+  sections: [],
 });
 
 const parentFeature = { osmMeta: { type: 'relation', id: 99 } };

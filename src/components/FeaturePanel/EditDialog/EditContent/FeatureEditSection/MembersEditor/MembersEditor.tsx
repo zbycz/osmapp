@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -12,19 +12,22 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FeatureRow } from '../FeatureRow';
-import { t, Translation } from '../../../../../services/intl';
-import { AddMemberForm } from './AddMemberForm';
+import { FeatureRow } from '../../FeatureRow';
+import { t, Translation } from '../../../../../../services/intl';
+import { AddMemberForm } from '../AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { CragIcon } from '../../../Climbing/CragIcon';
-import { Setter } from '../../../../../types';
+import { CragIcon } from '../../../../Climbing/CragIcon';
 import {
   useHandleItemClick,
   useHandleOpenAllMembers,
-} from '../useHandleItemClick';
-import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
-import { useCurrentItem } from '../../context/EditContext';
-import { OpenAllButton } from './helpers';
+} from '../../useHandleItemClick';
+import { ConvertNodeToRelation, isConvertible } from '../ConvertNodeToRelation';
+import {
+  useCurrentItem,
+  useExpandedSections,
+} from '../../../context/EditContext';
+import { OpenAllButton } from '../helpers';
+import { Member } from '../../../context/types';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -68,49 +71,57 @@ const SectionName = () => {
 const CustomAccordion = ({
   children,
   membersLength,
-  isExpanded,
-  setIsExpanded,
 }: {
   children: React.ReactNode;
-  membersLength?: number;
-  isExpanded?: boolean;
-  setIsExpanded?: Setter<boolean>;
-}) => (
-  <>
-    <Divider />
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={isExpanded}
-      sx={{
-        '&.MuiAccordion-root:before': {
-          opacity: 1,
-        },
-      }}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        onClick={() => setIsExpanded(!isExpanded)}
+  membersLength: number | undefined;
+}) => {
+  const { expanded, toggleExpanded } = useExpandedSections('members');
+  return (
+    <>
+      <Divider />
+      <Accordion // TODO replace Accordion with custom collapse component, it is not accordion anymore :)
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        slotProps={{ transition: { timeout: 0 } }}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 1,
+          },
+        }}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <SectionName />
-          {membersLength ? (
-            <Chip size="small" label={membersLength} variant="outlined" />
-          ) : null}
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails sx={{ pt: 0 }}>
-        <List disablePadding>{children}</List>
-      </AccordionDetails>
-    </Accordion>
-  </>
-);
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          onClick={toggleExpanded}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <SectionName />
+            {membersLength ? (
+              <Chip size="small" label={membersLength} variant="outlined" />
+            ) : null}
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails sx={{ pt: 0 }}>{children}</AccordionDetails>
+      </Accordion>
+    </>
+  );
+};
+
+const MemberItem = ({ member }: { member: Member }) => {
+  const handleClick = useHandleItemClick();
+  return (
+    <FeatureRow
+      shortId={member.shortId}
+      originalLabel={member.originalLabel}
+      role={member.role}
+      onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
+    />
+  );
+};
 
 export const MembersEditor = () => {
   const { shortId, members, tags } = useCurrentItem();
-  const [isExpanded, setIsExpanded] = useState(false);
-  const handleClick = useHandleItemClick(setIsExpanded);
   const convertible = isConvertible(shortId, tags);
   const handleOpenAll = useHandleOpenAllMembers();
 
@@ -119,20 +130,14 @@ export const MembersEditor = () => {
   }
 
   return (
-    <CustomAccordion
-      membersLength={members?.length}
-      isExpanded={isExpanded}
-      setIsExpanded={setIsExpanded}
-    >
-      {members?.map((member) => (
-        <FeatureRow
-          key={member.shortId}
-          shortId={member.shortId}
-          originalLabel={member.originalLabel}
-          role={member.role}
-          onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
-        />
-      ))}
+    <CustomAccordion membersLength={members?.length}>
+      {!!members && (
+        <List disablePadding>
+          {members.map((member) => (
+            <MemberItem key={member.shortId} member={member} />
+          ))}
+        </List>
+      )}
 
       <Stack direction="row" alignItems="center" spacing={2} mt={1} ml={1}>
         {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}

@@ -387,6 +387,7 @@ export default {
   'crag_filter.routes': 'cestami',
   'crag_filter.reset': 'Reset',
   'crag_filter.done': 'Hotovo',
+  'crag_filter.zoom_in': 'Filtrování nad mapou je v beta režimu, všechny výsledky se zobrazí od zoomu __zoom__. <link>více informací</link>',
 
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',
@@ -505,6 +506,8 @@ export default {
   'climbing_rock.marble': 'mramor',
   'climbing_rock.serpentinite': 'serpentinit',
   'climbing_rock.chert': 'buližník',
+  'climbing_rock.trachyandesite': 'znělec',
+  'climbing_rock.tuff': 'sopečný tuf',
 
   'editdialog.add_value': 'Přidat',
   'editdialog.all_values_added': 'Všechny hodnoty byly přidány',

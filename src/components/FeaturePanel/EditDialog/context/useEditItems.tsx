@@ -10,6 +10,7 @@ import {
   EditDataItem,
   Members,
   SetMembers,
+  SetSections,
   SetShortId,
   SetTagsEntries,
   TagsEntries,
@@ -81,6 +82,14 @@ const toggleToBeDeletedFactory = (setDataItem: SetDataItem) => {
     }));
 };
 
+const setSectionsFactory =
+  (setDataItem: SetDataItem): SetSections =>
+  (updateFn) =>
+    setDataItem((prev) => ({
+      ...prev,
+      sections: updateFn(prev.sections),
+    }));
+
 const getModifiedFlag = (dataItem: DataItem): boolean => {
   if (dataItem.shortId.includes('-')) {
     return true;
@@ -103,13 +112,12 @@ const getModifiedFlag = (dataItem: DataItem): boolean => {
 export const useEditItems = () => {
   const [data, setData] = useState<DataItem[]>([]);
 
-  const items = useMemo<Array<EditDataItem>>(
+  const items = useMemo<EditDataItem[]>(
     () =>
       data.map((dataItem) => {
         const { shortId, tagsEntries, members } = dataItem;
         const setDataItem = setDataItemFactory(setData, shortId);
         const setTagsEntries = setTagsEntriesFactory(setDataItem, tagsEntries);
-        const setMembers = setMembersFactory(setDataItem, members);
         const presetKey = getPresetKey(dataItem);
         return {
           ...dataItem,
@@ -118,12 +126,13 @@ export const useEditItems = () => {
           tags: Object.fromEntries(tagsEntries),
           setTag: setTagFactory(setTagsEntries),
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
-          setMembers,
+          setMembers: setMembersFactory(setDataItem, members),
           setNodeLonLat: setNodeLonLatFactory(setDataItem),
           presetKey,
           presetLabel: getPresetTranslation(presetKey),
           convertToRelation: convertToRelationFactory(setData, shortId),
           modified: getModifiedFlag(dataItem),
+          setSections: setSectionsFactory(setDataItem),
         };
         // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),

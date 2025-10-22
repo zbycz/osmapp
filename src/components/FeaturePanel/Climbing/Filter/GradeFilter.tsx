@@ -77,7 +77,7 @@ export const GradeFilter = () => {
         mt={1}
       >
         {t('crag_filter.grade')}
-        <GradeSystemSelect />
+        <GradeSystemSelect showDefaultOnButton />
       </Stack>
       <Stack gap={1} ml={2} mr={2} mb={2}>
         <div>

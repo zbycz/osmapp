@@ -13,20 +13,53 @@ const StyledIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
 })<{ $isOpened: boolean }>`
   pointer-events: all;
-  &,
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1); // same as LayerSwitcherButton
+  backdrop-filter: blur(15px);
+
+  background-color: ${({ theme, $isOpened }) =>
+    $isOpened
+      ? theme.palette.background.paper
+      : convertHexToRgba(theme.palette.background.paper, 0.8)};
+
   &:hover {
-    background-color: ${({ theme, $isOpened }) =>
-      $isOpened
-        ? theme.palette.background.paper
-        : convertHexToRgba(theme.palette.background.paper, 0.8)};
+    background-color: ${({ theme }) => theme.palette.background.paper};
   }
 `;
 
-export const MapFilter = () => {
-  const { climbingFilter } = useUserSettingsContext();
+type MapFilterButtonProps = {
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  open: boolean;
+};
+const MapFilterButton = ({ open, onClick }: MapFilterButtonProps) => {
   const isMobileMode = useMobileMode();
   const { isDefaultFilter, isGradeIntervalDefault, isMinimumRoutesDefault } =
-    climbingFilter;
+    useUserSettingsContext().climbingFilter;
+  const numberOfActiveFilters = [
+    isGradeIntervalDefault,
+    isMinimumRoutesDefault,
+  ].filter((item) => !item).length;
+
+  return (
+    <Badge
+      variant="standard"
+      badgeContent={numberOfActiveFilters}
+      color="error"
+      invisible={isDefaultFilter}
+    >
+      <Tooltip title={t('map.filter')} arrow>
+        <StyledIconButton
+          onClick={onClick}
+          $isOpened={open}
+          size={isMobileMode ? 'large' : 'medium'}
+        >
+          <FilterListAltIcon fontSize="small" />
+        </StyledIconButton>
+      </Tooltip>
+    </Badge>
+  );
+};
+
+export const MapFilter = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const handleToggle = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,29 +67,9 @@ export const MapFilter = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const numberOfActiveFilters = [
-    isGradeIntervalDefault,
-    isMinimumRoutesDefault,
-  ].filter((item) => !item).length;
-
   return (
     <>
-      <Badge
-        variant="standard"
-        badgeContent={numberOfActiveFilters}
-        color="error"
-        invisible={isDefaultFilter}
-      >
-        <Tooltip title={t('map.filter')} arrow>
-          <StyledIconButton
-            onClick={handleToggle}
-            $isOpened={open}
-            size={isMobileMode ? 'large' : 'medium'}
-          >
-            <FilterListAltIcon fontSize="small" />
-          </StyledIconButton>
-        </Tooltip>
-      </Badge>
+      <MapFilterButton open={open} onClick={handleToggle} />
 
       <FilterPopover
         anchorEl={anchorEl}

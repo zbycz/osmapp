@@ -439,6 +439,7 @@ export default {
   'crag_filter.routes': 'routes',
   'crag_filter.reset': 'Reset',
   'crag_filter.done': 'Done',
+  'crag_filter.zoom_in': 'Map filtering is in beta, all filtered results are shown from zoom __zoom__. <link>more info</link>',
 
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
@@ -560,6 +561,8 @@ export default {
   'climbing_rock.marble': 'marble',
   'climbing_rock.serpentinite': 'serpentinite',
   'climbing_rock.chert': 'chert',
+  'climbing_rock.trachyandesite': 'trachyandesite',
+  'climbing_rock.tuff': 'tuff',
 
   'editdialog.add_value': 'Add',
   'editdialog.all_values_added': 'All values added',
