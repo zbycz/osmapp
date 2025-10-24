@@ -50,30 +50,26 @@ export const isWikimediaCommonsPhotoPath = (tag: string) => {
 export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
 
-export const getCommonTags = (tags: FeatureTags, commonTag: string) => {
+export const getWikimediaCommonsTags = (tags: FeatureTags) => {
   return naturalSort(
     Object.entries(tags).filter(([key]) => {
-      return key.startsWith(commonTag);
+      return isWikimediaCommons(key);
     }),
     (item) => item[0],
   );
 };
 
-export const getCommonKeys = (tags: FeatureTags, commonKey: string) =>
-  getCommonTags(tags, commonKey).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
+export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
+  getWikimediaCommonsTags(tags).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
 
-export const getLastWikimediaCommonsIndex = (tags: FeatureTags) => {
-  return getLastCommonKeyIndex(tags, 'wikimedia_commons');
-};
-
-export const getLastCommonKeyIndex = (tags: FeatureTags, commonKey: string) => {
-  const keys = getCommonKeys(tags, commonKey);
+export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
+  const keys = getWikimediaCommonsKeys(tags);
 
   const maxKey = keys.reduce((max, key) => {
-    if (key === commonKey) return Math.max(max, 0);
+    if (key === 'wikimedia_commons') return Math.max(max, 0);
 
     const parts = key.split(':');
-    if (parts[0] === commonKey && parts.length > 1) {
+    if (parts[0] === 'wikimedia_commons' && parts.length > 1) {
       const number = parseInt(parts[1], 10);
       if (!Number.isNaN(number)) {
         return Math.max(max, number - 1);

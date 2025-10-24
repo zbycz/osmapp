@@ -4,7 +4,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
-  getLastWikimediaCommonsIndex,
+  getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
 import { Setter } from '../../../types';
@@ -15,7 +15,7 @@ import { DataItem } from '../EditDialog/context/types';
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
-  const newIndex = getLastWikimediaCommonsIndex(route.feature.tags);
+  const newIndex = getNextWikimediaCommonsIndex(route.feature.tags);
 
   let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
