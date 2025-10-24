@@ -62,6 +62,7 @@ export const getWikimediaCommonsTags = (tags: FeatureTags) => {
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
   getWikimediaCommonsTags(tags).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
 
+// @deprecated this function must be refactored, in fact it returns "Last Index", but it is hidden inside - see history
 export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
   const keys = getWikimediaCommonsKeys(tags);
 
