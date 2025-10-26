@@ -15,6 +15,15 @@ import { ActionButtons } from './ActionButtons';
 import { t } from '../../../../services/intl';
 import { useMobileMode } from '../../../helpers';
 import { Setter } from '../../../../types';
+import { QrCode } from './QrCode';
+import { PROJECT_ID } from '../../../../services/project';
+
+const getProjectLogo = () => {
+  if (PROJECT_ID === 'openclimbing') {
+    return '/openclimbing/logo/openclimbing_64.png';
+  }
+  return '/osmapp/logo/osmapp_64.png';
+};
 
 const useLink = (short: boolean) => {
   const { feature } = useFeatureContext();
@@ -64,24 +73,27 @@ export const LinkSection = () => {
   const link = useLink(short);
 
   return (
-    <Box mb={2}>
-      <Typography variant="overline">{t('sharedialog.link')}</Typography>
-      <Stack spacing={0}>
-        <StyledTextField
-          fullWidth
-          value={link}
-          variant="outlined"
-          size={useMobileMode() ? 'small' : 'medium'}
-        />
-        <Stack direction="row" alignItems="center">
-          {supportsShortUrl && (
-            <ShortenCheckbox short={short} setShort={setShort} />
-          )}
-          <div style={{ flex: 1 }} />
+    <>
+      <Box mb={2}>
+        <Typography variant="overline">{t('sharedialog.link')}</Typography>
+        <Stack spacing={0}>
+          <StyledTextField
+            fullWidth
+            value={link}
+            variant="outlined"
+            size={useMobileMode() ? 'small' : 'medium'}
+          />
+          <Stack direction="row" alignItems="center">
+            {supportsShortUrl && (
+              <ShortenCheckbox short={short} setShort={setShort} />
+            )}
+            <div style={{ flex: 1 }} />
 
-          <ActionButtons payload={link} type="url" />
+            <ActionButtons payload={link} type="url" />
+          </Stack>
         </Stack>
-      </Stack>
-    </Box>
+      </Box>
+      <QrCode payload={link} image={getProjectLogo()} />
+    </>
   );
 };
