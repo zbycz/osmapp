@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
@@ -25,17 +25,9 @@ const getProjectLogo = () => {
   return '/osmapp/logo/osmapp_64.png';
 };
 
-const useLink = (short: boolean) => {
+const useProjectLink = (short: boolean) => {
   const { feature } = useFeatureContext();
-  const [link, setLink] = useState(
-    short ? getShortLink(feature) : getFullOsmappLink(feature),
-  );
-
-  useEffect(() => {
-    const url = short ? getShortLink(feature) : getFullOsmappLink(feature);
-    setLink(url);
-  }, [short, feature]);
-  return link;
+  return short ? getShortLink(feature) : getFullOsmappLink(feature);
 };
 
 const StyledTextField = styled(TextField)`
@@ -70,7 +62,7 @@ export const LinkSection = () => {
   const { feature } = useFeatureContext();
   const supportsShortUrl = !feature.point;
   const [short, setShort] = useState(false);
-  const link = useLink(short);
+  const link = useProjectLink(short);
 
   return (
     <>
