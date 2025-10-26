@@ -1,7 +1,11 @@
 import { useToggleState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { PanelFooterWrapper, PanelSidePadding } from '../utils/PanelHelpers';
-import { FeatureDescription, FromOsm } from './FeatureDescription';
+import {
+  FeatureDescription,
+  FromOsm,
+  OpenInProduction,
+} from './FeatureDescription';
 import Coordinates from './Coordinates';
 import { t } from '../../services/intl';
 import { ObjectsAround } from './ObjectsAround';
@@ -76,6 +80,7 @@ export const FeaturePanelFooter = ({
               </Typography>
             </Box>
             <Coordinates />
+            <OpenInProduction />
           </PanelSidePadding>
         </PanelFooterWrapper>
       </AccordionDetails>
