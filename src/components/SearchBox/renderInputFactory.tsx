@@ -25,6 +25,8 @@ const SearchBoxInput = ({
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
+
+    inputRef.current.focus();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
