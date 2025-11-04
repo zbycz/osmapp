@@ -1,6 +1,8 @@
 import * as fetchModule from '../../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
 
+// more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
+
 jest.mock('../../../../../services/fetch', () => ({
   fetchJson: jest.fn(),
 }));
@@ -11,7 +13,7 @@ test('conversion', async () => {
       {
         type: 'relation',
         id: 6818857,
-        members: [],
+        members: [{ ref: 68352 }, { ref: 4673219 }],
         tags: {
           colour: '#880088',
           ref: '89',
