@@ -1,6 +1,8 @@
 import * as fetchModule from '../../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
 
+// more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
+
 jest.mock('../../../../../services/fetch', () => ({
   fetchJson: jest.fn(),
 }));

@@ -6,6 +6,8 @@ import {
 } from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
 
+// more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
+
 type WithTags = { id: String; tags: Record<string, string> };
 type WithRef = { ref: string };
 
