@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LineInformation, requestLines } from './requestRoutes';
+import { categories, LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportCategory } from './PublicTransportWrapper';
 import { DotLoader } from '../../../helpers';
 import { sortByReference } from './helpers';
@@ -9,27 +9,19 @@ import { useQuery } from 'react-query';
 import { Typography } from '@mui/material';
 import { useShowOnMap } from './useShowOnMap';
 
-const categories = [
-  'tourism',
-  'subway',
-  'commuter',
-  'regional',
-  'long_distance',
-  'high_speed',
-  'night',
-  'car',
-  'car_shuttle',
-  'bus',
-  'trolleybus',
-  'unknown',
-];
-
 type PublicTransportDisplayProps = {
   routes: LineInformation[];
   geoJson: GeoJSON.FeatureCollection;
 };
 
-const defaultShown = ['subway', 'commuter', 'regional', 'trolleybus', 'bus'];
+const defaultShown = [
+  'subway',
+  'commuter',
+  'regional',
+  'trolleybus',
+  'bus',
+  'tram',
+];
 
 const categorizedRoutes = (routes: LineInformation[]) => {
   const grouped = groupBy(routes, ({ service }) => {

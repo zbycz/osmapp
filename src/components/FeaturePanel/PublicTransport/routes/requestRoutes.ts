@@ -6,7 +6,27 @@ import {
 } from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
 
-type WithTags = { tags: Record<string, string> };
+// more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
+
+type WithTags = { id: String; tags: Record<string, string> };
+type WithRef = { ref: string };
+
+export const categories = [
+  'tourism',
+  'subway',
+  'commuter',
+  'regional',
+  'long_distance',
+  'high_speed',
+  'night',
+  'car',
+  'car_shuttle',
+  'bus',
+  'trolleybus',
+  'tram',
+  'funicular',
+  'unknown',
+];
 
 export interface LineInformation {
   tags: Record<string, string>;
@@ -18,8 +38,8 @@ export interface LineInformation {
   osmId: string;
 }
 
-const filterRoutesByRef = (routes: WithTags[], ref: string) =>
-  routes.filter(({ tags }) => tags.ref === ref);
+const filterRoutesByRef = (routes: WithTags[], members: WithRef[]) =>
+  routes.filter(({ id }) => members.find(({ ref }) => ref == id));
 
 const getTagValue = (
   key: string,
@@ -43,30 +63,45 @@ const getService = (tags: Record<string, string>, routes: WithTags[]) => {
     serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
   const isHighspeed = getVal('highspeed') === 'yes';
   const isSubway = getVal('subway') === 'yes';
-
-  return (
+  const service =
     serviceTag ||
     (isHighspeed && 'high_speed') ||
     (isSubway && 'subway') ||
     getVal('route') ||
-    getVal('route_master')
-  );
+    getVal('route_master');
+
+  return categories.includes(service) ? service : 'unknown';
+};
+
+const getLetter = (featureType: string) => {
+  switch (featureType) {
+    case 'node':
+    case 'way':
+      return featureType[0];
+  }
+  return 'n';
 };
 
 export async function requestLines(featureType: string, id: number) {
+  const l = getLetter(featureType);
   const overpassQuery = `[out:json];
     ${featureType}(${id})-> .specific_feature;
 
     // Try to find stop_area relations containing the specific node and get their stops
     (
-      rel(bn.specific_feature)["public_transport"="stop_area"];
+      rel(b${l}.specific_feature)["public_transport"="stop_area"];
       rel(r._)["public_transport"="stop_area"] -> .stop_areas;
     ) -> .stop_areas;
-    node(r.stop_areas: "stop") -> .stops;
     (
-      rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-      // If no stop_area, find routes that directly include the specific node
-      rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+        node(r.stop_areas: "stop");
+        node(r.stop_areas: "stop_position");
+        node(r.stop_areas: "station");
+        node(r.stop_areas: "bus_stop");
+    ) -> .stops;
+    (
+      rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail|funicular"];
+      // If no stop_area, find routes that directly include the specific node/way
+      rel(b${l}.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail|funicular"];
     ) -> .routes;
     // Get the master relation
     (
@@ -87,9 +122,29 @@ export async function requestLines(featureType: string, id: number) {
     features: geoJsonFeatures,
   };
 
+  const orphanRoutes = routes
+    .filter(
+      ({ id }) =>
+        !routeMasters.find(({ members }) =>
+          members.find(({ ref }) => ref == id),
+        ),
+    )
+    .map((r) => {
+      const { id, type, tags } = r;
+      return {
+        tags,
+        routes: [r],
+        ref: `${tags.ref || tags.name}`,
+        colour: tags.colour,
+        service: getService(tags, []),
+        osmId: `${id}`,
+        osmType: type,
+      };
+    });
+
   const allRoutes = routeMasters
-    .map(({ type, id, tags }) => {
-      const directionRouteTags = filterRoutesByRef(routes, tags.ref);
+    .map(({ type, id, tags, members }) => {
+      const directionRouteTags = filterRoutesByRef(routes, members);
       const getVal = (key: string) =>
         getTagValue(key, tags, directionRouteTags);
 
@@ -103,6 +158,7 @@ export async function requestLines(featureType: string, id: number) {
         osmType: type,
       };
     })
+    .concat(orphanRoutes)
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
