@@ -25,7 +25,7 @@ const fetchClimbingStats = () =>
     `${CLIMBING_TILES_HOST}api/climbing-tiles/stats`,
   );
 
-const ClimbingSecondary = () => {
+const ClimbingSecondaryInner = () => {
   const { data, error, isFetching } = useQuery([], () => fetchClimbingStats());
 
   if (isFetching) {
@@ -68,6 +68,13 @@ const ClimbingSecondary = () => {
       />
     </>
   );
+};
+
+const ClimbingSecondary = () => {
+  if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+    return <ClimbingSecondaryInner />;
+  }
+  return <>lite</>;
 };
 
 const OverlayItem = ({ layer }: { layer: Layer }) => {
