@@ -11,6 +11,8 @@ import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { join, publishDbgObject } from '../utils';
 
+// this is old version (climbing-overlay), which later developed into climbing-tiles. See src/server/climbing-tiles/README.md
+
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
 const convertOsmIdToMapId = (apiId: OsmId) => {
@@ -27,7 +29,7 @@ const getItems = (elements) => {
       nodes.push(element);
     } else if (element.type === 'way') {
       ways.push(element);
-    } else if (element.type === 'relation') {
+    } else if (element.type === 'relation' && element.members) {
       relations.push(element);
     }
   });
@@ -181,11 +183,11 @@ export const cragsToGeojson = (response: any): Feature[] => {
   return [...nodesOut, ...waysOut, ...relationsOut3];
 };
 
-// on CZ 48,11,51,19 makes 12 MB   (only crags is 700kB)
+// in 11/2025 it is 3.5 MB JSON from Overpass ~6 seconds
 export const fetchCrags = async () => {
   const query = `[out:json][timeout:25];
     (
-      nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
+      nwr["climbing"](49.64474,14.21855,49.67273,14.28025); //displays routes in this area
       >;<;
       rel["climbing"="crag"];
       rel["climbing"="area"];
