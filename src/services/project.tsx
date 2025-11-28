@@ -44,6 +44,9 @@ const domains: Record<string, Project> = {
 const prUrl = (host: string) =>
   /^osmapp-git(.*)climbing(.*)vercel.app$/.test(host) ? openclimbing : null;
 
+const forceProjectHost = process.env.NEXT_PUBLIC_FORCE_PROJECT;
+const forcedProject = forceProjectHost ? domains[forceProjectHost] : undefined;
+
 // Globals
 export let PROJECT_ID = 'error: PROJECT not set';
 export let PROJECT_NAME = 'error: PROJECT not set';
@@ -53,7 +56,7 @@ export let PROJECT_DECRIPTION = 'error: PROJECT not set' as TranslationId;
 export let PROJECT_SERP_DESCRIPTION = 'error: PROJECT not set' as TranslationId;
 
 const setProject = (host: string) => {
-  const project = domains[host] ?? prUrl(host) ?? osmappDev;
+  const project = forcedProject ?? domains[host] ?? prUrl(host) ?? osmappDev;
   PROJECT_ID = project.id;
   PROJECT_NAME = project.name;
   PROJECT_URL = project.url;

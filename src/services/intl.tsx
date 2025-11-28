@@ -58,6 +58,12 @@ export const Translation = ({ id, values, tags }: Props) => {
 export const changeLang = (langId: string) => {
   if (langId === intl.lang) return;
   Cookies.set('lang', langId, { expires: 365, path: '/' });
+
+  if (process.env.NEXT_PUBLIC_FAKE_STATIC_EXPORT) {
+    window.location.href = `/${langId}`;
+    return;
+  }
+
   Router.push(Router.asPath, Router.asPath, { locale: 'default' }).then(() =>
     Router.reload(),
   );
