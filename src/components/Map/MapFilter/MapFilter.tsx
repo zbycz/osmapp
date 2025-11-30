@@ -67,6 +67,10 @@ export const MapFilter = () => {
     setAnchorEl(event.currentTarget);
   };
 
+  if (!process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+    return null;
+  }
+
   return (
     <>
       <MapFilterButton open={open} onClick={handleToggle} />
