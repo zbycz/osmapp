@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-  pull_request: # TODO DO NOT MERGE
-    branches: ['master'] # TODO DO NOT MERGE
+  #pull_request: # TODO only for testing, DO NOT MERGE
+  #  branches: ['master'] # TODO only for testing, DO NOT MERGE
 
 permissions:
   contents: write
@@ -32,7 +32,7 @@ jobs:
           NEXT_PUBLIC_FAKE_STATIC_EXPORT=true NEXT_PUBLIC_FORCE_PROJECT=osmapp.org yarn build
           mkdir public/_next
           cp -r .next/static public/_next
-          echo "test.osmapp.org" > public/CNAME
+          echo "osmapp.org" > public/CNAME
 
           yarn start &
           sleep 5 # start usually takes 1 second
