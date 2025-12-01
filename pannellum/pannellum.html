@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Panorama</title>
+  <link rel="stylesheet" href="https://cdn.pannellum.org/2.5/pannellum.css" />
+  <script type="text/javascript" src="https://cdn.pannellum.org/2.5/pannellum.js"></script>
+
+  <style>
+    html,body,#panorama {
+      width: 100%;
+      height: 100%;
+      padding:0;
+      margin:0;
+    }
+  </style>
+</head>
+<body>
+<div id="panorama"></div>
+<script>
+  // parse hash like /pannellum.html#small=${small}&large=${large}
+  var hash = window.location.hash.substring(1);
+  var url = new URL(`?${hash}`, window.location.href);
+  var sm = url.searchParams.get("small");
+  var lg = url.searchParams.get("large");
+
+  if (!sm || !lg) {
+    document.getElementById('panorama').innerHTML = 'Invalid URL';
+  }
+  else {
+    // code from https://github.com/mpetroff/pannellum/pull/1240
+    var viewer = pannellum.viewer('panorama', {
+      "default": {
+        "firstScene": "small",
+        "showZoomCtrl": false,
+        "autoLoad": true,
+        "autoRotate": -1,
+        "sceneFadeDuration": 1000
+      },
+      "scenes": {
+        "small": {
+          "panorama": sm,
+        },
+        "big": {
+          "panorama": lg,
+        },
+      }
+    });
+    viewer.on('fullscreenchange', function(fullscreenActive) {
+      var pitch = viewer.getPitch(), yaw = viewer.getYaw(), hfov = viewer.getHfov();
+      var scene = fullscreenActive ? 'big' : 'small';
+      viewer.loadScene(scene, pitch, yaw, hfov);
+    });
+
+  }
+</script>
+</body>
+</html>

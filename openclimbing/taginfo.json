@@ -1,0 +1,59 @@
+{
+  "data_format": 1,
+  "data_url": "https://openclimbing.org/openclimbing/taginfo.json",
+  "project": {
+    "name": "openclimbing.org",
+    "description": "Application for mapping climbing areas and creating interactive climbing guides. All data is open and anyone can edit it - similar to Wikipedia",
+    "project_url": "https://openclimbing.org/",
+    "icon_url": "https://openclimbing.org/openclimbing/logo/openclimbing_256.png",
+    "contact_name": "Jan Václavík",
+    "contact_email": "jvaclavik@gmail.com"
+  },
+  "tags": [
+    { "key": "author" },
+    { "key": "climbing:bolts" },
+    { "key": "climbing:boulder" },
+    { "key": "climbing:grade:british_adjectival" },
+    { "key": "climbing:grade:british_traditional" },
+    { "key": "climbing:grade:french_british" },
+    { "key": "climbing:grade:french" },
+    { "key": "climbing:grade:hueco" },
+    { "key": "climbing:grade:ice" },
+    { "key": "climbing:grade:mixed" },
+    { "key": "climbing:grade:norwegian" },
+    { "key": "climbing:grade:saxon" },
+    { "key": "climbing:grade:uiaa" },
+    { "key": "climbing:grade:yds_class" },
+    { "key": "climbing:length" },
+    { "key": "climbing:multipitch" },
+    { "key": "climbing:pitches" },
+    { "key": "climbing:trad" },
+    { "key": "climbing" },
+    { "key": "contact:mobile" },
+    { "key": "contact:phone" },
+    { "key": "contact:website" },
+    { "key": "description" },
+    {
+      "key": "image",
+      "description": "Shows feature image, see eg.: https://openclimbing.org/relation/6706848"
+    },
+    { "key": "leisure=sports_centre" },
+    { "key": "leisure=sports_hall" },
+    {
+      "key": "name",
+      "description": "Shows a detail of any feature. Displays its name and all other tags. It lets the user edit it. See eg.: https://openclimbing.org/relation/6706848"
+    },
+    {
+      "key": "opening_hours",
+      "description": "Shows parsed hours and also lets the user edit it."
+    },
+    { "key": "phone" },
+    { "key": "sport", "value": "climbing" },
+    { "key": "website" },
+    {
+      "key": "wikimedia_commons:path",
+      "description": "Draws a line over specified wikimedia_commons image. See eg.: https://openclimbing.org/en/relation/17416912"
+    },
+    { "key": "wikimedia_commons" }
+  ]
+}
