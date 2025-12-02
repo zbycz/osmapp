@@ -1,0 +1,57 @@
+name: Deploy to GitHub Pages hack
+
+on:
+  push:
+    branches:
+      - main
+  #pull_request: # TODO only for testing, DO NOT MERGE
+  #  branches: ['master'] # TODO only for testing, DO NOT MERGE
+
+permissions:
+  contents: write
+
+jobs:
+  fake-static-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Build app
+        run: |
+          NEXT_PUBLIC_FAKE_STATIC_EXPORT=true NEXT_PUBLIC_FORCE_PROJECT=osmapp.org yarn build
+          mkdir public/_next
+          cp -r .next/static public/_next
+          echo "osmapp.org" > public/CNAME
+
+          yarn start &
+          sleep 5 # start usually takes 1 second
+
+          curl --cookie "hideHomepage=yes" http://localhost:3000 > public/index.html
+          curl --cookie "hideHomepage=yes" http://localhost:3000 > public/404.html
+          for lang in de cs en es fr it pl am ja zh zh-CN zh-TW zh-HK; do
+            mkdir public/$lang
+            curl --cookie "hideHomepage=yes; lang=$lang" http://localhost:3000 > public/$lang/index.html
+          done;
+
+          # Prague
+          mkdir public/node
+          mkdir public/node/1601837931
+          curl --cookie "hideHomepage=yes" http://localhost:3000/node/1601837931 > public/node/1601837931/index.html
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          force_orphan: true
