@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages hack
 on:
   push:
     branches:
-      - main
+      - master
   #pull_request: # TODO only for testing, DO NOT MERGE
   #  branches: ['master'] # TODO only for testing, DO NOT MERGE
 
@@ -32,7 +32,7 @@ jobs:
           NEXT_PUBLIC_FAKE_STATIC_EXPORT=true NEXT_PUBLIC_FORCE_PROJECT=osmapp.org yarn build
           mkdir public/_next
           cp -r .next/static public/_next
-          echo "osmapp.org" > public/CNAME
+          echo "static.osmapp.org" > public/CNAME
 
           yarn start &
           sleep 5 # start usually takes 1 second
