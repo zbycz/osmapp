@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages hack
 on:
   push:
     branches:
-      - main
+      - master
   #pull_request: # TODO only for testing, DO NOT MERGE
   #  branches: ['master'] # TODO only for testing, DO NOT MERGE
 

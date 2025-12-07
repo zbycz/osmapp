@@ -16,6 +16,7 @@ import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { getMapViewFromHash } from '../App/helpers';
 import { osmappLayers } from '../LayerSwitcher/osmappLayers';
+import { fakeStaticExportSkipDefaultMapView } from '../App/fakeStaticExportHelpers';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
@@ -66,6 +67,8 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const usePersistMapView = (view: View) => {
   useEffect(() => {
+    if (fakeStaticExportSkipDefaultMapView(view)) return;
+
     window.location.hash = view.join('/');
     Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
   }, [view]);

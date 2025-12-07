@@ -185,7 +185,7 @@ export const HamburgerMenu = () => {
             <InstallLink />
             <Divider />
             <Box mb={2}>
-              <ClimbingForumLink />
+              {(hasClimbingLayer || isOpenClimbing) && <ClimbingForumLink />}
               <EditLink />
             </Box>
             <Divider />
