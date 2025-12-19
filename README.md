@@ -94,8 +94,7 @@ Also, big thanks for support/sponsorship from these awesome companies: ❤️
 - [GraphHopper Directions API](https://www.graphhopper.com/) - routing API
 - [InteliJ IDEA](https://www.jetbrains.com/idea/) – Webstorm IDE
 - [Sentry](https://sentry.io/) – error tracking
-- [Vercel](https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss) – hosting with generous free-tier \
-  [![vercel.svg](.github/vercel.svg)](https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss)
+- [Vercel](https://vercel.com/) – preview deployments
 
 ## License
 

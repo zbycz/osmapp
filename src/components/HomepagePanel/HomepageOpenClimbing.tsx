@@ -202,12 +202,6 @@ const Banners = () => (
     >
       <LogoMaptiler width={140} />
     </a>
-    <a
-      href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
-      target="_blank"
-    >
-      <img src="/vercel.svg" alt="Vercel" width="160" />
-    </a>
   </Stack>
 );
 
