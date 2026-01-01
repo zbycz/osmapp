@@ -4,11 +4,10 @@ on:
   push:
     branches:
       - static.osmapp.org
-  #pull_request: # TODO only for testing, DO NOT MERGE
-  #  branches: ['master'] # TODO only for testing, DO NOT MERGE
 
 permissions:
-  contents: write
+  id-token: write
+  pages: write
 
 jobs:
   hacky-static-and-deploy:
@@ -27,15 +26,16 @@ jobs:
       - name: Install deps
         run: yarn install --frozen-lockfile
 
-      - name: Build app
+      - name: Build hacky static export
         run: |
           export VERCEL_GIT_COMMIT_SHA="$(git rev-parse HEAD)"
           export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
-
-          NEXT_PUBLIC_FAKE_STATIC_EXPORT=true NEXT_PUBLIC_FORCE_PROJECT=osmapp.org yarn build
+          export NEXT_PUBLIC_FAKE_STATIC_EXPORT=true
+          export NEXT_PUBLIC_FORCE_PROJECT=osmapp.org
+          yarn build
           mkdir public/_next
           cp -r .next/static public/_next
-          echo "static.osmapp.org" > public/CNAME
+          echo -e "User-agent: *\nDisallow: /" > public/robots.txt
 
           yarn start &
           sleep 5 # start usually takes 1 second
@@ -47,14 +47,18 @@ jobs:
             curl --cookie "hideHomepage=yes; lang=$lang" http://localhost:3000 > public/$lang/index.html
           done;
 
-          # Prague
+          # cache SSR version of some pages (eg. Prague)
           mkdir public/node
           mkdir public/node/1601837931
           curl --cookie "hideHomepage=yes" http://localhost:3000/node/1601837931 > public/node/1601837931/index.html
 
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          force_orphan: true
+          path: ./public
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
