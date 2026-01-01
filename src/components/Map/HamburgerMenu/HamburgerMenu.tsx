@@ -175,17 +175,17 @@ export const HamburgerMenu = () => {
           <div>
             <UserHeader closeMenu={close} />
             <Divider sx={{ mt: 1, mb: 2 }} />
-            {(hasClimbingLayer || PROJECT_ID === 'openclimbing') && (
-              <MyTicksMenuItem closeMenu={close} />
+            {isOpenClimbing && <MyTicksMenuItem closeMenu={close} />}
+            {(hasClimbingLayer || isOpenClimbing) && (
+              <ClimbingGradesTableLink closeMenu={close} />
             )}
-            {isOpenClimbing && <ClimbingGradesTableLink closeMenu={close} />}
           </div>
           <div>
             <AboutLink closeMenu={close} />
             <InstallLink />
             <Divider />
             <Box mb={2}>
-              {(hasClimbingLayer || isOpenClimbing) && <ClimbingForumLink />}
+              {isOpenClimbing && <ClimbingForumLink />}
               <EditLink />
             </Box>
             <Divider />
