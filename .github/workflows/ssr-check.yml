@@ -1,9 +1,11 @@
 name: Check server-side rendering
-on:
-  deployment_status:
+run-name: Check server-side rendering (${{ github.event.deployment_status.environment }})
+on: deployment_status
 jobs:
   check-ssr:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    # only for vercel "preview" deployments (It is not our production)
+    if: github.event.deployment_status.state == 'success'
+      && (github.event.deployment_status.environment == 'Preview' || github.event.deployment_status.environment == 'Production')
     runs-on: ubuntu-latest
     steps:
       - name: Check if node/6 is ssr rendered

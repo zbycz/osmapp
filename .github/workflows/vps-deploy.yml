@@ -1,0 +1,64 @@
+name: Build & Deploy VPS
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Commit hash or branch to deploy'
+        required: false
+        default: 'master'
+#  push:
+#    branches: [master, deploy-vps]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: VPS
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build next.js (standalone)
+        run: |
+          echo "VERCEL_GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> .env
+          echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
+          echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
+
+          NEXTJS_OUTPUT=standalone yarn build
+          mv public .next/standalone
+          mkdir -p .next/standalone/public/_next
+          mv .next/static .next/standalone/public/_next/
+
+      - name: Verify build (SSR check)
+        run: |
+          cd .next/standalone
+          node server.js &
+          sleep 5 # server usually starts in 1 second
+          curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)" && echo "SSR OK"
+
+      - name: Deploy
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+            mkdir ~/.ssh
+            echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+            chmod 600 ~/.ssh/id_ed25519
+            ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+
+            cd .next/standalone
+            zip -q -r build-$RUN_ID.zip ./
+            rsync -avz build-$RUN_ID.zip nodeuser@$DEPLOY_HOST:/app/
+            ssh nodeuser@$DEPLOY_HOST "/app/deploy.sh $RUN_ID"
