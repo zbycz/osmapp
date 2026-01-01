@@ -26,7 +26,7 @@ jobs:
       - name: Install deps
         run: yarn install --frozen-lockfile
 
-      - name: Build hacky static export
+      - name: Build next.js (hacky static export)
         run: |
           export VERCEL_GIT_COMMIT_SHA="$(git rev-parse HEAD)"
           export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
@@ -38,7 +38,7 @@ jobs:
           echo -e "User-agent: *\nDisallow: /" > public/robots.txt
 
           yarn start &
-          sleep 5 # start usually takes 1 second
+          sleep 5 # server usually starts in 1 second
 
           curl --cookie "hideHomepage=yes" http://localhost:3000 > public/index.html
           curl --cookie "hideHomepage=yes" http://localhost:3000 > public/404.html
@@ -47,9 +47,8 @@ jobs:
             curl --cookie "hideHomepage=yes; lang=$lang" http://localhost:3000 > public/$lang/index.html
           done;
 
-          # cache SSR version of some pages (eg. Prague)
-          mkdir public/node
-          mkdir public/node/1601837931
+          # cache SSR version of some pages (eg. Prague, english-only)
+          mkdir -p public/node/1601837931
           curl --cookie "hideHomepage=yes" http://localhost:3000/node/1601837931 > public/node/1601837931/index.html
 
       - name: Setup Pages
