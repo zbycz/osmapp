@@ -1,9 +1,9 @@
-name: Deploy to GitHub Pages hack
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - master
+      - static.osmapp.org
   #pull_request: # TODO only for testing, DO NOT MERGE
   #  branches: ['master'] # TODO only for testing, DO NOT MERGE
 
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 jobs:
-  fake-static-and-deploy:
+  hacky-static-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,9 @@ jobs:
 
       - name: Build app
         run: |
+          export VERCEL_GIT_COMMIT_SHA="$(git rev-parse HEAD)"
+          export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
+
           NEXT_PUBLIC_FAKE_STATIC_EXPORT=true NEXT_PUBLIC_FORCE_PROJECT=osmapp.org yarn build
           mkdir public/_next
           cp -r .next/static public/_next
