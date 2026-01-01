@@ -25,6 +25,7 @@ import { useMobileMode } from '../helpers';
 import { HomepageOpenClimbingGallery } from './HomepageOpenClimbingGallery';
 import { SupportUs } from './SupportUs';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import { PROJECT_NAME } from '../../services/project';
 const AccordionStyle = {
   '&:before': {
     backgroundColor: 'transparent !important',
@@ -83,7 +84,7 @@ const Header = () => {
           color="inherit"
           fontWeight={900}
         >
-          openclimbing.org
+          {PROJECT_NAME}
         </Typography>
       </Stack>
     </Stack>
