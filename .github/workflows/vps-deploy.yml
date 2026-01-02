@@ -15,14 +15,14 @@ jobs:
           node-version: 20
           cache: yarn
 
-      - name: Create build env file
-        run: |
-          echo "VERCEL_GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> .env
-          echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
-          echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
-
 #      - name: Install dependencies
 #        run: yarn install --frozen-lockfile
+#
+#      - name: Create build env file
+#        run: |
+#          echo "VERCEL_GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> .env
+#          echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
+#          echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
 #
 #      - name: Build (standalone)
 #        run: NEXTJS_OUTPUT=standalone yarn build
@@ -47,7 +47,6 @@ jobs:
           REPO: ${{ github.repository }}
         run:
           ARTIFACT_URL=$(gh api repos/$REPO/actions/runs/$RUN_ID/artifacts --jq '.artifacts[0].archive_download_url')
+          curl --insecure --fail -S -X POST https://13.62.127.2/deploy-webhook -d "$ARTIFACT_URL"
 
-          echo "$ARTIFACT_URL"
 
-          curl -X POST https://13.62.127.2/deploy-webhook -d "artifact_url=$ARTIFACT_URL"
