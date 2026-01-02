@@ -12,9 +12,6 @@ permissions:
 jobs:
   hacky-static-and-deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: gh-pages
-      url: https://static.osmapp.org
 
     steps:
       - name: Checkout
