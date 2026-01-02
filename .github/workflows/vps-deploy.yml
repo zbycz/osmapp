@@ -47,6 +47,6 @@ jobs:
           REPO: ${{ github.repository }}
         run:
           ARTIFACT_URL=$(gh api repos/$REPO/actions/runs/$RUN_ID/artifacts --jq '.artifacts[0].archive_download_url')
-          curl --insecure --fail -S -X POST https://13.62.127.2/deploy-webhook -d "$ARTIFACT_URL"
+          curl --insecure -X POST https://13.62.127.2/deploy-webhook -d "$ARTIFACT_URL"
 
 
