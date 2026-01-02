@@ -21,22 +21,31 @@ jobs:
           echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
           echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
 
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build (standalone)
-        run: NEXTJS_OUTPUT=standalone yarn build
-
-      - name: Restructure standalone output
-        run: |
-          mv public .next/standalone
-          mkdir -p .next/standalone/public/_next
-          mv .next/static .next/standalone/public/_next/
+#      - name: Install dependencies
+#        run: yarn install --frozen-lockfile
+#
+#      - name: Build (standalone)
+#        run: NEXTJS_OUTPUT=standalone yarn build
+#
+#      - name: Restructure standalone output
+#        run: |
+#          mv public .next/standalone
+#          mkdir -p .next/standalone/public/_next
+#          mv .next/static .next/standalone/public/_next/
 
       - uses: actions/upload-artifact@v4
         with:
           name: osmapp-build
-          path: .next/standalone
+          path: .github
+#          path: .next/standalone
           include-hidden-files: true
 
+      - name: Trigger deploy webhook with artifact URL
+        run:
+          RUN_ID=${{ github.run_id }}
+          REPO=${{ github.repository }}
+          ARTIFACT_URL=$(gh api repos/$REPO/actions/runs/$RUN_ID/artifacts --jq '.artifacts[0].archive_download_url')
 
+          echo "$ARTIFACT_URL"
+
+          curl -X POST https://13.62.127.2/deploy-webhook -d "artifact_url=$ARTIFACT_URL"
