@@ -1,0 +1,5 @@
+# This file ignores codestyle commits in git-blame
+# https://news.ycombinator.com/context?id=45527465
+
+# general: add eslint rule for direct React.* import (#1282)
+cc36abd63d557a381ee061efb805fc536f285ea3
