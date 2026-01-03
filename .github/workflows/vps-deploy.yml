@@ -8,13 +8,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: yarn
-
+#      - uses: actions/checkout@v4
+#
+#      - uses: actions/setup-node@v4
+#        with:
+#          node-version: 20
+#          cache: yarn
+#
 #      - name: Install dependencies
 #        run: yarn install --frozen-lockfile
 #
@@ -32,25 +32,26 @@ jobs:
 #          mv public .next/standalone
 #          mkdir -p .next/standalone/public/_next
 #          mv .next/static .next/standalone/public/_next/
+#
+#      - uses: actions/upload-artifact@v4
+#        with:
+#          name: osmapp-build
+#          path: .next/standalone
+#          include-hidden-files: true
 
+
+      - name: Build
+        run: mkdir build; echo "build" > build/test.txt
       - uses: actions/upload-artifact@v4
         with:
           name: osmapp-build
-          path: .github
-#          path: .next/standalone
+          path: build
           include-hidden-files: true
 
-      - name: Trigger deploy webhook with artifact URL
+      - name: Trigger deploy webhook
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ github.run_id }}
           REPO: ${{ github.repository }}
         run: |
-          ARTIFACTS=$(gh api repos/$REPO/actions/runs/$RUN_ID/artifacts)
-          ARTIFACT_URL=$(echo "$ARTIFACTS" | jq '.artifacts[0].archive_download_url')
-          echo "ARTIFACTS: $ARTIFACTS"
-          echo "ARTIFACT_URL: $ARTIFACT_URL"
-
-          set -x
-          curl --insecure https://13.62.127.2/deploy-webhook -X POST -d "$ARTIFACT_URL" --silent --dump-header - --fail-with-body
-
+          curl --insecure https://13.62.127.2/deploy-webhook -X POST -d "$RUN_ID" --silent --dump-header - --fail-with-body
