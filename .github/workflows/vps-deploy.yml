@@ -52,5 +52,5 @@ jobs:
           echo "ARTIFACT_URL: $ARTIFACT_URL"
 
           set -x
-          curl --insecure https://13.62.127.2/deploy-webhook -X POST -d "$ARTIFACT_URL" --silent --dump-header -
+          curl --insecure https://13.62.127.2/deploy-webhook -X POST -d "$ARTIFACT_URL" --silent --dump-header - --fail-with-body
 
