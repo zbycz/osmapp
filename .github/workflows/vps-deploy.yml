@@ -49,9 +49,5 @@ jobs:
           include-hidden-files: true
 
       - name: Trigger deploy webhook
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RUN_ID: ${{ github.run_id }}
-          REPO: ${{ github.repository }}
-        run: |
-          curl --insecure https://13.62.127.2/deploy-webhook -X POST -d "$RUN_ID" --silent --dump-header - --fail-with-body
+        run: curl --insecure https://13.62.127.2/deploy-webhook -X POST -d ${{ github.run_id }} --silent --dump-header - --fail-with-body
+
