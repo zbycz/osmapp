@@ -8,40 +8,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-#      - uses: actions/checkout@v4
-#
-#      - uses: actions/setup-node@v4
-#        with:
-#          node-version: 20
-#          cache: yarn
-#
-#      - name: Install dependencies
-#        run: yarn install --frozen-lockfile
-#
-#      - name: Create build env file
-#        run: |
-#          echo "VERCEL_GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> .env
-#          echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
-#          echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
-#
-#      - name: Build (standalone)
-#        run: NEXTJS_OUTPUT=standalone yarn build
-#
-#      - name: Restructure standalone output
-#        run: |
-#          mv public .next/standalone
-#          mkdir -p .next/standalone/public/_next
-#          mv .next/static .next/standalone/public/_next/
-#
-#      - uses: actions/upload-artifact@v4
-#        with:
-#          name: osmapp-build
-#          path: .next/standalone
-#          include-hidden-files: true
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Create build env file
+        run: |
+          echo "VERCEL_GIT_COMMIT_SHA=$(git rev-parse HEAD)" >> .env
+          echo "VERCEL_GIT_COMMIT_MESSAGE=$(git log -1 --pretty=%B)" >> .env
+          echo "NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true" >> .env
+
+      - name: Build (standalone)
+        run: NEXTJS_OUTPUT=standalone yarn build
+
+      - name: Restructure standalone output
+        run: |
+          mv public .next/standalone
+          mkdir -p .next/standalone/public/_next
+          mv .next/static .next/standalone/public/_next/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: osmapp-build
+          path: .next/standalone
+          include-hidden-files: true
 
 
-      - name: Build
-        run: mkdir build; echo "build" > build/test.txt
+#      - name: Build
+#        run: mkdir build; echo "build" > build/test.txt
       - uses: actions/upload-artifact@v4
         with:
           name: osmapp-build
