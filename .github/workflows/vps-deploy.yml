@@ -53,12 +53,12 @@ jobs:
           DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
           RUN_ID: ${{ github.run_id }}
         run: |
-            mkdir ~/.ssh
-            echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
-            chmod 600 ~/.ssh/id_ed25519
-            ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+          mkdir ~/.ssh
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
 
-            cd .next/standalone
-            zip -q -r build-$RUN_ID.zip ./
-            rsync -avz build-$RUN_ID.zip nodeuser@$DEPLOY_HOST:/app/
-            ssh nodeuser@$DEPLOY_HOST "/app/deploy.sh $RUN_ID"
+          cd .next/standalone
+          zip -q -r build-$RUN_ID.zip ./
+          rsync -avz build-$RUN_ID.zip nodeuser@$DEPLOY_HOST:/app/
+          ssh nodeuser@$DEPLOY_HOST "/app/deploy.sh $RUN_ID"
