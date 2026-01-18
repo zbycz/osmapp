@@ -12,13 +12,15 @@ export const useEditDialogFeature = () => {
 };
 
 export const useEditDialogClose = () => {
-  const { items } = useEditContext();
+  const { items, successInfo } = useEditContext();
   const isModified = items.some(({ modified }) => modified);
   const { close } = useEditDialogContext();
 
+  // TODO remove this window.confirm, once the edit-dialog state is saved in localStorage
   return () => {
     if (
       isModified &&
+      !successInfo &&
       window.confirm(
         'Your changes are not saved. Are you sure you want to close this dialog?',
       ) === false
