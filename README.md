@@ -34,7 +34,7 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 > Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or GitHub Codespaces – full dev environment in your browser. \
 > Consider setting `NEXT_PUBLIC_ENABLE_TEST_API=true` in `.env.local` for testing. \
 > If Vercel build fails, please run `yarn build` locally to debug it. \
-> [Architecture DOCS here](https://github.com/zbycz/osmapp/wiki/Architecture).
+> [Architecture DOCS here](https://github.com/zbycz/osmapp/wiki/Architecture) + AI docs here: [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zbycz/osmapp)
 
 ## Features 🗺 📱 🖥
 
