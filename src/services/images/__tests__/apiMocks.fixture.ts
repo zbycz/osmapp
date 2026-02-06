@@ -133,7 +133,7 @@ export const WIKIPEDIA_CS: ApiMock = {
 };
 
 export const FODY: ApiMock = {
-  url: 'https://osm.fit.vutbr.cz/fody/api/close?lat=50.0995841&lon=14.304877&limit=1&distance=50',
+  url: 'https://osm.fit.vut.cz/fody/api/close?lat=50.0995841&lon=14.304877&limit=1&distance=50',
   response: {
     type: 'FeatureCollection',
     features: [

@@ -73,9 +73,9 @@ test('ImageFromCenter - fody', async () => {
     }),
   ).toEqual({
     description: 'Fody photodb from Milancer (2019-11-10 15:19:18)',
-    imageUrl: 'https://osm.fit.vutbr.cz/fody/files/250px/25530.jpg',
+    imageUrl: 'https://osm.fit.vut.cz/fody/files/250px/25530.jpg',
     link: 25530,
-    linkUrl: 'https://osm.fit.vutbr.cz/fody/?id=25530',
+    linkUrl: 'https://osm.fit.vut.cz/fody/?id=25530',
   });
 });
 
