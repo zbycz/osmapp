@@ -1,8 +1,4 @@
-import {
-  ClimbingFeaturesRecord,
-  xataRestQuery,
-  xataRestQueryPaginated,
-} from './db';
+import { ClimbingFeaturesRecord, getPool } from './db';
 import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { buildTileGeojson } from './buildTileGeojson';
@@ -31,7 +27,7 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   }
 
   const cacheKey = `${z}/${x}/${y}`;
-  const cache = await xataRestQuery(
+  const cache = await getPool().query(
     'SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1',
     [cacheKey],
   );
@@ -46,13 +42,13 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
     ? `SELECT * FROM climbing_features WHERE ${bboxCondition}`
     : `SELECT * FROM climbing_features WHERE type != 'route' AND type != 'route_top' AND ${bboxCondition}`;
 
-  const rows = await xataRestQueryPaginated<ClimbingFeaturesRecord>(query);
-  const geojson = buildTileGeojson(isOptimizedToGrid, rows, bbox);
+  const result = await getPool().query<ClimbingFeaturesRecord>(query);
+  const geojson = buildTileGeojson(isOptimizedToGrid, result.rows, bbox);
 
   const duration = Math.round(performance.now() - start);
   logCacheMiss(duration, geojson.features.length);
 
-  await xataRestQuery(
+  await getPool().query(
     `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, JSON.stringify(geojson), duration, geojson.features.length],
   );

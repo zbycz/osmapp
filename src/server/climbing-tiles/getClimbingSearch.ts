@@ -1,6 +1,6 @@
 import { ClimbingSearchRecord } from '../../types';
 import { removeDiacritics } from './utils';
-import { xataRestQuery } from './db';
+import { getPool } from './db';
 
 export const getClimbingSearch = async (
   q: string,
@@ -19,7 +19,7 @@ export const getClimbingSearch = async (
       ORDER BY distance_km
       LIMIT 30`;
 
-  const result = await xataRestQuery<ClimbingSearchRecord>(query, [
+  const result = await getPool().query<ClimbingSearchRecord>(query, [
     lat,
     lon,
     `%${removeDiacritics(q)}%`,

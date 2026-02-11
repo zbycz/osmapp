@@ -3,6 +3,10 @@ import { refreshClimbingTiles } from '../../../src/server/climbing-tiles/refresh
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    if (!process.env.NEON_DB_URL) {
+      throw new Error('NEON_DB_URL must be set');
+    }
+
     const log = await refreshClimbingTiles();
 
     res.status(200).send(log);

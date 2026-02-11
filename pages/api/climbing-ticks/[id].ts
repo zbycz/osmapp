@@ -1,11 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-  xataRestQuery,
-  xataRestUpdate,
-} from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
-import { ClimbingTick } from '../../../src/types';
+import { ClimbingTickDb } from '../../../src/types';
+import { getPool } from '../../../src/server/climbing-tiles/db';
 
 class HttpError extends Error {
   constructor(
@@ -18,7 +15,7 @@ class HttpError extends Error {
 
 const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const tick = await xataRestQuery<ClimbingTick>(
+  const tick = await getPool().query<ClimbingTickDb>(
     'SELECT id, "osmUserId" FROM climbing_ticks WHERE id=$1',
     [req.query.id],
   );
@@ -36,7 +33,7 @@ const validateRequestAndGetTick = async (req: NextApiRequest) => {
 
 const deleteTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  return xataRestQuery('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
+  await getPool().query('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
 };
 
 const ALLOWED_FIELDS = [
@@ -51,12 +48,22 @@ const ALLOWED_FIELDS = [
 
 const updateTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  return xataRestUpdate(
-    `UPDATE climbing_ticks SET ... WHERE id=$1`,
-    [tickId],
-    ALLOWED_FIELDS,
-    req.body,
+
+  const newData = req.body;
+  const updates = ALLOWED_FIELDS.filter(
+    (field) => newData[field] !== undefined,
   );
+  if (updates.length === 0) {
+    return;
+  }
+  const setClause = updates
+    .map((field, i) => `"${field}"=$${i + 2}`)
+    .join(', ');
+  const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id=$1 RETURNING *`;
+  const setParams = updates.map((field) => newData[field]);
+  const result = await getPool().query(sql, [tickId, ...setParams]);
+
+  return result.rows[0];
 };
 
 const performPutOrDelete = async (req: NextApiRequest) => {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { xataRestQuery } from '../../../src/server/climbing-tiles/db';
+import { getPool } from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import format from 'pg-format';
@@ -20,7 +20,7 @@ const addTickToDB = async (req: NextApiRequest) => {
     pairing,
   };
 
-  const insertResult = await xataRestQuery<ClimbingTickDb>(
+  const insertResult = await getPool().query<ClimbingTickDb>(
     format(
       'INSERT INTO climbing_ticks (%I) VALUES (%L) RETURNING id',
       Object.keys(newTick),
@@ -32,7 +32,7 @@ const addTickToDB = async (req: NextApiRequest) => {
 
 const getAllTicks = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const result = await xataRestQuery<ClimbingTickDb>(
+  const result = await getPool().query<ClimbingTickDb>(
     'SELECT * FROM climbing_ticks WHERE "osmUserId" = $1',
     [user.id],
   );

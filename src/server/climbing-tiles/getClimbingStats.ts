@@ -1,9 +1,9 @@
 import { ClimbingStatsResponse } from '../../types';
-import { xataRestQuery } from './db';
+import { getPool } from './db';
 
 export const getClimbingStats = async (): Promise<ClimbingStatsResponse> => {
-  const query = `SELECT * FROM climbing_tiles_stats ORDER BY timestamp DESC LIMIT 1`;
-  const result = await xataRestQuery(query);
+  const query = `SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`;
+  const result = await getPool().query(query);
 
   if (result.rows.length === 0) {
     throw new Error('No row found in climbing_tiles_stats');
