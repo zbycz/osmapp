@@ -12,17 +12,13 @@ const OVERPASS_HOSTS = [
 // Overpass lately experiences a lot of wierd issues ~ February 2026, see https://community.openstreetmap.org/t/overpass-api-performance-issues/140598
 const isRetryableError = (e: FetchError) => {
   return (
-    e instanceof FetchError &&
-    (e.code === '429' ||
-      e.code === '500' ||
-      e.code === '502' ||
-      e.code === '503' ||
-      e.code === '504' ||
-      e.message.includes('fetchJson: parse error') ||
-      e.message.includes(
-        'Dispatcher_Client::request_read_and_idx::protocol_error',
-      ))
-    // TODO consider code === 'network'
+    (e instanceof Error && e.message.includes('fetchJson: parse error')) ||
+    (e instanceof FetchError &&
+      (e.code === '429' ||
+        e.code === '500' ||
+        e.code === '502' ||
+        e.code === '503' ||
+        e.code === '504'))
   );
 };
 
