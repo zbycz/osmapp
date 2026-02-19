@@ -1,10 +1,9 @@
 import { Feature, LonLat } from '../types';
-import { getOverpassUrl } from './overpassSearch';
-import { fetchJson } from '../fetch';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
+import { fetchOverpass } from './fetchOverpass';
 
-const getAroundUrl = ([lat, lon]: LonLat) =>
-  getOverpassUrl(
+const fetchAround = ([lat, lon]: LonLat) =>
+  fetchOverpass(
     `[timeout:5][out:json];(
         relation[~"."~"."](around:50,${lon},${lat});
         way[~"."~"."](around:50,${lon},${lat});
@@ -15,6 +14,6 @@ const getAroundUrl = ([lat, lon]: LonLat) =>
 export const fetchAroundFeatures = async (
   point: LonLat,
 ): Promise<Feature[]> => {
-  const response = await fetchJson(getAroundUrl(point));
+  const response = await fetchAround(point);
   return overpassAroundToSkeletons(response);
 };
