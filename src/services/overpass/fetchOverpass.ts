@@ -1,10 +1,53 @@
 import { fetchJson } from '../fetch';
+import { FetchError } from '../helpers';
 
 // TODO add proper overpass types from refreshClimbingTilesHelpers.ts
 
-export const fetchOverpass = async (fullQuery: string) =>
-  await fetchJson(
-    `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-      fullQuery,
-    )}`,
+const OVERPASS_HOSTS = [
+  'overpass.private.coffee', // alternative instance (minutely synced), we prefer it for bigger HW & less known
+  'overpass-api.de', // main instance (minutely synced)
+  'overpass.osm.jp', // last alternative (1-month-old data in February 2026)
+];
+
+// Overpass lately experiences a lot of wierd issues ~ February 2026, see https://community.openstreetmap.org/t/overpass-api-performance-issues/140598
+const isRetryableError = (e: FetchError) => {
+  return (
+    e instanceof FetchError &&
+    (e.code === '429' ||
+      e.code === '500' ||
+      e.code === '502' ||
+      e.code === '503' ||
+      e.code === '504' ||
+      e.message.includes('fetchJson: parse error') ||
+      e.message.includes(
+        'Dispatcher_Client::request_read_and_idx::protocol_error',
+      ))
+    // TODO consider code === 'network'
   );
+};
+
+export const fetchOverpass = async (query: string) => {
+  const LAST_INDEX = OVERPASS_HOSTS.length - 1;
+
+  for (let i = 0; i < OVERPASS_HOSTS.length; i++) {
+    const host = OVERPASS_HOSTS[i];
+
+    try {
+      const url = `https://${host}/api/interpreter?data=${encodeURIComponent(query)}`;
+      const response = await fetchJson(url);
+
+      return response;
+    } catch (e) {
+      if (i === LAST_INDEX) {
+        throw e;
+      }
+
+      if (isRetryableError(e)) {
+        console.info(`Overpass ${host} failed, will try next host.`, e); // eslint-disable-line no-console
+        continue;
+      }
+
+      throw e;
+    }
+  }
+};
