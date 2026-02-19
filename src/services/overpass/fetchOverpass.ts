@@ -6,7 +6,7 @@ import { FetchError } from '../helpers';
 const OVERPASS_HOSTS = [
   'overpass.private.coffee', // alternative instance (minutely synced), we prefer it for bigger HW & less known
   'overpass-api.de', // main instance (minutely synced)
-  'overpass.osm.jp', // last alternative (1-month-old data in February 2026)
+  'maps.mail.ru/osm/tools/overpass', // last alternative (minutely synced)
 ];
 
 // Overpass lately experiences a lot of wierd issues ~ February 2026, see https://community.openstreetmap.org/t/overpass-api-performance-issues/140598
