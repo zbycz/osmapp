@@ -11,16 +11,10 @@ import { isAstNode } from '../../components/SearchBox/queryWizard/isAst';
 const getOverpassQuery = ([a, b, c, d], query: string) =>
   `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
 
-const OVERPASS_API_BASES = [
-  'https://overpass.private.coffee/api/interpreter',
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.osm.jp/api/interpreter',
-] as const;
-
-export const getOverpassUrl = (
-  fullQuery: string,
-  base: string = OVERPASS_API_BASES[0],
-) => `${base}?data=${encodeURIComponent(fullQuery)}`;
+export const getOverpassUrl = (fullQuery: string) =>
+  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+    fullQuery,
+  )}`;
 
 type OverpassObject = {
   type: 'node' | 'way' | 'relation';
@@ -171,33 +165,13 @@ export const performOverpassSearch = async (
   const query = getOverpassQuery(bbox, body);
 
   console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
-  let lastError: unknown;
-  for (const base of OVERPASS_API_BASES) {
-    try {
-      const overpass = await fetchJson(getOverpassUrl(query, base));
-      console.log('overpass result:', overpass); // eslint-disable-line no-console
-      const features = overpassGeomToGeojson(overpass);
-      console.log('overpass geojson', features); // eslint-disable-line no-console
-      // TODO preprocess the data to tell polygons from lines, see https://github.com/zbycz/osmapp/issues/974
-      return { type: 'FeatureCollection', features };
-    } catch (e) {
-      lastError = e;
-      const code = (e as { code?: string })?.code;
-      const message = (e as { message?: string })?.message ?? '';
+  const overpass = await fetchJson(getOverpassUrl(query));
+  console.log('overpass result:', overpass); // eslint-disable-line no-console
 
-      const isRetryable =
-        code === 'network' ||
-        code === '429' ||
-        code === '500' ||
-        code === '502' ||
-        code === '503' ||
-        code === '504' ||
-        message.includes('fetchJson: parse error') ||
-        message.includes(
-          'Dispatcher_Client::request_read_and_idx::protocol_error',
-        );
-      if (!isRetryable) throw e;
-    }
-  }
-  throw lastError;
+  const features = overpassGeomToGeojson(overpass);
+  console.log('overpass geojson', features); // eslint-disable-line no-console
+
+  // TODO preprocess the data to tell polygons from lines, see https://github.com/zbycz/osmapp/issues/974
+
+  return { type: 'FeatureCollection', features };
 };
