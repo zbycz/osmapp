@@ -9,6 +9,10 @@ import {
 } from '../../../services/types';
 
 type OsmType = 'node' | 'way' | 'relation';
+type OverpassStat = {
+  type: 'stat';
+  geometry: { type: 'Point'; coordinates: LonLat };
+};
 export type OsmNode = {
   type: 'node';
   id: number;
@@ -36,7 +40,7 @@ export type OsmRelation = {
   center?: { lat: number; lon: number }; // only for overpass `out center` queries
 };
 
-export type OsmItem = OsmNode | OsmWay | OsmRelation;
+export type OsmItem = OsmNode | OsmWay | OsmRelation; // TODO add OverpassStat
 export type OsmResponse = {
   elements: OsmItem[];
   osm3s: { timestamp_osm_base: string }; // overpass only

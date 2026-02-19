@@ -1,5 +1,4 @@
-import { fetchJson } from '../fetch';
-import { getOverpassUrl } from '../overpass/overpassSearch';
+import { fetchOverpass } from '../overpass/fetchOverpass';
 
 /*
 This query doesn't work, because area is usualy a relation of realtions,
@@ -20,13 +19,9 @@ export type ClimbingArea = {
   members: any[];
 };
 
-type OverpassResponse = {
-  elements: Array<ClimbingArea>;
-};
-
-export const getClimbingAreas = async (): Promise<Array<ClimbingArea>> => {
+export const getClimbingAreas = async (): Promise<ClimbingArea[]> => {
   const query = `[out:json][timeout:300]; rel["climbing"="area"]; out body;`;
 
-  const areas = await fetchJson<OverpassResponse>(getOverpassUrl(query));
-  return areas?.elements;
+  const areas = await fetchOverpass(query);
+  return areas?.elements as ClimbingArea[];
 };

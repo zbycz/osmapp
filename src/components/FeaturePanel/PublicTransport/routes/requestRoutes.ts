@@ -1,10 +1,7 @@
 import groupBy from 'lodash/groupBy';
-import { fetchJson } from '../../../../services/fetch';
-import {
-  getOverpassUrl,
-  overpassGeomToGeojson,
-} from '../../../../services/overpass/overpassSearch';
+import { overpassGeomToGeojson } from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
+import { fetchOverpass } from '../../../../services/overpass/fetchOverpass';
 
 // more test cases along with expected outcomes can be found in https://github.com/zbycz/osmapp/pull/1160
 
@@ -110,7 +107,7 @@ export async function requestLines(featureType: string, id: number) {
     );
     out geom qt;`;
 
-  const overpassGeom = await fetchJson(getOverpassUrl(overpassQuery));
+  const overpassGeom = await fetchOverpass(overpassQuery);
   const grouped = groupBy(overpassGeom.elements, ({ tags }) => tags.type);
   const routeMasters = grouped.route_master || [];
   const routes = grouped.route || [];
