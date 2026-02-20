@@ -11,7 +11,7 @@ import {
 } from '../types';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
 
-export const WIDTH = 410;
+export const WIDTH = 400;
 
 export type ImageType = {
   imageUrl: string;
