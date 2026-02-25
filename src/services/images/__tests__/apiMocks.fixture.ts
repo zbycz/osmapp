@@ -29,7 +29,7 @@ export const WIKIDATA: ApiMock = {
 };
 
 export const COMMONS_CATEGORY: ApiMock = {
-  url: 'https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AYosemite%20National%20Park&gcmlimit=20&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&origin=*',
+  url: 'https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AYosemite%20National%20Park&gcmlimit=20&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=500&format=json&origin=*',
   response: {
     batchcomplete: '',
     continue: {
@@ -48,7 +48,7 @@ export const COMMONS_CATEGORY: ApiMock = {
           imageinfo: [
             {
               thumburl:
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg/400px-thumbnail.jpg',
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg/500px-thumbnail.jpg',
               thumbwidth: 400,
               thumbheight: 273,
               responsiveUrls: {
@@ -70,7 +70,7 @@ export const COMMONS_CATEGORY: ApiMock = {
 };
 
 export const COMMONS_FILE: ApiMock = {
-  url: 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=400&format=json&titles=File%3AHlubo%C4%8Depsk%C3%A9%20plotny%20-%20Prav%C3%A1%20plotna.jpg&origin=*',
+  url: 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=500&format=json&titles=File%3AHlubo%C4%8Depsk%C3%A9%20plotny%20-%20Prav%C3%A1%20plotna.jpg&origin=*',
   response: {
     batchcomplete: '',
     query: {
@@ -83,7 +83,7 @@ export const COMMONS_FILE: ApiMock = {
           imageinfo: [
             {
               thumburl:
-                'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg/400px-Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg',
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg/500px-Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg',
               thumbwidth: 400,
               thumbheight: 314,
               responsiveUrls: {
@@ -105,7 +105,7 @@ export const COMMONS_FILE: ApiMock = {
 };
 
 export const WIKIPEDIA: ApiMock = {
-  url: 'https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=400&format=json&titles=Yosemite%20National%20Park&origin=*',
+  url: 'https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=500&format=json&titles=Yosemite%20National%20Park&origin=*',
   response: {
     batchcomplete: '',
     query: {
@@ -116,7 +116,7 @@ export const WIKIPEDIA: ApiMock = {
           title: 'Yosemite National Park',
           thumbnail: {
             source:
-              'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/400px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
+              'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/500px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
             width: 400,
             height: 418,
           },
@@ -128,7 +128,7 @@ export const WIKIPEDIA: ApiMock = {
 };
 
 export const WIKIPEDIA_CS: ApiMock = {
-  url: 'https://cs.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=400&format=json&titles=Yosemite%20National%20Park&origin=*',
+  url: 'https://cs.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=500&format=json&titles=Yosemite%20National%20Park&origin=*',
   response: WIKIPEDIA.response,
 };
 
