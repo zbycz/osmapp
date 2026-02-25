@@ -91,7 +91,7 @@ test('wikidata=*', async () => {
   ).toEqual({
     description: 'Wikidata image (wikidata=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Half_Dome_with_Eastern_Yosemite_Valley_(50MP).jpg/400px-Half_Dome_with_Eastern_Yosemite_Valley_(50MP).jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Half_Dome_with_Eastern_Yosemite_Valley_(50MP).jpg/500px-Half_Dome_with_Eastern_Yosemite_Valley_(50MP).jpg',
     link: 'Q180402',
     linkUrl: 'https://www.wikidata.org/wiki/Q180402',
   });
@@ -109,7 +109,7 @@ test('image=File:', async () => {
   ).toEqual({
     description: 'Wikimedia Commons (image=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubočepské_plotny_-_Pravá_plotna.jpg/400px-Hlubočepské_plotny_-_Pravá_plotna.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubočepské_plotny_-_Pravá_plotna.jpg/500px-Hlubočepské_plotny_-_Pravá_plotna.jpg',
     link: 'File:Hlubočepské plotny - Pravá plotna.jpg',
     linkUrl: 'https://commons.wikimedia.org/w/index.php?curid=145779916',
   });
@@ -127,7 +127,7 @@ test('wikimedia_commons=File:', async () => {
   ).toEqual({
     description: 'Wikimedia Commons (wikimedia_commons=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubočepské_plotny_-_Pravá_plotna.jpg/400px-Hlubočepské_plotny_-_Pravá_plotna.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubočepské_plotny_-_Pravá_plotna.jpg/500px-Hlubočepské_plotny_-_Pravá_plotna.jpg',
     link: 'File:Hlubočepské plotny - Pravá plotna.jpg',
     linkUrl: 'https://commons.wikimedia.org/w/index.php?curid=145779916',
   });
@@ -166,7 +166,7 @@ test('wikipedia=*', async () => {
   ).toEqual({
     description: 'Wikipedia (wikipedia=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/400px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/500px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
     link: 'File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
     linkUrl:
       'https://commons.wikimedia.org/wiki/File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
@@ -185,7 +185,7 @@ test('wikipedia=* with lang prefix in value', async () => {
   ).toEqual({
     description: 'Wikipedia (wikipedia:2=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/400px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/500px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
     link: 'File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
     linkUrl:
       'https://commons.wikimedia.org/wiki/File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
@@ -204,7 +204,7 @@ test('wikipedia:cs=* with lang prefix in key', async () => {
   ).toEqual({
     description: 'Wikipedia (wikipedia:cs=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/400px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg/500px-Tunnel_View%2C_Yosemite_Valley%2C_Yosemite_NP_-_Diliff.jpg',
     link: 'File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
     linkUrl:
       'https://commons.wikimedia.org/wiki/File:Tunnel_View,_Yosemite_Valley,_Yosemite_NP_-_Diliff.jpg',
