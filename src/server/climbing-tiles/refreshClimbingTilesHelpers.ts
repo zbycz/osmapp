@@ -1,5 +1,5 @@
 import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
-import { ClimbingFeaturesRecord } from './db';
+import { ClimbingFeaturesRecord } from '../db/db';
 import { removeDiacritics } from './utils';
 import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
 import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
@@ -81,7 +81,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       name: name === nameRaw ? null : name, // query length optimization
       nameRaw,
       routeCount: feature.properties.routeCount,
-      hasImages: feature.properties.hasImages,
+      hasImages: feature.properties.hasImages ? 1 : 0,
       parentId: feature.properties.parentId,
       gradeId,
       gradeTxt,

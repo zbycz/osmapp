@@ -22,8 +22,8 @@ With Xata we use two types of access:
 ## Setup
 
 1. create a new account at [lite.xata.io](https://lite.xata.io) and personal API key at [app.xata.io/settings](https://app.xata.io/settings)
-2. import DB from [db.sql](./db.sql) file
-3. update [db.ts](./db.ts) with your credentials. Various ids are hardcoded for both types of endpoints (postgres/REST). The personal API KEY is in ENV variable `XATA_PASSWORD`.
+2. import DB from [db.sql](../db/db.sql) file
+3. update [db.ts](../db/db.ts) with your credentials. Various ids are hardcoded for both types of endpoints (postgres/REST). The personal API KEY is in ENV variable `XATA_PASSWORD`.
 4. run `/api/climbing-tiles/refresh` to get data from overpass and populate the DB (in average 112 seconds for the whole refresh)
 5. set ENV \
    `NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true`

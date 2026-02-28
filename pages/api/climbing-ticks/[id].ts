@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import { ClimbingTickDb } from '../../../src/types';
-import { getPool } from '../../../src/server/climbing-tiles/db';
+import { getDb } from '../../../src/server/db/db';
 
 class HttpError extends Error {
   constructor(
@@ -15,25 +15,29 @@ class HttpError extends Error {
 
 const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const tick = await getPool().query<ClimbingTickDb>(
-    'SELECT id, "osmUserId" FROM climbing_ticks WHERE id=$1',
-    [req.query.id],
-  );
 
-  if (tick.rows?.length === 0) {
+  const db = getDb();
+  const tick = db
+    .prepare<
+      [string],
+      ClimbingTickDb
+    >('SELECT id, osmUserId FROM climbing_ticks WHERE id = ?')
+    .get(`${req.query.id}`);
+
+  if (!tick) {
     throw new HttpError('Tick not found', 404);
   }
 
-  if (tick.rows[0].osmUserId !== user.id) {
+  if (tick.osmUserId !== user.id) {
     throw new HttpError('This tick is owned by different user.', 401);
   }
 
-  return tick.rows[0].id;
+  return tick.id;
 };
 
 const deleteTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  await getPool().query('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
+  getDb().prepare('DELETE FROM climbing_ticks WHERE id = ?').run(tickId);
 };
 
 const ALLOWED_FIELDS = [
@@ -48,7 +52,6 @@ const ALLOWED_FIELDS = [
 
 const updateTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-
   const newData = req.body;
   const updates = ALLOWED_FIELDS.filter(
     (field) => newData[field] !== undefined,
@@ -56,22 +59,25 @@ const updateTick = async (req: NextApiRequest) => {
   if (updates.length === 0) {
     return;
   }
-  const setClause = updates
-    .map((field, i) => `"${field}"=$${i + 2}`)
-    .join(', ');
-  const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id=$1 RETURNING *`;
-  const setParams = updates.map((field) => newData[field]);
-  const result = await getPool().query(sql, [tickId, ...setParams]);
 
-  return result.rows[0];
+  const setClause = updates.map((field) => `"${field}" = @${field}`).join(', ');
+  const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id = @tickId RETURNING *`;
+
+  return getDb()
+    .prepare(sql)
+    .get({
+      ...newData, // dirty, but safe TODO later
+      tickId,
+    });
 };
 
 const performPutOrDelete = async (req: NextApiRequest) => {
   if (req.method === 'PUT') {
-    return updateTick(req);
+    return await updateTick(req);
   }
   if (req.method === 'DELETE') {
-    return deleteTick(req);
+    await deleteTick(req);
+    return { success: true };
   }
   throw new Error('Method not implemented.');
 };
@@ -79,7 +85,7 @@ const performPutOrDelete = async (req: NextApiRequest) => {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const result = await performPutOrDelete(req);
-    res.status(200).setHeader('Content-Type', 'application/json').send(result);
+    res.status(200).setHeader('Content-Type', 'application/json').json(result);
   } catch (err) {
     if (err instanceof HttpError) {
       res.status(err.code).send(err.message);

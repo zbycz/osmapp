@@ -1,6 +1,4 @@
-import { PoolClient } from 'pg';
-import { ClimbingFeaturesRecord } from './db';
-import format from 'pg-format';
+import { ClimbingFeaturesRecord, getDb } from '../db/db';
 import { OsmResponse } from './overpass/types';
 
 type TileStats =
@@ -12,36 +10,41 @@ type TileStats =
       max_size: string;
     };
 
-export const queryTileStats = async (
-  client: PoolClient,
-): Promise<TileStats> => {
-  const time = await client.query(
-    'SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1',
-  );
-  const size = await client.query(
-    'SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1',
-  );
+export const queryTileStats = (): TileStats => {
+  const db = getDb();
 
-  if (!time.rowCount || !size.rowCount) {
+  const time = db
+    .prepare(
+      'SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1',
+    )
+    .get() as any; // TODO any
+  const size = db
+    .prepare(
+      'SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1',
+    )
+    .get() as any;
+
+  if (!time || !size) {
     return {};
   }
 
   return {
-    max_time: time.rows[0].duration,
-    max_time_zxy: time.rows[0].zxy,
-    max_size: size.rows[0].size,
-    max_size_zxy: size.rows[0].zxy,
+    max_time: time.duration,
+    max_time_zxy: time.zxy,
+    max_size: size.size,
+    max_size_zxy: size.zxy,
   };
 };
 
-export const addStats = async (
-  client: PoolClient,
+export const addStats = (
   data: OsmResponse,
   buildLog: string,
   buildDuration: number,
   deletedTilesStats: TileStats,
   records: ClimbingFeaturesRecord[],
 ) => {
+  const db = getDb();
+
   const groups = records.filter((r) => ['crag', 'area'].includes(r.type));
   const routes = records.filter((r) => r.type === 'route');
 
@@ -56,13 +59,13 @@ export const addStats = async (
     groups_with_name_count: groups.filter((r) => r.name).length,
   };
 
-  await client.query(
-    format(
-      'INSERT INTO climbing_tiles_stats(%I) VALUES (%L)',
-      Object.keys(statsRow),
-      Object.values(statsRow),
-    ),
-  );
+  const columns = Object.keys(statsRow).join(', ');
+  const placeholders = Object.keys(statsRow)
+    .map((key) => `@${key}`)
+    .join(', ');
+  db.prepare(
+    `INSERT INTO climbing_tiles_stats (${columns}) VALUES (${placeholders})`,
+  ).run(statsRow);
 };
 
 export const removeDiacritics = (str: string) =>

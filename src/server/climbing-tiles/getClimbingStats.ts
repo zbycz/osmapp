@@ -1,11 +1,12 @@
 import { ClimbingStatsResponse } from '../../types';
-import { getPool } from './db';
+import { getDb } from '../db/db';
 
-export const getClimbingStats = async (): Promise<ClimbingStatsResponse> => {
-  const query = `SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`;
-  const result = await getPool().query(query);
+export const getClimbingStats = (): ClimbingStatsResponse => {
+  const row = getDb()
+    .prepare(`SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`)
+    .get() as any; // TODO
 
-  if (result.rows.length === 0) {
+  if (!row) {
     throw new Error('No row found in climbing_tiles_stats');
   }
 
@@ -17,7 +18,7 @@ export const getClimbingStats = async (): Promise<ClimbingStatsResponse> => {
     routes_count,
     build_log, // only in db
     ...devStats
-  } = result.rows[0];
+  } = row;
 
   return {
     lastRefresh: timestamp,
