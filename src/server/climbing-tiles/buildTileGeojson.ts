@@ -1,7 +1,7 @@
 import { BBox, Geometry } from 'geojson';
 import { ClimbingTilesFeature, ClimbingTilesProperties } from '../../types';
-import { ClimbingFeaturesRecord } from './db';
 import { OsmId } from '../../services/types';
+import { ClimbingFeaturesRow } from '../db/types';
 
 // rows or columns count
 const COUNT = 500;
@@ -47,7 +47,7 @@ const convertOsmIdToMapId = (apiId: OsmId) => {
 };
 
 const getProperties = (
-  record: ClimbingFeaturesRecord,
+  record: ClimbingFeaturesRow,
 ): ClimbingTilesProperties => {
   const { type, parentId } = record;
   const name = record.name || record.nameRaw;
@@ -59,7 +59,7 @@ const getProperties = (
       name,
       parentId,
       routeCount,
-      hasImages,
+      hasImages: hasImages > 0, // TODO maybe use number as in sqlite?
       histogramCode,
     };
   }
@@ -76,12 +76,12 @@ const getProperties = (
   return undefined;
 };
 
-const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
+const buildGeojson = (record: ClimbingFeaturesRow): ClimbingTilesFeature => {
   const { osmType, osmId, line, lon, lat } = record;
   const id = convertOsmIdToMapId({ type: osmType, id: osmId });
   const properties = getProperties(record);
   const geometry: Geometry = line
-    ? { type: 'LineString', coordinates: line }
+    ? { type: 'LineString', coordinates: JSON.parse(line) }
     : { type: 'Point', coordinates: [lon, lat] };
 
   return { type: 'Feature', id, geometry, properties };
@@ -89,7 +89,7 @@ const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
 
 export const buildTileGeojson = (
   isOptimizedToGrid: boolean,
-  recordsInBbox: ClimbingFeaturesRecord[],
+  recordsInBbox: ClimbingFeaturesRow[],
   bbox: BBox,
 ): GeoJSON.FeatureCollection => {
   const featuresInBbox = recordsInBbox.map(buildGeojson);

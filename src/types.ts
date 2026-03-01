@@ -10,7 +10,7 @@ export type Tile = { z: number; x: number; y: number };
 export type ClimbingStatsResponse = {
   lastRefresh: string;
   osmDataTimestamp: string;
-  devStats: Record<string, string>;
+  devStats: Record<string, string | number>;
   groupsCount: number;
   groupsWithNameCount: number;
   routesCount: number;

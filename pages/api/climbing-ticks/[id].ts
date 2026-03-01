@@ -1,11 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-  xataRestQuery,
-  xataRestUpdate,
-} from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
-import { ClimbingTick } from '../../../src/types';
+import { ClimbingTickDb } from '../../../src/types';
+import { getDb } from '../../../src/server/db/db';
 
 class HttpError extends Error {
   constructor(
@@ -18,25 +15,28 @@ class HttpError extends Error {
 
 const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const tick = await xataRestQuery<ClimbingTick>(
-    'SELECT id, "osmUserId" FROM climbing_ticks WHERE id=$1',
-    [req.query.id],
-  );
 
-  if (tick.rows?.length === 0) {
+  const tick = getDb()
+    .prepare<
+      [string],
+      ClimbingTickDb
+    >('SELECT id, osmUserId FROM climbing_ticks WHERE id = ?')
+    .get(`${req.query.id}`);
+
+  if (!tick) {
     throw new HttpError('Tick not found', 404);
   }
 
-  if (tick.rows[0].osmUserId !== user.id) {
+  if (tick.osmUserId !== user.id) {
     throw new HttpError('This tick is owned by different user.', 401);
   }
 
-  return tick.rows[0].id;
+  return tick.id;
 };
 
 const deleteTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  return xataRestQuery('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
+  return getDb().prepare('DELETE FROM climbing_ticks WHERE id = ?').run(tickId);
 };
 
 const ALLOWED_FIELDS = [
@@ -49,22 +49,38 @@ const ALLOWED_FIELDS = [
   'pairing',
 ];
 
+const getSafeUpdates = (req: NextApiRequest) => {
+  const entries = ALLOWED_FIELDS.map(
+    (field) => [field, req.body[field]] as [string, string | number],
+  );
+  const filtered = entries.filter(([k, v]) => v !== undefined); // careful - empty string or a zero are valid values!!
+  return Object.fromEntries(filtered);
+};
+
 const updateTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  return xataRestUpdate(
-    `UPDATE climbing_ticks SET ... WHERE id=$1`,
-    [tickId],
-    ALLOWED_FIELDS,
-    req.body,
-  );
+  const updates = getSafeUpdates(req);
+  if (updates.length === 0) {
+    return;
+  }
+
+  const setClause = Object.keys(updates)
+    .map((k) => `"${k}" = @${k}`)
+    .join(', ');
+
+  return getDb()
+    .prepare(
+      `UPDATE climbing_ticks SET ${setClause} WHERE id = @tickId RETURNING *`,
+    )
+    .get({ ...updates, tickId });
 };
 
 const performPutOrDelete = async (req: NextApiRequest) => {
   if (req.method === 'PUT') {
-    return updateTick(req);
+    return await updateTick(req);
   }
   if (req.method === 'DELETE') {
-    return deleteTick(req);
+    return await deleteTick(req);
   }
   throw new Error('Method not implemented.');
 };

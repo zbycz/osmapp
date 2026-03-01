@@ -40,6 +40,9 @@ const getHullForSubfeatures = (
     const coords = subfeatures.flatMap((f) =>
       f.geometry.type === 'Point' ? [f.geometry.coordinates] : [],
     );
+    if (coords.length < 2) {
+      return null; // TODO the other could be a LineString, check #14.35/37.7343/-119.6216
+    }
     return lineString(coords);
   }
   return hull;
