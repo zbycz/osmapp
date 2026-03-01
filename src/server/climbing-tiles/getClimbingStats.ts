@@ -1,13 +1,19 @@
 import { ClimbingStatsResponse } from '../../types';
 import { getDb } from '../db/db';
+import { ClimbingStatsRow } from '../db/types';
 
 export const getClimbingStats = (): ClimbingStatsResponse => {
   const row = getDb()
-    .prepare(`SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`)
-    .get() as any; // TODO
+    .prepare<
+      [],
+      ClimbingStatsRow
+    >(`SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`)
+    .get();
 
   if (!row) {
-    throw new Error('No row found in climbing_tiles_stats');
+    throw new Error(
+      'No row found in climbing_tiles_stats, you should run /refresh',
+    );
   }
 
   const {

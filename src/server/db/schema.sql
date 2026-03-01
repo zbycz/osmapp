@@ -8,11 +8,11 @@ CREATE TABLE climbing_features
   lat             REAL    NOT NULL,
   "osmType"       TEXT    NOT NULL,
   "osmId"         INTEGER NOT NULL,
-  name            TEXT, -- contains name with diacritics ONLY IF it differs from nameRaw
+  name            TEXT, -- name with diacritics - ONLY IF it differs from nameRaw
   "nameRaw"       TEXT, -- name without diacritics (always present, or NULL)
   "routeCount"    INTEGER,
   "hasImages"     INTEGER,
-  line            TEXT,
+  line            TEXT, -- geometry coordinates JSON
   "gradeTxt"      TEXT,
   "gradeId"       INTEGER,
   "histogramCode" TEXT,
@@ -22,7 +22,7 @@ CREATE TABLE climbing_features
 CREATE TABLE climbing_tiles_cache
 (
   zxy           TEXT NOT NULL PRIMARY KEY,
-  tile_geojson  TEXT NOT NULL,
+  tile_geojson  TEXT NOT NULL, -- JSON
   duration      INTEGER,
   feature_count INTEGER
 );

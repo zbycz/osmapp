@@ -1,24 +1,6 @@
 import BetterSqlite3, { type Database } from 'better-sqlite3';
 import { readFileSync } from 'fs';
 import path from 'path';
-import { OsmType } from '../../services/types';
-
-export type ClimbingFeaturesRecord = {
-  type: string;
-  osmType: OsmType;
-  osmId: number;
-  lon: number;
-  lat: number;
-  name?: string;
-  nameRaw: string;
-  routeCount?: number;
-  hasImages?: number; // sqlite doesn't have bool
-  parentId?: number;
-  gradeId?: number;
-  gradeTxt?: string;
-  line?: string; // JSON of type: number[][]
-  histogramCode?: string;
-};
 
 const DB_PATH = path.resolve(process.cwd(), 'data/db.sqlite');
 const SCHEMA_PATH = path.resolve(process.cwd(), 'src/server/db/schema.sql');

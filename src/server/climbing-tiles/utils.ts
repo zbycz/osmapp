@@ -1,5 +1,6 @@
-import { ClimbingFeaturesRecord, getDb } from '../db/db';
+import { getDb } from '../db/db';
 import { OsmResponse } from './overpass/types';
+import { ClimbingFeaturesRow } from '../db/types';
 
 type EmptyObject = Record<string, never>;
 
@@ -44,7 +45,7 @@ export const addStats = (
   buildLog: string,
   buildDuration: number,
   deletedTilesStats: TileStats,
-  records: ClimbingFeaturesRecord[],
+  records: ClimbingFeaturesRow[],
 ) => {
   const db = getDb();
 

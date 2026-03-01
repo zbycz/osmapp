@@ -1,10 +1,10 @@
 import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
-import { ClimbingFeaturesRecord } from '../db/db';
 import { removeDiacritics } from './utils';
 import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
 import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
 import { encodeHistogram } from './overpass/histogram';
 import { GeojsonFeature } from './overpass/types';
+import { ClimbingFeaturesRow } from '../db/types';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -57,7 +57,7 @@ const getRouteGradeIndex = (tags: FeatureTags) => {
 };
 
 export const recordsFactory = (log: (message: string) => void) => {
-  const records: ClimbingFeaturesRecord[] = [];
+  const records: ClimbingFeaturesRow[] = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
@@ -74,7 +74,7 @@ export const recordsFactory = (log: (message: string) => void) => {
 
     const name = feature.tags.name;
     const nameRaw = removeDiacritics(name);
-    const record: ClimbingFeaturesRecord = {
+    const record: ClimbingFeaturesRow = {
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,

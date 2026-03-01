@@ -12,12 +12,13 @@ Vector GEOJSON TILES of custom design:
 
 Since March 2026 the whole stack is based on one SQLite database ([#1466](https://github.com/zbycz/osmapp/pull/1466)). Previously we used XATA Lite free tier for ~1 year, see details at the bottom.
 
-We serve ~1000 tile requests/day, cache HITS are ~1ms, cache MISSes ~12ms.
 Three layers of caches:
 
 1. server cache - DB table `climbing_tiles_cache`
 2. cdn cache - Cloudflare cache via Page Rule
 3. browser cache - both on browser level, and on the application level via `fetchJson()`
+
+We serve ~1000 tile requests/day, server cache HITS are ~1ms, MISSes ~12ms.
 
 ## Setup
 

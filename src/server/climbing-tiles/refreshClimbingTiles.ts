@@ -1,7 +1,7 @@
 import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
-import { ClimbingFeaturesRecord, getDb } from '../db/db';
+import { getDb } from '../db/db';
 import { addStats, queryTileStats } from './utils';
 import { readFileSync } from 'fs';
 import {
@@ -11,6 +11,7 @@ import {
 } from './refreshClimbingTilesHelpers';
 import { cacheTile000 } from './getClimbingTile';
 import { OsmResponse } from './overpass/types';
+import { ClimbingFeaturesRow } from '../db/types';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -184,7 +185,7 @@ export const refreshClimbingTiles = async () => {
     const columnNames = columns.join(', ');
     const placeholders = columns.map((c) => `@${c}`).join(', ');
 
-    const insertRecord = getDb().prepare<ClimbingFeaturesRecord>(
+    const insertRecord = getDb().prepare<ClimbingFeaturesRow>(
       `INSERT INTO climbing_features (${columnNames}) VALUES (${placeholders})`,
     );
 

@@ -1,8 +1,9 @@
-import { ClimbingFeaturesRecord, getDb } from '../db/db';
+import { getDb } from '../db/db';
 import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { buildTileGeojson } from './buildTileGeojson';
 import { BBox } from 'geojson';
+import { ClimbingFeaturesRow } from '../db/types';
 
 const getBboxCondition = (bbox: BBox) =>
   `lon >= ${bbox[0]} AND lon <= ${bbox[2]} AND lat >= ${bbox[1]} AND lat <= ${bbox[3]}`;
@@ -44,7 +45,7 @@ export const getClimbingTile = ({ z, x, y }: Tile): string => {
     ? `SELECT * FROM climbing_features WHERE ${bboxCondition}`
     : `SELECT * FROM climbing_features WHERE type != 'route' AND type != 'route_top' AND ${bboxCondition}`;
 
-  const rows = getDb().prepare<[], ClimbingFeaturesRecord>(query).all();
+  const rows = getDb().prepare<[], ClimbingFeaturesRow>(query).all();
   const geojson = buildTileGeojson(isOptimizedToGrid, rows, bbox);
 
   const duration = Math.round(performance.now() - start);
@@ -59,7 +60,7 @@ export const getClimbingTile = ({ z, x, y }: Tile): string => {
   return JSON.stringify(geojson);
 };
 
-export const cacheTile000 = (allRecords: ClimbingFeaturesRecord[]) => {
+export const cacheTile000 = (allRecords: ClimbingFeaturesRow[]) => {
   const bbox = tileToBBOX({ z: 0, x: 0, y: 0 });
   const records = allRecords.filter((r) => !r.type.startsWith('route'));
   const tile000 = buildTileGeojson(true, records, bbox);
