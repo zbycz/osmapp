@@ -1,28 +1,31 @@
 import { ClimbingFeaturesRecord, getDb } from '../db/db';
 import { OsmResponse } from './overpass/types';
 
+type EmptyObject = Record<string, never>;
+
 type TileStats =
-  | {}
+  | EmptyObject
   | {
       max_time_zxy: string;
       max_size_zxy: string;
-      max_time: string;
-      max_size: string;
+      max_time: number;
+      max_size: number;
     };
 
 export const queryTileStats = (): TileStats => {
-  const db = getDb();
+  const time = getDb()
+    .prepare<
+      [],
+      { zxy: string; duration: number }
+    >('SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1')
+    .get();
 
-  const time = db
-    .prepare(
-      'SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1',
-    )
-    .get() as any; // TODO any
-  const size = db
-    .prepare(
-      'SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1',
-    )
-    .get() as any;
+  const size = getDb()
+    .prepare<
+      [],
+      { zxy: string; size: number }
+    >('SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1')
+    .get();
 
   if (!time || !size) {
     return {};
@@ -59,12 +62,12 @@ export const addStats = (
     groups_with_name_count: groups.filter((r) => r.name).length,
   };
 
-  const columns = Object.keys(statsRow).join(', ');
-  const placeholders = Object.keys(statsRow)
-    .map((key) => `@${key}`)
-    .join(', ');
+  const columns = Object.keys(statsRow);
+  const columnNames = columns.join(', ');
+  const placeholders = columns.map((c) => `@${c}`).join(', ');
+
   db.prepare(
-    `INSERT INTO climbing_tiles_stats (${columns}) VALUES (${placeholders})`,
+    `INSERT INTO climbing_tiles_stats (${columnNames}) VALUES (${placeholders})`,
   ).run(statsRow);
 };
 

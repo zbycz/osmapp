@@ -1,8 +1,8 @@
 import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
-import { getDb } from '../db/db';
-import { queryTileStats, addStats } from './utils';
+import { ClimbingFeaturesRecord, getDb } from '../db/db';
+import { addStats, queryTileStats } from './utils';
 import { readFileSync } from 'fs';
 import {
   buildLogFactory,
@@ -177,14 +177,14 @@ export const refreshClimbingTiles = async () => {
   const records = getNewRecords(data, log); // ~ 70k records
   log(`Records: ${records.length}`);
 
-  const db = getDb();
-  db.transaction(() => {
-    db.prepare('DELETE FROM climbing_features').run();
+  getDb().transaction(() => {
+    getDb().prepare('DELETE FROM climbing_features').run();
 
     const columns = Object.keys(records[0]);
     const columnNames = columns.join(', ');
     const placeholders = columns.map((c) => `@${c}`).join(', ');
-    const insertRecord = db.prepare(
+
+    const insertRecord = getDb().prepare<ClimbingFeaturesRecord>(
       `INSERT INTO climbing_features (${columnNames}) VALUES (${placeholders})`,
     );
 
@@ -192,7 +192,7 @@ export const refreshClimbingTiles = async () => {
       insertRecord.run(record);
     }
 
-    db.prepare('DELETE FROM climbing_tiles_cache').run();
+    getDb().prepare('DELETE FROM climbing_tiles_cache').run();
 
     log('Caching tile 0/0/0');
     cacheTile000(records);

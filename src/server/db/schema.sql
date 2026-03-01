@@ -1,4 +1,4 @@
--- SQLite create
+-- SQLite schema v1
 
 CREATE TABLE climbing_features
 (
@@ -8,11 +8,11 @@ CREATE TABLE climbing_features
   lat             REAL    NOT NULL,
   "osmType"       TEXT    NOT NULL,
   "osmId"         INTEGER NOT NULL,
-  name            TEXT,
+  name            TEXT, -- contains name with diacritics ONLY IF it differs from nameRaw
+  "nameRaw"       TEXT, -- name without diacritics (always present, or NULL)
   "routeCount"    INTEGER,
-  "nameRaw"       TEXT,
-  "hasImages"     INTEGER, -- SQLite nemá Boolean, používá se 0/1
-  line            TEXT,    -- JSON se v SQLite ukládá jako TEXT
+  "hasImages"     INTEGER,
+  line            TEXT,
   "gradeTxt"      TEXT,
   "gradeId"       INTEGER,
   "histogramCode" TEXT,
@@ -49,9 +49,9 @@ CREATE TABLE climbing_ticks
   "osmUserId" INTEGER NOT NULL,
   "osmType"   TEXT,
   "osmId"     INTEGER,
-  timestamp   TEXT    NOT NULL, -- SQLite nemá specializovaný Timestamp, používá ISO8601 string
+  timestamp   TEXT    NOT NULL,
   style       TEXT,
   "myGrade"   TEXT,
   note        TEXT,
-  pairing     TEXT              -- JSON uložen jako TEXT
+  pairing     TEXT
 );

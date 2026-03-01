@@ -16,8 +16,7 @@ class HttpError extends Error {
 const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
 
-  const db = getDb();
-  const tick = db
+  const tick = getDb()
     .prepare<
       [string],
       ClimbingTickDb
@@ -37,7 +36,7 @@ const validateRequestAndGetTick = async (req: NextApiRequest) => {
 
 const deleteTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  getDb().prepare('DELETE FROM climbing_ticks WHERE id = ?').run(tickId);
+  return getDb().prepare('DELETE FROM climbing_ticks WHERE id = ?').run(tickId);
 };
 
 const ALLOWED_FIELDS = [
@@ -50,25 +49,30 @@ const ALLOWED_FIELDS = [
   'pairing',
 ];
 
+const getSafeUpdates = (req: NextApiRequest) => {
+  const entries = ALLOWED_FIELDS.map(
+    (field) => [field, req.body[field]] as [string, string | number],
+  );
+  const filtered = entries.filter(([k, v]) => v !== undefined); // careful - empty string or a zero are valid values!!
+  return Object.fromEntries(filtered);
+};
+
 const updateTick = async (req: NextApiRequest) => {
   const tickId = await validateRequestAndGetTick(req);
-  const newData = req.body;
-  const updates = ALLOWED_FIELDS.filter(
-    (field) => newData[field] !== undefined,
-  );
+  const updates = getSafeUpdates(req);
   if (updates.length === 0) {
     return;
   }
 
-  const setClause = updates.map((field) => `"${field}" = @${field}`).join(', ');
-  const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id = @tickId RETURNING *`;
+  const setClause = Object.keys(updates)
+    .map((k) => `"${k}" = @${k}`)
+    .join(', ');
 
   return getDb()
-    .prepare(sql)
-    .get({
-      ...newData, // dirty, but safe TODO later
-      tickId,
-    });
+    .prepare(
+      `UPDATE climbing_ticks SET ${setClause} WHERE id = @tickId RETURNING *`,
+    )
+    .get({ ...updates, tickId });
 };
 
 const performPutOrDelete = async (req: NextApiRequest) => {
@@ -76,8 +80,7 @@ const performPutOrDelete = async (req: NextApiRequest) => {
     return await updateTick(req);
   }
   if (req.method === 'DELETE') {
-    await deleteTick(req);
-    return { success: true };
+    return await deleteTick(req);
   }
   throw new Error('Method not implemented.');
 };
@@ -85,7 +88,7 @@ const performPutOrDelete = async (req: NextApiRequest) => {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const result = await performPutOrDelete(req);
-    res.status(200).setHeader('Content-Type', 'application/json').json(result);
+    res.status(200).setHeader('Content-Type', 'application/json').send(result);
   } catch (err) {
     if (err instanceof HttpError) {
       res.status(err.code).send(err.message);

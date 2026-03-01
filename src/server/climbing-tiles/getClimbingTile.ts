@@ -27,8 +27,11 @@ export const getClimbingTile = ({ z, x, y }: Tile): string => {
 
   const cacheKey = `${z}/${x}/${y}`;
   const cache = getDb()
-    .prepare('SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = ?')
-    .get(cacheKey) as any; //TODO
+    .prepare<
+      [string],
+      { tile_geojson: string }
+    >('SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = ?')
+    .get(cacheKey);
 
   if (cache) {
     logCacheHit(start);
@@ -57,13 +60,12 @@ export const getClimbingTile = ({ z, x, y }: Tile): string => {
 };
 
 export const cacheTile000 = (allRecords: ClimbingFeaturesRecord[]) => {
-  const db = getDb();
-
   const bbox = tileToBBOX({ z: 0, x: 0, y: 0 });
   const records = allRecords.filter((r) => !r.type.startsWith('route'));
   const tile000 = buildTileGeojson(true, records, bbox);
+  const count = records.length;
 
-  db.prepare<[string]>(
-    `INSERT INTO climbing_tiles_cache VALUES ('0/0/0', ?, -1, -1)`,
-  ).run(JSON.stringify(tile000));
+  getDb()
+    .prepare(`INSERT INTO climbing_tiles_cache VALUES ('0/0/0', ?, -1, ?)`)
+    .run(JSON.stringify(tile000), count);
 };

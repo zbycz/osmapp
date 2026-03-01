@@ -21,7 +21,7 @@ export type ClimbingFeaturesRecord = {
 };
 
 const DB_PATH = path.resolve(process.cwd(), 'data/db.sqlite');
-const SCHEMA_PATH = path.resolve(process.cwd(), 'src/server/db/db.sql');
+const SCHEMA_PATH = path.resolve(process.cwd(), 'src/server/db/schema.sql');
 
 const getDbVersion = (db: Database) => {
   const result = db
@@ -46,7 +46,7 @@ export function getDb() {
         db.pragma('user_version = 1');
       })();
 
-      console.log(`Database db.sqlite initialized to version 1`); // eslint-disable-line no-console
+      console.log(`Database ${DB_PATH} initialized to version 1`); // eslint-disable-line no-console
     }
 
     store.db = db;
@@ -54,3 +54,7 @@ export function getDb() {
 
   return store.db;
 }
+
+// TODO use global const DB - but develop a way to disable it, eg. for vercel
+// currently throws TypeError: Cannot open database because the directory does not exist
+//export const DB = getDb();
