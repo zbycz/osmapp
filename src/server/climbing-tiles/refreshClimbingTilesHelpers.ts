@@ -16,16 +16,6 @@ export const centerGeometry = (
   },
 });
 
-const firstPointGeometry = (
-  feature: GeojsonFeature<LineString>,
-): GeojsonFeature<Point> => ({
-  ...feature,
-  geometry: {
-    type: 'Point',
-    coordinates: feature.geometry.coordinates[0],
-  },
-});
-
 const getRouteGradeTxt = (tags: FeatureTags) => {
   if (tags?.climbing?.startsWith('route')) {
     const gradeKey = Object.keys(tags).find((key) =>
@@ -89,7 +79,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       lat,
       line:
         feature.geometry.type === 'LineString'
-          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any) // careful, pg and rest handles differently
+          ? JSON.stringify(feature.geometry.coordinates)
           : null,
       histogramCode: encodeHistogram(feature.properties.histogram),
     };
@@ -102,7 +92,6 @@ export const recordsFactory = (log: (message: string) => void) => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson again construct two items (2800 records ~ 4% saved)
     addRecordRaw(type, way.center, way);
   };
 
