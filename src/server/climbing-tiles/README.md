@@ -5,32 +5,28 @@ Vector GEOJSON TILES of custom design:
 - Almost every feature related to climbing is displayed with crag icon (▲) over the map, `climbing=area` with the double mountain icon (⛰️).
   - Areas are rendered up to two levels deep - areas and super-areas.
 - Features with images are blue/red.
-- Specific routes are colored according to their grade in any classification system.
+- Routes are colored according to their grade in any classification system.
 - via ferratas and climbing gyms are shown with separate icons.
 - Full definition [here](https://github.com/zbycz/osmapp/blob/bcad4d2/src/server/climbing-tiles/refreshClimbingTiles.ts#L50-L166)
-- How it looks: https://commons.wikimedia.org/wiki/File:Openclimbing.org_-_map.png
+- How it looks: https://wiki.openstreetmap.org/wiki/Openclimbing.org#Gallery
 
-Our production needs were covered by [lite.xata.io free tier](https://xata.io/blog/postgres-free-tier). We served ~30 users/day = ~500 tile requests/day. XATA offers 15GB of storage (we used 23 MB) and continual uptime.
+Since March 2026 the whole stack is based on one SQLite database ([#1466](https://github.com/zbycz/osmapp/pull/1466)). Previously we used XATA Lite free tier for ~1 year, see details at the bottom.
 
-The response time sometimes goes up to tens of seconds, so we cache the tile in three layers: 1) DB table climbing_tiles_cache 2) Vercel CDN cache for 1h - cache hit around 20% 3) browser cache on the application level see `fetchJson()` caching implementaion.
+Three layers of caches:
 
-With Xata we use two types of access:
+1. server cache - DB table `climbing_tiles_cache`
+2. cdn cache - Cloudflare cache via Page Rule
+3. browser cache - both on browser level, and on the application level via `fetchJson()`
 
-1. postgres connection - for refreshing tiles - inserting 65000 rows every night, split in 65 INSERT calls. Faster then REST, but can timeout in peak times.
-2. [REST JSON endpoint](https://lite.xata.io/docs/api-reference/db/db_branch_name/sql#sql-query) - for getting features or cached tiles.
+We serve ~1000 tile requests/day, server cache HITS are ~1ms, MISSes ~12ms.
 
 ## Setup
 
-1. create a new account at [lite.xata.io](https://lite.xata.io) and personal API key at [app.xata.io/settings](https://app.xata.io/settings)
-2. import DB from [db.sql](./db.sql) file
-3. update [db.ts](./db.ts) with your credentials. Various ids are hardcoded for both types of endpoints (postgres/REST). The personal API KEY is in ENV variable `XATA_PASSWORD`.
-4. run `/api/climbing-tiles/refresh` to get data from overpass and populate the DB (in average 112 seconds for the whole refresh)
-5. set ENV \
-   `NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true`
+1. set ENVs \
+   `NEXT_PUBLIC_ENABLE_CLIMBING_TILES=true` \
    `NEXT_PUBLIC_CLIMBING_TILES_LOCAL=true`
-6. open browser and choose the `Climbing` layer - if configured correctly, second line shows refresh date, not "lite"
-
-If you want to use proper Postgres DB, eg. to allow TRANSACTIONS and SPATIAL INDEXES. Revert this commit [#1384](https://github.com/zbycz/osmapp/pull/1384). And configure the `NEON_DB_URL` which can be any Postgres URL connection string. Unfortunately NeonDB free tier stopped the instance mid-month, so we reverted back to Xata.
+2. run `/api/climbing-tiles/refresh` to get data from overpass and populate the DB (in average 90 seconds for the whole refresh). The `db.sqlite` is created automatically in `/data` folder.
+3. open browser and choose the `Climbing` layer - if configured correctly, second line shows refresh date, not "lite"
 
 ## Architecture Docs
 
@@ -66,3 +62,22 @@ Browser
   - finally `setData` in the maplibre GEOJSON source `CLIMBING_TILES_SOURCE`.
 
 Many notes can be found in exploration pull requests - [see](https://github.com/search?q=repo%3Azbycz%2Fosmapp+in%3Atitle+climbingTiles&type=pullrequests&s=created&o=asc).
+
+.
+
+.
+
+.
+
+## OLD XATA setup, before we used local SQLite
+
+~Our production needs were covered by [lite.xata.io free tier](https://xata.io/blog/postgres-free-tier). We served ~30 users/day = ~500 tile requests/day. XATA offers 15GB of storage (we used 23 MB) and continual uptime.~
+
+~The response time sometimes goes up to tens of seconds, so we cache the tile in three layers: 1) DB table climbing_tiles_cache 2) Vercel CDN cache for 1h - cache hit around 20% 3) browser cache on the application level see `fetchJson()` caching implementaion.~
+
+~With Xata we use two types of access:~
+
+1. ~postgres connection - for refreshing tiles - inserting 65000 rows every night, split in 65 INSERT calls. Faster then REST, but can timeout in peak times.~
+2. ~[REST JSON endpoint](https://lite.xata.io/docs/api-reference/db/db_branch_name/sql#sql-query) - for getting features or cached tiles.~
+
+~There was also test of the postgres only version via NEON_DB - see [#1384](https://github.com/zbycz/osmapp/pull/1384).~

@@ -1,6 +1,10 @@
-Use type `ClimbingTick` in FE.
+Use type `ClimbingTick` in FE which contains converted `shortId`.
+
+The raw DB type is `ClimbingTickDb`.
 
 # POST /api/climbing-ticks
+
+Supply XYZ for valid token from app cookie called `osmAccessToken`.
 
 ```
 curl -X POST http://127.0.0.1:3000/api/climbing-ticks \

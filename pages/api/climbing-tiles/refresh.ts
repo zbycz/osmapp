@@ -3,6 +3,10 @@ import { refreshClimbingTiles } from '../../../src/server/climbing-tiles/refresh
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    if (!process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+      throw new Error('NEXT_PUBLIC_ENABLE_CLIMBING_TILES must be on');
+    }
+
     const log = await refreshClimbingTiles();
 
     res.status(200).send(log);

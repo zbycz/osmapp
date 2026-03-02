@@ -1,10 +1,8 @@
 import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
-import format from 'pg-format';
-import { getPool } from './db';
-import { queryTileStats, addStats } from './utils';
-import { chunk } from 'lodash';
+import { getDb } from '../db/db';
+import { addStats, queryTileStats } from './utils';
 import { readFileSync } from 'fs';
 import {
   buildLogFactory,
@@ -13,7 +11,7 @@ import {
 } from './refreshClimbingTilesHelpers';
 import { cacheTile000 } from './getClimbingTile';
 import { OsmResponse } from './overpass/types';
-import { PoolClient } from 'pg';
+import { ClimbingFeaturesRow } from '../db/types';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -24,7 +22,7 @@ const fetchFromOverpass = async () => {
   // takes about 42 secs, 25MB; in May25 = 25MB - 217k items->55k records
   const query = `[out:json][timeout:100];(nwr["climbing"];nwr["sport"="climbing"];);(._;>>;);out qt;`;
   const data = await fetchJson<OsmResponse>(
-    'https://overpass-api.de/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
     {
       body: encodeUrl`data=${query}`,
       method: 'POST',
@@ -169,64 +167,43 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
   return records;
 };
 
-const refreshInner = async (client: PoolClient) => {
+export const refreshClimbingTiles = async () => {
   const { getBuildLog, log } = buildLogFactory();
   const start = performance.now();
-  const tileStats = await queryTileStats(client);
+  const tileStats = queryTileStats();
 
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
 
-  const records = getNewRecords(data, log); // ~ 55k records
+  const records = getNewRecords(data, log); // ~ 70k records
   log(`Records: ${records.length}`);
 
-  const columns = Object.keys(records[0]);
-  const chunks = chunk(records, 1000); // XATA max size is probably 4 MB, but it was out of memory on 1.8MB as well. This produces queries about 0.4 MB big
+  getDb().transaction(() => {
+    getDb().prepare('DELETE FROM climbing_features').run();
 
-  await client.query('TRUNCATE TABLE climbing_features');
-  for (const [index, chunk] of chunks.entries()) {
-    const query = format(
-      'INSERT INTO climbing_features(%I) VALUES %L',
-      columns,
-      chunk.map((record) => Object.values(record)),
+    const columns = Object.keys(records[0]);
+    const columnNames = columns.join(', ');
+    const placeholders = columns.map((c) => `@${c}`).join(', ');
+
+    const insertRecord = getDb().prepare<ClimbingFeaturesRow>(
+      `INSERT INTO climbing_features (${columnNames}) VALUES (${placeholders})`,
     );
-    log(`SQL Query #${index + 1} length: ${query.length} chars`);
-    await client.query(query);
-  }
 
-  await client.query('TRUNCATE TABLE climbing_tiles_cache');
+    for (const record of records) {
+      insertRecord.run(record);
+    }
 
-  log('Caching tile 0/0/0');
-  await cacheTile000(client, records);
+    getDb().prepare('DELETE FROM climbing_tiles_cache').run();
+
+    log('Caching tile 0/0/0');
+    cacheTile000(records);
+  })();
 
   const buildDuration = Math.round(performance.now() - start);
   log(`Duration: ${buildDuration} ms`);
   log('Done.');
 
-  await addStats(
-    client,
-    data,
-    getBuildLog(),
-    buildDuration,
-    tileStats,
-    records,
-  );
+  addStats(data, getBuildLog(), buildDuration, tileStats, records);
 
   return getBuildLog();
-};
-
-export const refreshClimbingTiles = async () => {
-  const client = await getPool().connect();
-  try {
-    // await client.query('BEGIN'); // xata is out of memory for transaction
-    const result = await refreshInner(client);
-    // await client.query('COMMIT');
-
-    return result;
-  } catch (error) {
-    // await client.query('ROLLBACK');
-    throw error;
-  } finally {
-    client.release(); // this is important - in finally
-  }
 };

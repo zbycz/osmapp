@@ -5,7 +5,7 @@ import { addCorsAndCache } from '../../../src/server/climbing-tiles/addCorsAndCa
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   addCorsAndCache(res);
   try {
-    const json = await getClimbingStats();
+    const json = getClimbingStats();
 
     res.status(200).setHeader('Content-Type', 'application/json').send(json);
   } catch (err) {

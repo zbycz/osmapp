@@ -1,12 +1,19 @@
 import { ClimbingStatsResponse } from '../../types';
-import { xataRestQuery } from './db';
+import { getDb } from '../db/db';
+import { ClimbingStatsRow } from '../db/types';
 
-export const getClimbingStats = async (): Promise<ClimbingStatsResponse> => {
-  const query = `SELECT * FROM climbing_tiles_stats ORDER BY timestamp DESC LIMIT 1`;
-  const result = await xataRestQuery(query);
+export const getClimbingStats = (): ClimbingStatsResponse => {
+  const row = getDb()
+    .prepare<
+      [],
+      ClimbingStatsRow
+    >(`SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`)
+    .get();
 
-  if (result.rows.length === 0) {
-    throw new Error('No row found in climbing_tiles_stats');
+  if (!row) {
+    throw new Error(
+      'No row found in climbing_tiles_stats, you should run /refresh',
+    );
   }
 
   const {
@@ -17,7 +24,7 @@ export const getClimbingStats = async (): Promise<ClimbingStatsResponse> => {
     routes_count,
     build_log, // only in db
     ...devStats
-  } = result.rows[0];
+  } = row;
 
   return {
     lastRefresh: timestamp,
