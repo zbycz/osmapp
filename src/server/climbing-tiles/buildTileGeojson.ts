@@ -1,6 +1,6 @@
-import { BBox, Geometry } from 'geojson';
+import { BBox, Feature as GeojsonFeature, Geometry } from 'geojson';
 import { ClimbingTilesFeature, ClimbingTilesProperties } from '../../types';
-import { OsmId } from '../../services/types';
+import { LineString, OsmId, Point } from '../../services/types';
 import { ClimbingFeaturesRow } from '../db/types';
 
 // rows or columns count
@@ -87,6 +87,27 @@ const buildGeojson = (record: ClimbingFeaturesRow): ClimbingTilesFeature => {
   return { type: 'Feature', id, geometry, properties };
 };
 
+const isRouteLineString = (
+  f: ClimbingTilesFeature,
+): f is GeojsonFeature<LineString, ClimbingTilesProperties> => {
+  return f.properties.type === 'route' && f.geometry?.type === 'LineString';
+};
+
+const firstPointGeometry = (
+  feature: GeojsonFeature<LineString>,
+): GeojsonFeature<Point> => ({
+  ...feature,
+  geometry: {
+    type: 'Point',
+    coordinates: feature.geometry.coordinates[0],
+  },
+});
+
+const addRouteStarts = (features: ClimbingTilesFeature[]) => [
+  ...features,
+  ...features.filter(isRouteLineString).map(firstPointGeometry),
+];
+
 export const buildTileGeojson = (
   isOptimizedToGrid: boolean,
   recordsInBbox: ClimbingFeaturesRow[],
@@ -100,6 +121,6 @@ export const buildTileGeojson = (
 
   return {
     type: 'FeatureCollection' as const,
-    features,
+    features: addRouteStarts(features),
   };
 };
