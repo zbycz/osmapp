@@ -462,9 +462,6 @@ export default {
   weather: '天氣',
 
   'climbing_tiles.stats': `刷新：每晚1次<br />上次刷新：__lastRefresh__<br />OSM 時間戳：__osmTime__<br/>CDN 快取：1 小時`,
-  'climbing.type.area': '攀石區',
-  'climbing.type.crag': '攀石岩場',
-  'climbing.type.gym': '攀石館',
   'climbing.type.ferrata': '鐵索攀岩徑',
   'climbing.forum': '討論區',
 

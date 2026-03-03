@@ -35,7 +35,7 @@ export type ClimbingTilesProperties = {
 };
 
 export type ClimbingSearchRecord = {
-  type: 'area' | 'crag' | 'gym' | 'ferrata';
+  type: 'area' | 'crag' | 'gym' | 'ferrata' | 'route' | 'route_top';
   lon: number;
   lat: number;
   osmType: OsmType;

@@ -29,26 +29,39 @@ const getDistance = (point1: LonLat, point2: LonLat) => {
 const haversineSorter = (origin: LonLat) => (a, b) =>
   getDistance(origin, [a.lon, a.lat]) - getDistance(origin, [b.lon, b.lat]);
 
+const QUERY_GROUPS = `
+    SELECT "type", "lon", "lat", "osmType", "osmId", COALESCE("name", "nameRaw") AS "name",
+      ((lat - @lat) * (lat - @lat) + (lon - @lon) * (lon - @lon)) AS distance_sq
+    FROM climbing_features
+    WHERE type != 'route' AND type != 'route_top' AND nameRaw LIKE @query
+    ORDER BY distance_sq
+    LIMIT 30`;
+
+const QUERY_ROUTES = `
+    SELECT "type", "lon", "lat", "osmType", "osmId", COALESCE("name", "nameRaw") AS "name",
+      ((lat - @lat) * (lat - @lat) + (lon - @lon) * (lon - @lon)) AS distance_sq
+    FROM climbing_features
+    WHERE (type = 'route' OR type = 'route_top') AND nameRaw LIKE @query
+    ORDER BY distance_sq
+    LIMIT 10`;
+
+// usually 20 ms on M1 Air for both queries (70k records, 59k with nameRaw)
 export const getClimbingSearch = (
   q: string,
   lon: number,
   lat: number,
 ): ClimbingSearchRecord[] => {
-  const query = `
-    SELECT "type", "lon", "lat", "osmType", "osmId", COALESCE("name", "nameRaw") AS "name",
-      ((lat - @lat) * (lat - @lat) + (lon - @lon) * (lon - @lon)) AS distance_sq
-    FROM climbing_features
-    WHERE type != 'route' AND nameRaw LIKE @query
-    ORDER BY distance_sq
-    LIMIT 30`;
+  const query = `%${removeDiacritics(q)}%`;
 
-  const rows = getDb()
-    .prepare(query)
-    .all({
-      lat,
-      lon,
-      query: `%${removeDiacritics(q)}%`,
-    }) as ClimbingSearchRecord[];
+  const groups = getDb()
+    .prepare(QUERY_GROUPS)
+    .all({ lat, lon, query }) as ClimbingSearchRecord[];
+  const routes = getDb()
+    .prepare(QUERY_ROUTES)
+    .all({ lat, lon, query }) as ClimbingSearchRecord[];
 
-  return rows.sort(haversineSorter([lon, lat]));
+  groups.sort(haversineSorter([lon, lat])); // we search by distance_sq for performance, but we want to sort by real distance on FE
+  routes.sort(haversineSorter([lon, lat]));
+
+  return [...groups, ...routes];
 };
