@@ -17,6 +17,7 @@ import { PROJECT_ID } from '../../../services/project';
 import { ClimbingSearchRecord } from '../../../types';
 import { GeocoderAborted } from './geocoder';
 import { t } from '../../../services/intl';
+import { getPresetTranslation } from '../../../services/tagging/translations';
 
 const getApiUrl = (inputValue: string, view: View) => {
   const [_zoom, lat, lon] = view;
@@ -54,15 +55,13 @@ export const fetchClimbingSearchOptions = async (
   }
 };
 
-const typeLabels: Record<ClimbingSearchRecord['type'], string> = {
-  area: t('climbing.type.area'), // no preset
-  crag: t('climbing.type.crag'), // getPresetTranslation('climbing/crag')
-  gym: t('climbing.type.gym'), // getPresetTranslation('leisure/sports_centre/climbing')
-  ferrata: t('climbing.type.ferrata'), // no preset
-
-  // TODO would be returned twice
-  //"route": "route", // getPresetTranslation('climbing/route')
-};
+const getTypeLabels = (): Record<ClimbingSearchRecord['type'], string> => ({
+  area: getPresetTranslation('type/site/climbing/area'),
+  crag: getPresetTranslation('climbing/crag'),
+  route: getPresetTranslation('climbing/route'),
+  gym: getPresetTranslation('leisure/sports_centre/climbing'),
+  ferrata: t('climbing.type.ferrata'), // no preset yet
+});
 
 type Props = {
   option: ClimbingOption;
@@ -75,7 +74,7 @@ export const ClimbingRow = ({ option, inputValue }: Props) => {
   const { name, type, lon, lat } = option.climbing;
 
   const distance = getHumanDistance(isImperial, mapCenter, [lon, lat]);
-  const label = typeLabels[type] ?? `climbing ${type}`;
+  const label = getTypeLabels()[type] ?? `climbing ${type}`;
 
   return (
     <>
