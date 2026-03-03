@@ -59,6 +59,7 @@ const getTypeLabels = (): Record<ClimbingSearchRecord['type'], string> => ({
   area: getPresetTranslation('type/site/climbing/area'),
   crag: getPresetTranslation('climbing/crag'),
   route: getPresetTranslation('climbing/route'),
+  route_top: getPresetTranslation('climbing/route_top'), // only in ourPresets.ts yet
   gym: getPresetTranslation('leisure/sports_centre/climbing'),
   ferrata: t('climbing.type.ferrata'), // no preset yet
 });
