@@ -1,14 +1,14 @@
-# Careful, environment "VPS" is restricted to "master" branch only – https://github.com/zbycz/osmapp/settings/environments
+# Careful, environment "VPS" is restricted to the "master" branch only – https://github.com/zbycz/osmapp/settings/environments
 
 name: Build & Deploy VPS
-run-name: Deploy VPS from ${{ inputs.ref || github.ref }}
+run-name: Build & Deploy VPS ${{ inputs.ref && format(' – manually from {0}', inputs.ref) }}
 
 on:
   workflow_dispatch:
     inputs:
       ref:
         description: 'Commit hash or branch to deploy'
-        required: false
+        required: true
         default: 'master'
   push:
     branches: [master, deploy-vps]
