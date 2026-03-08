@@ -1,14 +1,21 @@
+# Careful, environment "VPS" is restricted to the "master" branch only – https://github.com/zbycz/osmapp/settings/environments
+
 name: Build & Deploy VPS
+run-name: Build & Deploy VPS ${{ inputs.ref && format(' – manually from {0}', inputs.ref) }}
 
 on:
   workflow_dispatch:
     inputs:
       ref:
         description: 'Commit hash or branch to deploy'
-        required: false
+        required: true
         default: 'master'
-#  push:
-#    branches: [master, deploy-vps]
+  push:
+    branches: [master]
+
+concurrency:
+  group: production-vps-deploy
+  cancel-in-progress: true # this is safe, deploy is atomic
 
 jobs:
   build-and-deploy:
@@ -18,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ inputs.ref || github.ref }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -56,9 +63,9 @@ jobs:
           mkdir ~/.ssh
           echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H $DEPLOY_HOST >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
 
           cd .next/standalone
-          zip -q -r build-$RUN_ID.zip ./
-          rsync -avz build-$RUN_ID.zip nodeuser@$DEPLOY_HOST:/app/
-          ssh nodeuser@$DEPLOY_HOST "/app/deploy.sh $RUN_ID"
+          zip -q -r "build-$RUN_ID.zip" ./
+          rsync -avz "build-$RUN_ID.zip" nodeuser@"$DEPLOY_HOST":/app/
+          ssh nodeuser@"$DEPLOY_HOST" "/app/deploy.sh $RUN_ID"
