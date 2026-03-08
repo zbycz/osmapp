@@ -11,6 +11,9 @@ on:
   push:
     branches: [master, deploy-vps]
 
+concurrency:
+  group: vps-deploy-${{ github.ref_name }}
+  cancel-in-progress: true
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
