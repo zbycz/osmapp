@@ -15,6 +15,7 @@ import { getPresetOptions } from './options/preset';
 import { Option } from './types';
 import { getOsmOptions } from './options/osm';
 import { getCoordsOption } from './options/coords';
+import { getTilesOption } from './options/tiles';
 import {
   CLIMBING_SEARCH_ABORTABLE_QUEUE,
   fetchClimbingSearchOptions,
@@ -29,6 +30,11 @@ const getMatchedOptions = (inputValue: string, stars: Star[]) => {
   const coordOptions = getCoordsOption(inputValue);
   if (coordOptions.length) {
     return coordOptions;
+  }
+
+  const tilesOptions = getTilesOption(inputValue);
+  if (tilesOptions.length) {
+    return tilesOptions;
   }
 
   const osmOptions = getOsmOptions(inputValue);

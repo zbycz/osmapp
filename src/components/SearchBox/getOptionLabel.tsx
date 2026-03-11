@@ -18,6 +18,7 @@ export const getOptionLabel = (option: Option | undefined) => {
       option.geocoder.properties &&
       buildPhotonAddress(option.geocoder.properties)) ||
     (option.type === 'osm' && `${option.osm.type}/${option.osm.id}`) ||
+    (option.type === 'tiles' && option.tiles.label) ||
     ''
   );
 };
