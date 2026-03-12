@@ -9,30 +9,44 @@ import maplibregl from 'maplibre-gl';
 import type { GeoJSONSource } from 'maplibre-gl';
 
 const tileRegex = /^(\d+)\/(\d+)\/(\d+)$/;
+const urlZRegex = /[?&]z=(\d+)/;
+const urlXRegex = /[?&]x=(\d+)/;
+const urlYRegex = /[?&]y=(\d+)/;
 
 const TILE_SOURCE_ID = 'tile-bbox';
 const TILE_LAYER_ID = 'tile-bbox-layer';
 
+const isValidTile = (z: number, x: number, y: number): boolean => {
+  if (z < 0 || z > 25) return false;
+  if (x < 0 || x >= Math.pow(2, z)) return false;
+  if (y < 0 || y >= Math.pow(2, z)) return false;
+  return true;
+};
+
 export const getTilesOption = (inputValue: string): TilesOption[] => {
-  const match = inputValue.trim().match(tileRegex);
-  if (!match) {
-    return [];
+  const trimmed = inputValue.trim();
+
+  const match = trimmed.match(tileRegex);
+  if (match) {
+    const z = parseInt(match[1], 10);
+    const x = parseInt(match[2], 10);
+    const y = parseInt(match[3], 10);
+    if (!isValidTile(z, x, y)) return [];
+    return [{ type: 'tiles', tiles: { z, x, y, label: `${z}/${x}/${y}` } }];
   }
 
-  const z = parseInt(match[1], 10);
-  const x = parseInt(match[2], 10);
-  const y = parseInt(match[3], 10);
+  const zMatch = trimmed.match(urlZRegex);
+  const xMatch = trimmed.match(urlXRegex);
+  const yMatch = trimmed.match(urlYRegex);
+  if (zMatch && xMatch && yMatch) {
+    const z = parseInt(zMatch[1], 10);
+    const x = parseInt(xMatch[1], 10);
+    const y = parseInt(yMatch[1], 10);
+    if (!isValidTile(z, x, y)) return [];
+    return [{ type: 'tiles', tiles: { z, x, y, label: `${z}/${x}/${y}` } }];
+  }
 
-  if (z < 0 || z > 25) return [];
-  if (x < 0 || x >= Math.pow(2, z)) return [];
-  if (y < 0 || y >= Math.pow(2, z)) return [];
-
-  return [
-    {
-      type: 'tiles',
-      tiles: { z, x, y, label: `${z}/${x}/${y}` },
-    },
-  ];
+  return [];
 };
 
 export const tilesOptionSelected = ({ tiles }: TilesOption) => {
