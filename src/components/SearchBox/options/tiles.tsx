@@ -51,11 +51,11 @@ export const tilesOptionSelected = ({ tiles }: TilesOption) => {
           type: 'Polygon',
           coordinates: [
             [
-              [w, n],
-              [e, n],
-              [e, s],
               [w, s],
+              [e, s],
+              [e, n],
               [w, n],
+              [w, s],
             ],
           ],
         },
