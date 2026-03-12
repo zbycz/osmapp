@@ -8,10 +8,32 @@ import { tileToBBOX } from '../../../server/climbing-tiles/tileToBBOX';
 import maplibregl from 'maplibre-gl';
 import type { GeoJSONSource } from 'maplibre-gl';
 
-export { getTilesOption } from './tilesUtils';
+const tileRegex = /^(\d+)\/(\d+)\/(\d+)$/;
 
 const TILE_SOURCE_ID = 'tile-bbox';
 const TILE_LAYER_ID = 'tile-bbox-layer';
+
+export const getTilesOption = (inputValue: string): TilesOption[] => {
+  const match = inputValue.trim().match(tileRegex);
+  if (!match) {
+    return [];
+  }
+
+  const z = parseInt(match[1], 10);
+  const x = parseInt(match[2], 10);
+  const y = parseInt(match[3], 10);
+
+  if (z < 0 || z > 25) return [];
+  if (x < 0 || x >= Math.pow(2, z)) return [];
+  if (y < 0 || y >= Math.pow(2, z)) return [];
+
+  return [
+    {
+      type: 'tiles',
+      tiles: { z, x, y, label: `${z}/${x}/${y}` },
+    },
+  ];
+};
 
 export const tilesOptionSelected = ({ tiles }: TilesOption) => {
   const map = getGlobalMap();
