@@ -10,7 +10,7 @@ import maplibregl from 'maplibre-gl';
 import type { GeoJSONSource } from 'maplibre-gl';
 
 const tileRegex = /^(\d+)\/(\d+)\/(\d+)$/;
-const urlZRegex = /[?&]z=(\d+)/;
+const urlZRegex = /z=(\d+)/;
 const urlXRegex = /[?&]x=(\d+)/;
 const urlYRegex = /[?&]y=(\d+)/;
 
