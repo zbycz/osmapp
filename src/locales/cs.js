@@ -113,6 +113,7 @@ export default {
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
   'searchbox.overpass_custom_query': 'vlastní dotaz',
+  'searchbox.tile_boundaries': 'z/x/y hranice dlaždice',
 
   'directions.get_directions': 'Vyhledat trasu',
   'directions.form.start_or_click': 'Zvolte začátek nebo klikněte do mapy',
