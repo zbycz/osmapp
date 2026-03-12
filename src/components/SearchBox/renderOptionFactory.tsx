@@ -8,6 +8,7 @@ import { Option } from './types';
 import { OsmRow } from './options/osm';
 import { CoordsRow } from './options/coords';
 import { ClimbingRow } from './options/climbing';
+import { TilesRow } from './options/tiles';
 
 type Props = {
   option: Option;
@@ -30,6 +31,8 @@ const Row = ({ option, inputValue }: Props) => {
       return <OsmRow option={option} />;
     case 'coords':
       return <CoordsRow option={option} />;
+    case 'tiles':
+      return <TilesRow option={option} />;
     case 'loader':
       return <LoaderRow />;
   }
