@@ -15,7 +15,10 @@ export const ClimbingGradesTableSettings = ({ isSettingVisible }) => {
       <Box m={1}>
         <Alert severity="warning">
           {t('climbing_grade_table.warning')}{' '}
-          <a href="https://github.com/zbycz/osmapp/issues" target="_blank">
+          <a
+            href="https://github.com/jvaclavik/openclimbing/issues"
+            target="_blank"
+          >
             Github
           </a>
           .

@@ -20,7 +20,7 @@ const loadOgImage = async (url: string): Promise<string | null> => {
     signal: abortController.signal,
     headers: {
       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'User-Agent': `OsmAPP ${process.env.osmappVersion} (+${PROJECT_URL}; load-og-image.tsx)`,
+      'User-Agent': `OpenClimbing ${process.env.osmappVersion} (+${PROJECT_URL}; load-og-image.tsx)`,
     },
   });
 

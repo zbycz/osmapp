@@ -91,7 +91,7 @@ export const getDiffXml = (
   const changeset = changesetId ? { changeset: changesetId } : {};
 
   const xml: DiffDocXmljs = {
-    $: { generator: 'OsmAPP', version: '0.6' },
+    $: { generator: 'OpenClimbing', version: '0.6' },
     create: getXmlByAction(changes, 'create', changeset),
     modify: getXmlByAction(changes, 'modify', changeset),
     delete: {

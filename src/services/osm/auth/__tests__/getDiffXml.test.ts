@@ -26,7 +26,7 @@ const nodeToDelete = {
 } as DataItem;
 
 const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<osmChange generator="OsmAPP" version="0.6">
+<osmChange generator="OpenClimbing" version="0.6">
   <create>
     <node id="-1" lon="14" lat="50" version="0" changeset="123">
       <tag k="newNode" v="yes"/>
@@ -73,7 +73,7 @@ const wayToDelete = {
 } as DataItem;
 
 const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<osmChange generator="OsmAPP" version="0.6">
+<osmChange generator="OpenClimbing" version="0.6">
   <create>
     <way id="-1" version="0" changeset="123">
       <tag k="newWay" v="yes"/>
@@ -131,7 +131,7 @@ const relationToDelete = {
 } as DataItem;
 
 const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<osmChange generator="OsmAPP" version="0.6">
+<osmChange generator="OpenClimbing" version="0.6">
   <create>
     <relation id="-1" version="0" changeset="123">
       <tag k="new" v="yes"/>

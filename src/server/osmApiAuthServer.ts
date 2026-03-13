@@ -13,7 +13,7 @@ const authFetch = async <T = any>(
 
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: {
-      'User-Agent': `osmapp ${process.env.osmappVersion} (SSR; https://osmapp.org/)`,
+      'User-Agent': `OpenClimbing ${process.env.osmappVersion} (SSR; https://github.com/jvaclavik/openclimbing)`,
       Authorization: `Bearer ${token}`,
     },
   });

@@ -18,7 +18,7 @@ import {
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
-    ['created_by', `OsmAPP ${process.env.osmappVersion}`],
+    ['created_by', `OpenClimbing ${process.env.osmappVersion}`],
     ['comment', changesetComment],
     ['submitted_from', getFullOsmappLink(feature)],
     // ...(needsReview ? [['review_requested', 'yes']] : []),

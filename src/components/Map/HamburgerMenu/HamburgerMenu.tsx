@@ -81,7 +81,7 @@ const AboutLink = ({ closeMenu }) => {
 const GithubLink = () => (
   <Tooltip title={t('map.github_title')}>
     <IconButton
-      href="https://github.com/zbycz/osmapp"
+      href="https://github.com/jvaclavik/openclimbing"
       component="a"
       target="_blank"
     >

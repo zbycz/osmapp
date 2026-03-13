@@ -20,7 +20,7 @@ export type RelationItemXml = {
 };
 
 export type DiffDocXmljs = {
-  $: { version: '0.6'; generator: 'OsmAPP' };
+  $: { version: '0.6'; generator: string };
   create: {
     node: NodeItemXml[];
     way: WayItemXml[];
