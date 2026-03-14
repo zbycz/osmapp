@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
 import { useInputValueState } from './options/geocoder';
 
-export const setSearchUrl = (value: string) => {
+const setInUrl = (value: string) => {
   const query = value ? `?q=${encodeURIComponent(value)}` : '';
 
   if (window.location.pathname === '/') {
@@ -12,12 +12,12 @@ export const setSearchUrl = (value: string) => {
   }
 };
 
-const setUrlQuery = debounce(
+export const setUrlQuery = debounce(
   (value: string, lastSyncedValue: React.MutableRefObject<string>) => {
-    setSearchUrl(value);
+    setInUrl(value);
     lastSyncedValue.current = value; // we ignore this in useHandleQuery
   },
-  500,
+  800,
 );
 
 export const useInputValueWithUrl = () => {
