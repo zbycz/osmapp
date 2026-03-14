@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import React, { useEffect, useRef } from 'react';
 import Router from 'next/router';
 import { Size } from '../types';
 import { HEIGHT } from '../helpers';
@@ -19,11 +18,20 @@ export const useImgSizeOnload = () => {
     }
   }, []);
 
-  const onPhotoLoad = (e) => {
+  const onLoad = (e) => {
     setSize({ width: e.target.width, height: e.target.height }); // browser case
   };
 
-  return { imgRef, size, onPhotoLoad };
+  return { imgRef, size, onLoad };
+};
+
+export const useImgError = () => {
+  const [error, setError] = useState<boolean>(false);
+  const onError = (e) => {
+    console.error('Feature Image failed to load', e.target.url); // eslint-disable-line no-console
+    setError(true);
+  };
+  return { error, onError };
 };
 
 export const UncertainCover = styled.div`
