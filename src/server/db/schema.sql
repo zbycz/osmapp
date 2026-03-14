@@ -11,7 +11,7 @@ CREATE TABLE climbing_features
   name            TEXT, -- name with diacritics - ONLY IF it differs from nameRaw
   "nameRaw"       TEXT, -- name without diacritics (always present, or NULL)
   "routeCount"    INTEGER,
-  "hasImages"     INTEGER,
+  "hasImages"     INTEGER, -- bool
   line            TEXT, -- geometry coordinates JSON
   "gradeTxt"      TEXT,
   "gradeId"       INTEGER,

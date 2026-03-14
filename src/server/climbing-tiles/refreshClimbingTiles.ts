@@ -196,7 +196,7 @@ export const refreshClimbingTiles = async () => {
     getDb().prepare('DELETE FROM climbing_tiles_cache').run();
 
     log('Caching tile 0/0/0');
-    cacheTile000(records);
+    cacheTile000(records); // if not cached, it would take 166ms. Negligible now on sqlite, but let's keep it
   })();
 
   const buildDuration = Math.round(performance.now() - start);
