@@ -3,14 +3,19 @@ import { Feature, LonLatBoth } from '../../../services/types';
 import { View } from '../../utils/MapStateContext';
 import { OSM_WEBSITE } from '../../../services/osm/consts';
 
-export const getIdEditorLink = (feature: Feature, view?: View) => {
+const getContrained = (view: View) => {
   const [z, lon, lat] = view.map(parseFloat);
-  const constrainedView = [z > 16 ? z : 16, lon, lat];
+  const constrained = [z > 16 ? z : 16, lon, lat];
+  return constrained.join('/');
+};
 
+export const getIdEditorLink = (feature: Feature, view?: View) => {
   const query = feature?.osmMeta?.id
     ? `?${feature.osmMeta.type}=${feature.osmMeta.id}`
     : '';
-  const hash = constrainedView ? `#map=${constrainedView.join('/')}` : '';
+
+  const hash = view ? `#map=${getContrained(view)}` : '';
+
   return `${OSM_WEBSITE}/edit${query}${hash}`;
 };
 
