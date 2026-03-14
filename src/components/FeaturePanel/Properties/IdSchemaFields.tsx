@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import styled from '@emotion/styled';
-import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
 import { buildAddress } from '../../../services/helpers';
 import { Feature } from '../../../services/types';
@@ -20,10 +19,11 @@ const Spacer = styled.div`
   height: 50px;
 `;
 
-// TODO get rid of `value` and `key` and use only tagsForField universally
+// TODO get rid of `value` and use only tagsForField universally (key already done - removed)
 // TODO design UiField to hold only what is needed to render (nothing more)
 const render = (uiField: UiField, feature: Feature): string | ReactNode => {
-  const { field, key: k, value: v, tagsForField, fieldTranslation } = uiField;
+  const { field, value: v, tagsForField, fieldTranslation } = uiField;
+  const k = tagsForField[0].key;
 
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
@@ -90,10 +90,11 @@ const addUnits = (label: string, value: string | ReactNode) => {
   return `${value} (${unit[1]})`;
 };
 
-const getTooltip = (field: Field, key: string) =>
-  `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`} (${
-    field.type
-  })`;
+const getTooltip = ({ field, tagsForField }: UiField) => {
+  const keys = tagsForField.map(({ key }) => key);
+  const s = keys[0] === field.fieldKey ? '' : `, key: ${keys}`;
+  return `field: ${field.fieldKey}${s} (${field.type})`;
+};
 
 const UiFields = ({ fields }: { fields: UiField[] }) => {
   const { feature } = useFeatureContext();
@@ -101,17 +102,14 @@ const UiFields = ({ fields }: { fields: UiField[] }) => {
   return (
     <>
       {fields.map((uiField) => {
-        const { key, label, field, tagsForField } = uiField;
+        const { fieldKey, label, tagsForField } = uiField;
         return (
-          <tr key={key}>
-            <th
-              title={getTooltip(field, key)}
-              style={{ verticalAlign: 'middle' }}
-            >
+          <tr key={fieldKey}>
+            <th title={getTooltip(uiField)} style={{ verticalAlign: 'middle' }}>
               {removeUnits(label)}
             </th>
             <td>
-              <InlineEditButton k={tagsForField?.[0]?.key ?? key} />
+              <InlineEditButton k={tagsForField[0].key} />
               {addUnits(label, render(uiField, feature))}
             </td>
           </tr>
