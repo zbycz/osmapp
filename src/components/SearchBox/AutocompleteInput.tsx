@@ -12,7 +12,7 @@ import { renderInputFactory } from './renderInputFactory';
 import { useHandleDirectQuery } from './useHandleDirectQuery';
 import { Setter } from '../../types';
 import {
-  setSearchUrl,
+  setUrlQuery,
   useHandleQuery,
   useInputValueWithUrl,
 } from './useHandleQuery';
@@ -55,11 +55,11 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       open={isOpen}
       onClose={() => {
         setIsOpen(false);
-        setSearchUrl('');
+        setUrlQuery('', lastSyncedValue);
       }}
       onOpen={() => {
         setIsOpen(true);
-        setSearchUrl(inputValue);
+        setUrlQuery(inputValue, lastSyncedValue);
       }}
       inputValue={inputValue}
       options={options}
