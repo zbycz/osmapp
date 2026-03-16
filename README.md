@@ -8,19 +8,7 @@ See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 - master branch: https://osmapp.org
 - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
 
-### project OpenClimbing.org
-
-Open-data climbing maps and topos. Photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
-
-- master branch: https://openclimbing.org
-  - **[Story behind openclimbing.org](https://medium.com/@jvaclavik/story-behind-openclimbing-org-ab448939c6ac)**
-  - **[How to add climbing crag to openclimbing.org](https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c)**
-  - Ideas? Issues? Join us at **[community.openclimbing.org](https://community.openclimbing.org)** 💬
-- examples: [Prokopské údolí](https://openclimbing.org/relation/17262674),
-  [Roviště](https://openclimbing.org/relation/17130100),
-  [Lomy nad Velkou](https://openclimbing.org/relation/17089246) or click just anything.
-
-_This is the same app served on another domain – only difference is branding and default layers._
+_Note:_ The OpenClimbing project was forked into a [stand-alone repository](https://github.com/jvaclavik/openclimbing) to enable faster iterations.
 
 ## How to contribute 🐱‍💻
 
@@ -102,6 +90,9 @@ GNU GPL
 
 ## Related projects
 
+- **OpenClimbing.org**
+  - Open-data climbing maps and topos – OpenStreetMap + Wikimedia. Based on OsmAPP, forked into a separate repository in March 2026.
+  - https://github.com/jvaclavik/openclimbing
 - **Facilmap.org**
   - relation viewer, POIs filtering, collaborative maps, embed etc.
   - https://facilmap.org/ ([Github](https://github.com/FacilMap/facilmap))
