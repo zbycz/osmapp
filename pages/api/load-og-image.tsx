@@ -55,6 +55,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const ogImage = await loadOgImage(href);
 
+  res.setHeader('Access-Control-Allow-Origin', '*'); // wildcard is needed to enable the vercel cache, it ignores the `origin` and caches randomnly one TODO consider Vary header if need be
+  res.setHeader('Cache-Control', `public, max-age=600, s-maxage=600`);
+
   if (ogImage) {
     return res.status(200).json({ ogImage });
   }
