@@ -7,12 +7,12 @@ import { getFirstOption } from './useGetOptions';
 import { useStarsContext } from '../utils/StarsContext';
 
 const getQd = () => {
-  // used for fake static export, when the query is in the url but not in the router query (because of the way we reload the page)
+  // used for fake static export, the query is in the url but for some reason not in Router
   const s =
     typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('qd')
       : null;
-  console.log('getQd', s); // eslint-disable-line no-console
+  console.log('fakeStaticExport - initial getQd() = ', s); // eslint-disable-line no-console
   return s;
 };
 

@@ -34,7 +34,7 @@ const doShortenerRedirect = () => {
   if (apiId !== null) {
     const chosenLang = getChosenLang();
     if (chosenLang && chosenLang !== 'en') {
-      Router.replace(`/${chosenLang}/?qd=${getUrlOsmId(apiId)}`);
+      window.location.href = `/${chosenLang}/?qd=${getUrlOsmId(apiId)}`;
     } else {
       Router.replace(`/${getUrlOsmId(apiId)}`);
     }
