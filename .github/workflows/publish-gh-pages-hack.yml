@@ -3,11 +3,15 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - static.osmapp.org
+      - master
 
 permissions:
   id-token: write
   pages: write
+
+concurrency:
+  group: static-deploy
+  cancel-in-progress: false
 
 jobs:
   hacky-static-and-deploy:
@@ -32,10 +36,11 @@ jobs:
           export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
           export NEXT_PUBLIC_FAKE_STATIC_EXPORT=true
           export NEXT_PUBLIC_FORCE_PROJECT=osmapp.org
+          export NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST=https://osmapp-preview.vercel.app
           yarn build
           mkdir public/_next
           cp -r .next/static public/_next
-          echo -e "User-agent: *\nDisallow: /" > public/robots.txt
+          #echo -e "User-agent: *\nDisallow: /" > public/robots.txt
 
           yarn start &
           sleep 5 # server usually starts in 1 second
