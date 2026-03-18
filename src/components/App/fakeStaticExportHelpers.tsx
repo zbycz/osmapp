@@ -9,9 +9,15 @@ import { isEqual } from 'lodash';
 import { DEFAULT_VIEW } from './helpers';
 
 const doLangRadirect = () => {
-  if (window.location.pathname === '/') {
-    if (Cookies.get('lang') && Cookies.get('lang') !== 'en') {
-      window.location.href = `/${Cookies.get('lang')}`;
+  const chosenLang = Cookies.get('lang');
+  if (chosenLang && chosenLang !== 'en') {
+    if (window.location.pathname === '/') {
+      window.location.href = `/${chosenLang}`;
+      return true;
+    }
+    if (window.location.pathname.match(/^\/(?:node|way|relation)\/\d+$/i)) {
+      const id = window.location.pathname.substring(1);
+      window.location.href = `/${chosenLang}?qd=${id}`;
       return true;
     }
   }
