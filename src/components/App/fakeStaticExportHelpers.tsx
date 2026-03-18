@@ -21,6 +21,7 @@ const doLangRadirect = () => {
       return true;
     }
   }
+  // TODO check the accept-language
 };
 
 const doShortenerRedirect = () => {
