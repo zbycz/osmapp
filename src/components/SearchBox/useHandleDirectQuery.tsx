@@ -6,6 +6,16 @@ import { useEffect, useRef } from 'react';
 import { getFirstOption } from './useGetOptions';
 import { useStarsContext } from '../utils/StarsContext';
 
+const getQd = () => {
+  // used for fake static export, the query is in the url but for some reason not in Router
+  const s =
+    typeof window !== 'undefined'
+      ? new URLSearchParams(window.location.search).get('qd')
+      : null;
+  console.log('fakeStaticExport - initial getQd() = ', s); // eslint-disable-line no-console
+  return s;
+};
+
 export const useHandleDirectQuery = (
   onSelected: (_: null, option: Option) => void,
   setInputValue: Setter<string>,
@@ -15,7 +25,7 @@ export const useHandleDirectQuery = (
   const { bbox, view } = useMapStateContext();
   const lastQuery = useRef<string | undefined>();
   const router = useRouter();
-  const query = router.query.qd;
+  const query = router.query.qd ?? getQd();
 
   useEffect(() => {
     (async () => {

@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  hacky-static-and-deploy:
+  hacky-static-build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:

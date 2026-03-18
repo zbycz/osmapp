@@ -8,10 +8,21 @@ import { getUrlOsmId } from '../../services/helpers';
 import { isEqual } from 'lodash';
 import { DEFAULT_VIEW } from './helpers';
 
+const getChosenLang = (): string | undefined => {
+  // TODO check the navigator.languages?
+  return Cookies.get('lang');
+};
+
 const doLangRadirect = () => {
-  if (window.location.pathname === '/') {
-    if (Cookies.get('lang') && Cookies.get('lang') !== 'en') {
-      window.location.href = `/${Cookies.get('lang')}`;
+  const chosenLang = getChosenLang();
+  if (chosenLang && chosenLang !== 'en') {
+    if (window.location.pathname === '/') {
+      window.location.href = `/${chosenLang}/`;
+      return true;
+    }
+    if (window.location.pathname.match(/^\/(?:node|way|relation)\/\d+$/i)) {
+      const id = window.location.pathname.substring(1);
+      window.location.href = `/${chosenLang}/?qd=${id}`;
       return true;
     }
   }
@@ -21,7 +32,12 @@ const doShortenerRedirect = () => {
   const apiId = getIdFromShortener(window.location.pathname.substring(1));
 
   if (apiId !== null) {
-    Router.replace(`/${getUrlOsmId(apiId)}`);
+    const chosenLang = getChosenLang();
+    if (chosenLang && chosenLang !== 'en') {
+      window.location.href = `/${chosenLang}/?qd=${getUrlOsmId(apiId)}`;
+    } else {
+      Router.replace(`/${getUrlOsmId(apiId)}`);
+    }
     return true;
   }
 };
