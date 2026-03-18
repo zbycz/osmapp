@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - patch1
 
 permissions:
   id-token: write
@@ -37,8 +36,7 @@ jobs:
           export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
           export NEXT_PUBLIC_FAKE_STATIC_EXPORT=true
           export NEXT_PUBLIC_FORCE_PROJECT=osmapp.org
-          #export NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST=https://osmapp-preview.vercel.app
-          export NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST=https://osmapp-preview-git-patch1-osm-app-team.vercel.app/
+          export NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST=https://osmapp-preview.vercel.app
           yarn build
           mkdir public/_next
           cp -r .next/static public/_next
