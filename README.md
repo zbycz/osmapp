@@ -46,7 +46,7 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 - **mobile applications** – using PWA technology, see [osmapp.org/install](https://osmapp.org/install)
 - **permanent URLs** – eg. [osmapp.org/way/123557148](https://osmapp.org/way/123557148) and shortener, eg. [osmapp.org/kkjwwaw](https://osmapp.org/kkjwwaw)
 - **creating POIs** – after clicking the coordinates (see e.g. [osmapp.org/50.1,14.39](https://osmapp.org/50.1,14.39))
-- **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French, Japanese, Chinese (Simplified & Traditional)
+- **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French, Japanese, Chinese (Simplified & Traditional), Russian
 - **undelete** – undo accidental delete in osmapp or elsewhere, e.g. [here](https://osmapp.org/node/1219767385)
 - and a lot of little details 🙂
 

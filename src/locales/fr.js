@@ -30,6 +30,7 @@ export default {
 
   'homepage.how_to_start': 'Commencez en tapant votre requête dans la barre de recherche.\nOu cliquez sur un élément de la carte.',
   'homepage.examples.eg': 'ex : ',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Statuet du pont Charles',
   'homepage.screenshot_alt': 'Captures d’écran d’OsmAPP',
   'homepage.about_osm': `Toutes les données proviennent de

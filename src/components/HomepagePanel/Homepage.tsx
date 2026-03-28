@@ -44,7 +44,7 @@ const Examples = () => (
   <>
     {t('homepage.examples.eg')}{' '}
     <Link href="/way/34633854" locale={intl.lang}>
-      Empire State Building
+      {t('homepage.examples.empire_state_building')}
     </Link>{' '}
     •{' '}
     <Link href="/way/119016167" locale={intl.lang}>

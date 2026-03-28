@@ -62,6 +62,7 @@ export default {
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.go_to_map_button': 'Přejít na mapu',
   'homepage.examples.eg': 'např.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
     miliony dobrovolníků — podobně jako Wikipedii.

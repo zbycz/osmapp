@@ -91,6 +91,7 @@ export default {
   'homepage.how_to_start': '在搜索框中输入查询开始，\n或点击地图上的任何项目。',
   'homepage.go_to_map_button': '前往地图',
   'homepage.examples.eg': '例如：',
+  'homepage.examples.empire_state_building': '帝国大厦',
   'homepage.examples.charles_bridge_statues': '查理大桥的雕像',
   'homepage.screenshot_alt': 'OsmAPP 截图',
   'homepage.about_osm': `所有地图数据均来自

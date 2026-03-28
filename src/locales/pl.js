@@ -23,6 +23,7 @@ export default {
 
   'homepage.how_to_start': 'Zacznij od wpisania zapytania w polu wyszukiwania.\nAlbo też kliknij dowolny obiekt na mapie.',
   'homepage.examples.eg': 'np.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Pomniki na Moście Karola',
   'homepage.screenshot_alt': 'Zrzut ekranu OsmAPP',
   'homepage.about_osm': `Wszystkie dane mapy pochodzą z
