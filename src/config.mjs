@@ -8,6 +8,7 @@ export const DEBUG_ID_SCHEMA = false;
 
 export const DEFAULT_DATA_FORMAT = 'd.M.yy';
 
+// this is used directly in .github/workflows/publish-gh-pages-hack.yml (mind in refactor)
 export const LANGUAGES = {
   de: 'Deutsch',
   cs: 'Česky',
