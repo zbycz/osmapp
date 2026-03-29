@@ -47,7 +47,7 @@ jobs:
 
           curl --cookie "hideHomepage=yes" http://localhost:3000 > public/index.html
           curl --cookie "hideHomepage=yes" http://localhost:3000 > public/404.html
-          for lang in $(node --input-type=module <<'EOF'import { LANGUAGES } from './src/config.mjs';process.stdout.write(`${Object.keys(LANGUAGES).join('\n')}\n`);EOF); do
+          for lang in $(node --input-type=module <<<'import { LANGUAGES } from "./src/config.mjs";process.stdout.write(Object.keys(LANGUAGES).join("\n")+"\n");'); do
             mkdir public/$lang
             curl --cookie "hideHomepage=yes; lang=$lang" http://localhost:3000 > public/$lang/index.html
           done;
