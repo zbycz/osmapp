@@ -23,6 +23,7 @@ export default {
 
   'homepage.how_to_start': 'Comienza escribiendo tu búsqueda en la caja de búsqueda. \nO haz click en cualquier elemento en el mapa.',
   'homepage.examples.eg': 'ej.',
+  'homepage.examples.empire_state_building': 'Edificio Empire State',
   'homepage.examples.charles_bridge_statues': 'Estatuas del puente Charles',
   'homepage.screenshot_alt': 'Pantallazo de OsmAPP',
   'homepage.about_osm': `Todos los datos del mapa son de

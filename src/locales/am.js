@@ -22,6 +22,7 @@ export default {
   'project.osmapp.description': 'ዓለማቀፍ OpenStreetMap አፕሊኬሽን',
   'homepage.how_to_start': 'ጥያቄዎን በመፈለጊያ ሳጥን ውስጥ መፃፍ ይጅምሩ.\n ወይንም ማንኛውንም በካርታው ላይ የሚገኝ ምልክት ጫን ያድርጉ ',
   'homepage.examples.eg': 'ለምሳሌ',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'የቻርለስ ድልድይ ሀውልቶች',
   'homepage.screenshot_alt': 'የOsmAPP የስክሪን ፎቶ',
   'homepage.about_osm': `ሁሉም የካርታ መረጃ ከ

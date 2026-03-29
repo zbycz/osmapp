@@ -91,6 +91,7 @@ export default {
   'homepage.how_to_start': '在搜尋框輸入查詢內容，\n或點擊地圖上任何項目即可開始。',
   'homepage.go_to_map_button': '前往地圖',
   'homepage.examples.eg': '例如：',
+  'homepage.examples.empire_state_building': '帝國大廈',
   'homepage.examples.charles_bridge_statues': '查理大橋的雕像',
   'homepage.screenshot_alt': 'OsmAPP 螢幕截圖',
   'homepage.about_osm': `所有地圖資料都來自

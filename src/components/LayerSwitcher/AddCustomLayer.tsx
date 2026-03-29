@@ -21,7 +21,7 @@ import {
   AutocompleteOption as LayerAutocompleteOption,
   SuccessLayerInput,
 } from './SuccessLayerInput';
-import { t } from '../../services/intl';
+import { t, Translation } from '../../services/intl';
 import { isValidLayerUrl } from './helpers';
 
 const LoadingLayerInput = () => (
@@ -311,20 +311,18 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
   return (
     <Dialog open={isOpen} maxWidth="md">
       <DialogTitle>
-        <p>Add a layer</p>
+        <p>{t('layerswitcher.add_layer_title')}</p>
       </DialogTitle>
 
       <DialogContent>
         <Box mb={2}>
           <Typography variant="body1">
-            Layers are sourced from the{' '}
-            <a
-              href="https://github.com/osmlab/editor-layer-index"
-              target="_blank"
-            >
-              editor-layer-index
-            </a>{' '}
-            list.
+            <Translation
+              id="layerswitcher.layers_source_info"
+              tags={{
+                link: 'a href="https://github.com/osmlab/editor-layer-index" target="_blank" rel="noreferrer"',
+              }}
+            />
           </Typography>
         </Box>
 
