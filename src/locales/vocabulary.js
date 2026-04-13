@@ -199,7 +199,8 @@ export default {
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
-  'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
+  'opening_hours.closed_now': 'Closed now',
+  'opening_hours.opens': 'Opens: __todayTime__',
   'opening_hours.today_closed': 'Closed today',
   'opening_hours.opens_soon': 'Opens soon',
   'opening_hours.opens_soon_today': 'Opens soon: __todayTime__',

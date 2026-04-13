@@ -59,10 +59,9 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
     case 'closed':
       return isOpenedToday
         ? {
-            statusText: t('opening_hours.now_closed_but_today', {
-              todayTime: '',
-            }).trim(),
-            time: todayTime,
+            statusText: t('opening_hours.closed_now'),
+            timeSeparator: ' - ',
+            time: t('opening_hours.opens', { todayTime }),
           }
         : { statusText: t('opening_hours.today_closed'), time: null };
     case 'opens-soon':
@@ -111,7 +110,8 @@ export const OpeningHoursRenderer = ({ v }) => {
       <AccessTime fontSize="small" />
       <div suppressHydrationWarning>
         <StatusText status={status}>{description.statusText}</StatusText>
-        {description.time && ` ${description.time}`}
+        {description.time &&
+          `${description.timeSeparator ?? ' '}${description.time}`}
         {maybeReasons.length > 0 && (
           <>
             <br />

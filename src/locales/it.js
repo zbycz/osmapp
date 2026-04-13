@@ -118,7 +118,8 @@ export default {
   'featurepanel.climbing_restriction': "Restrizioni sull'arrampicata",
 
   'opening_hours.open': 'Apertura: __todayTime__',
-  'opening_hours.now_closed_but_today': 'Ora chiuso, apertura: __todayTime__',
+  'opening_hours.closed_now': 'Ora chiuso',
+  'opening_hours.opens': 'Apre: __todayTime__',
   'opening_hours.today_closed': 'Oggi chiuso',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'domenica|lunedì|martedì|mercoledì|giovedì|venerdì|sabato',
 
