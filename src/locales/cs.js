@@ -162,7 +162,8 @@ export default {
   'featurepanel.hidden_crags': 'skrytých sektorů',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
-  'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
+  'opening_hours.closed_now': 'Nyní zavřeno',
+  'opening_hours.opens': 'Otevírá: __todayTime__',
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
   'opening_hours.editor.closed': 'zavřeno',

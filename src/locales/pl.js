@@ -65,7 +65,8 @@ export default {
   'featurepanel.objects_around': 'Obiekty w okolicy',
 
   'opening_hours.open': 'Otwarte: __todayTime__',
-  'opening_hours.now_closed_but_today': 'Obecnie zamknięte, dziś: __todayTime__',
+  'opening_hours.closed_now': 'Obecnie zamknięte',
+  'opening_hours.opens': 'Otwiera: __todayTime__',
   'opening_hours.today_closed': 'Dzisiaj zamknięte',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'niedziela|poniedziałek|wtorek|środa|czwartek|piątek|sobota',
 

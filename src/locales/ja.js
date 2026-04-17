@@ -132,7 +132,8 @@ export default {
 
   'opening_hours.all_day': '24時間',
   'opening_hours.open': '営業時間: __todayTime__',
-  'opening_hours.now_closed_but_today': '現在閉店 - 営業時間 __todayTime__',
+  'opening_hours.closed_now': '現在閉店',
+  'opening_hours.opens': '営業開始: __todayTime__',
   'opening_hours.today_closed': '本日は閉店',
   'opening_hours.opens_soon': 'まもなく開店します',
   'opening_hours.opens_soon_today': 'まもなく開店: __todayTime__',

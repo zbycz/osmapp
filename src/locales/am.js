@@ -63,7 +63,8 @@ export default {
   'featurepanel.objects_around': 'በዚህ ዙሪያው የሚገኙ',
 
   'opening_hours.open': 'ክፈት: __todayTime__',
-  'opening_hours.now_closed_but_today': 'አሁን ዝግ ነው፣  ዛሬ: __todayTime__',
+  'opening_hours.closed_now': 'አሁን ዝግ ነው',
+  'opening_hours.opens': 'ይከፈታል: __todayTime__',
   'opening_hours.today_closed': 'ዛሬ ዝግ ነው',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'እሁድ|ሰኞ|ማክሰኞ|ረቡዕ|ሐሙስ|አርብ|ቅዳሜ',
 
