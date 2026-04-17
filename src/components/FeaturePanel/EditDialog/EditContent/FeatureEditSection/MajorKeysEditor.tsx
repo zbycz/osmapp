@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
-  getLastWikimediaCommonsIndex,
+  getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
@@ -66,9 +66,9 @@ export const MajorKeysEditor: React.FC = () => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();
 
-  const lastWikimediaCommonsIndex = getLastWikimediaCommonsIndex(tags);
+  const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
 
-  const data = getData(lastWikimediaCommonsIndex + 1, tags);
+  const data = getData(nextWikimediaCommonsIndex + 1, tags);
 
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
@@ -77,7 +77,7 @@ export const MajorKeysEditor: React.FC = () => {
   const inactiveMajorKeys = data.keys.filter(
     (k) =>
       !activeMajorKeys.includes(k) ||
-      k === getWikimediaCommonsKey(lastWikimediaCommonsIndex + 1),
+      k === getWikimediaCommonsKey(nextWikimediaCommonsIndex + 1),
   );
 
   useEffect(() => {

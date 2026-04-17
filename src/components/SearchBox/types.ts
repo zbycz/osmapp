@@ -87,6 +87,11 @@ export type OsmOption = GenericOption<
   }
 >;
 
+export type TilesOption = GenericOption<
+  'tiles',
+  { z: number; x: number; y: number; label: string }
+>;
+
 /*
  * A option for the searchbox
  */
@@ -98,4 +103,5 @@ export type Option =
   | LoaderOption
   | GeocoderOption
   | ClimbingOption
-  | OsmOption;
+  | OsmOption
+  | TilesOption;

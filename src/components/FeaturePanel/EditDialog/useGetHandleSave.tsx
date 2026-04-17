@@ -8,7 +8,6 @@ import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { getFullOsmappLink } from '../../../services/helpers';
-import { addWebsiteForClimbingFeatures } from '../helpers/addWebsiteForClimbingFeatures';
 
 const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
@@ -61,10 +60,7 @@ export const useGetHandleSave = () => {
 
       setIsSaving(true);
 
-      const changes = addWebsiteForClimbingFeatures(
-        items.filter((item) => item.modified),
-      );
-
+      const changes = items.filter((item) => item.modified);
       const successInfo = loggedIn
         ? await saveChanges(feature, comment, changes)
         : await saveNote();

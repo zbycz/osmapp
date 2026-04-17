@@ -20,6 +20,7 @@ import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
 import styled from '@emotion/styled';
 import { getUrlForLangLinks, LangLinks } from '../src/helpers/LangLinks';
+import { OpenSearch } from '../src/helpers/OpenSearch';
 
 const Body = styled.body`
   @media (prefers-color-scheme: light) {
@@ -69,6 +70,7 @@ export default class MyDocument extends Document<Props> {
           <LangLinks urlForLangLinks={urlForLangLinks} />
 
           {isOpenClimbing ? <FaviconsOpenClimbing /> : <FaviconsOsmapp />}
+          <OpenSearch />
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
         <Body>

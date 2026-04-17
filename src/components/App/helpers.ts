@@ -10,7 +10,7 @@ import { Feature, OsmId } from '../../services/types';
 import { View } from '../utils/MapStateContext';
 import { NextPageContext } from 'next';
 
-const DEFAULT_VIEW: View = ['4', '50', '14'];
+export const DEFAULT_VIEW: View = ['4', '50', '14'];
 
 type IpApiResponse = {
   status: string;

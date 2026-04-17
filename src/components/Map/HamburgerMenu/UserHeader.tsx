@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React from 'react';
 import {
   Avatar,
   IconButton,
@@ -112,14 +112,12 @@ const LoggedOutUserHeader = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export const UserHeader = forwardRef<SVGSVGElement, UserLoginProps>(
-  ({ closeMenu }) => {
-    const { osmUser } = useOsmAuthContext();
-    if (!osmUser) {
-      return <LoggedOutUserHeader onClose={closeMenu} />;
-    }
-
+export const UserHeader = ({ closeMenu }) => {
+  const { osmUser } = useOsmAuthContext();
+  if (osmUser) {
     return <LoggedUserHeader onClose={closeMenu} />;
-  },
-);
-UserHeader.displayName = 'UserLogin';
+  }
+
+  return <LoggedOutUserHeader onClose={closeMenu} />;
+};
+UserHeader.displayName = 'UserHeader';

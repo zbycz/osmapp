@@ -10,6 +10,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { Setter } from '../../types';
 import { useCallback } from 'react';
 import { climbingOptionSelected } from './options/climbing';
+import { tilesOptionSelected } from './options/tiles';
 
 export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
   const { setFeature, setPreview } = useFeatureContext();
@@ -39,6 +40,10 @@ export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
           break;
         case 'coords':
           coordsOptionsSelected(option, setFeature);
+          break;
+        case 'tiles':
+          tilesOptionSelected(option);
+          break;
       }
     },
     [bbox, setFeature, setOverpassLoading, setPreview, showToast],

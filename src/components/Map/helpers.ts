@@ -28,6 +28,7 @@ export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
     .filter((layer) => isOsmLayer(layer))
     .map((x) => x.id);
 
+// TODO tohle se musí použít při setupu stylu, aby se nastavily metadata.clickableWithOsmId
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
   // eg. US states

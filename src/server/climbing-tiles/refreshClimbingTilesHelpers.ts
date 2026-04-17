@@ -1,10 +1,10 @@
 import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
-import { ClimbingFeaturesRecord } from './db';
 import { removeDiacritics } from './utils';
 import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
 import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
 import { encodeHistogram } from './overpass/histogram';
 import { GeojsonFeature } from './overpass/types';
+import { ClimbingFeaturesRow } from '../db/types';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -13,16 +13,6 @@ export const centerGeometry = (
   geometry: {
     type: 'Point',
     coordinates: feature.center,
-  },
-});
-
-const firstPointGeometry = (
-  feature: GeojsonFeature<LineString>,
-): GeojsonFeature<Point> => ({
-  ...feature,
-  geometry: {
-    type: 'Point',
-    coordinates: feature.geometry.coordinates[0],
   },
 });
 
@@ -57,7 +47,7 @@ const getRouteGradeIndex = (tags: FeatureTags) => {
 };
 
 export const recordsFactory = (log: (message: string) => void) => {
-  const records: ClimbingFeaturesRecord[] = [];
+  const records: ClimbingFeaturesRow[] = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
@@ -74,14 +64,14 @@ export const recordsFactory = (log: (message: string) => void) => {
 
     const name = feature.tags.name;
     const nameRaw = removeDiacritics(name);
-    const record: ClimbingFeaturesRecord = {
+    const record: ClimbingFeaturesRow = {
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,
       name: name === nameRaw ? null : name, // query length optimization
       nameRaw,
       routeCount: feature.properties.routeCount,
-      hasImages: feature.properties.hasImages,
+      hasImages: feature.properties.hasImages ? 1 : 0,
       parentId: feature.properties.parentId,
       gradeId,
       gradeTxt,
@@ -89,7 +79,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       lat,
       line:
         feature.geometry.type === 'LineString'
-          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any) // careful, pg and rest handles differently
+          ? JSON.stringify(feature.geometry.coordinates)
           : null,
       histogramCode: encodeHistogram(feature.properties.histogram),
     };
@@ -102,7 +92,6 @@ export const recordsFactory = (log: (message: string) => void) => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson again construct two items (2800 records ~ 4% saved)
     addRecordRaw(type, way.center, way);
   };
 

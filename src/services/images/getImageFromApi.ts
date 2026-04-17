@@ -144,11 +144,12 @@ const fetchMapillaryTag = async (k: string, v: string): ImagePromise => {
 
 // Only ogImage *OR* error can be there, for typescript we show it like this
 type OgImageResponse = { ogImage?: string; error?: string };
+const OG_IMAGE_FETCHER_HOST =
+  process.env.NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST ?? ''; // set to https://osmapp-preview.vercel.app for static export, otherwise leave empty
 
 const fetchOgImage = async (k: string, v: string): ImagePromise => {
-  const ogResponse = await fetchJson<OgImageResponse>(
-    `/api/load-og-image?href=${encodeURIComponent(v)}`,
-  );
+  const url = `${OG_IMAGE_FETCHER_HOST}/api/load-og-image?href=${encodeURIComponent(v)}`;
+  const ogResponse = await fetchJson<OgImageResponse>(url);
 
   if (ogResponse.error) {
     return null;

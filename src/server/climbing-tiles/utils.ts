@@ -1,47 +1,54 @@
-import { PoolClient } from 'pg';
-import { ClimbingFeaturesRecord } from './db';
-import format from 'pg-format';
+import { getDb } from '../db/db';
 import { OsmResponse } from './overpass/types';
+import { ClimbingFeaturesRow } from '../db/types';
+
+type EmptyObject = Record<string, never>;
 
 type TileStats =
-  | {}
+  | EmptyObject
   | {
       max_time_zxy: string;
       max_size_zxy: string;
-      max_time: string;
-      max_size: string;
+      max_time: number;
+      max_size: number;
     };
 
-export const queryTileStats = async (
-  client: PoolClient,
-): Promise<TileStats> => {
-  const time = await client.query(
-    'SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1',
-  );
-  const size = await client.query(
-    'SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1',
-  );
+export const queryTileStats = (): TileStats => {
+  const time = getDb()
+    .prepare<
+      [],
+      { zxy: string; duration: number }
+    >('SELECT zxy, duration FROM climbing_tiles_cache ORDER BY duration DESC LIMIT 1')
+    .get();
 
-  if (!time.rowCount || !size.rowCount) {
+  const size = getDb()
+    .prepare<
+      [],
+      { zxy: string; size: number }
+    >('SELECT zxy, LENGTH(tile_geojson) AS size FROM climbing_tiles_cache ORDER BY size DESC LIMIT 1')
+    .get();
+
+  if (!time || !size) {
     return {};
   }
 
   return {
-    max_time: time.rows[0].duration,
-    max_time_zxy: time.rows[0].zxy,
-    max_size: size.rows[0].size,
-    max_size_zxy: size.rows[0].zxy,
+    max_time: time.duration,
+    max_time_zxy: time.zxy,
+    max_size: size.size,
+    max_size_zxy: size.zxy,
   };
 };
 
-export const addStats = async (
-  client: PoolClient,
+export const addStats = (
   data: OsmResponse,
   buildLog: string,
   buildDuration: number,
   deletedTilesStats: TileStats,
-  records: ClimbingFeaturesRecord[],
+  records: ClimbingFeaturesRow[],
 ) => {
+  const db = getDb();
+
   const groups = records.filter((r) => ['crag', 'area'].includes(r.type));
   const routes = records.filter((r) => r.type === 'route');
 
@@ -56,13 +63,13 @@ export const addStats = async (
     groups_with_name_count: groups.filter((r) => r.name).length,
   };
 
-  await client.query(
-    format(
-      'INSERT INTO climbing_tiles_stats(%I) VALUES (%L)',
-      Object.keys(statsRow),
-      Object.values(statsRow),
-    ),
-  );
+  const columns = Object.keys(statsRow);
+  const columnNames = columns.join(', ');
+  const placeholders = columns.map((c) => `@${c}`).join(', ');
+
+  db.prepare(
+    `INSERT INTO climbing_tiles_stats (${columnNames}) VALUES (${placeholders})`,
+  ).run(statsRow);
 };
 
 export const removeDiacritics = (str: string) =>

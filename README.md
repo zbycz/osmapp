@@ -8,19 +8,7 @@ See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 - master branch: https://osmapp.org
 - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
 
-### project OpenClimbing.org
-
-Open-data climbing maps and topos. Photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
-
-- master branch: https://openclimbing.org
-  - **[Story behind openclimbing.org](https://medium.com/@jvaclavik/story-behind-openclimbing-org-ab448939c6ac)**
-  - **[How to add climbing crag to openclimbing.org](https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c)**
-  - Ideas? Issues? Join us at **[community.openclimbing.org](https://community.openclimbing.org)** 💬
-- examples: [Prokopské údolí](https://openclimbing.org/relation/17262674),
-  [Roviště](https://openclimbing.org/relation/17130100),
-  [Lomy nad Velkou](https://openclimbing.org/relation/17089246) or click just anything.
-
-_This is the same app served on another domain – only difference is branding and default layers._
+_Note:_ The OpenClimbing project was forked into a [stand-alone repository](https://github.com/jvaclavik/openclimbing) to enable faster iterations.
 
 ## How to contribute 🐱‍💻
 
@@ -34,7 +22,7 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 > Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or GitHub Codespaces – full dev environment in your browser. \
 > Consider setting `NEXT_PUBLIC_ENABLE_TEST_API=true` in `.env.local` for testing. \
 > If Vercel build fails, please run `yarn build` locally to debug it. \
-> [Architecture DOCS here](https://github.com/zbycz/osmapp/wiki/Architecture).
+> [Architecture DOCS here](https://github.com/zbycz/osmapp/wiki/Architecture) + AI docs here: [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/zbycz/osmapp)
 
 ## Features 🗺 📱 🖥
 
@@ -58,7 +46,7 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 - **mobile applications** – using PWA technology, see [osmapp.org/install](https://osmapp.org/install)
 - **permanent URLs** – eg. [osmapp.org/way/123557148](https://osmapp.org/way/123557148) and shortener, eg. [osmapp.org/kkjwwaw](https://osmapp.org/kkjwwaw)
 - **creating POIs** – after clicking the coordinates (see e.g. [osmapp.org/50.1,14.39](https://osmapp.org/50.1,14.39))
-- **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French, Japanese, Chinese (Simplified & Traditional)
+- **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French, Japanese, Chinese (Simplified & Traditional), Russian
 - **undelete** – undo accidental delete in osmapp or elsewhere, e.g. [here](https://osmapp.org/node/1219767385)
 - and a lot of little details 🙂
 
@@ -94,8 +82,7 @@ Also, big thanks for support/sponsorship from these awesome companies: ❤️
 - [GraphHopper Directions API](https://www.graphhopper.com/) - routing API
 - [InteliJ IDEA](https://www.jetbrains.com/idea/) – Webstorm IDE
 - [Sentry](https://sentry.io/) – error tracking
-- [Vercel](https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss) – hosting with generous free-tier \
-  [![vercel.svg](.github/vercel.svg)](https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss)
+- [Vercel](https://vercel.com/) – preview deployments
 
 ## License
 
@@ -103,6 +90,9 @@ GNU GPL
 
 ## Related projects
 
+- **OpenClimbing.org**
+  - Open-data climbing maps and topos – OpenStreetMap + Wikimedia. Based on OsmAPP, forked into a separate repository in March 2026.
+  - https://github.com/jvaclavik/openclimbing
 - **Facilmap.org**
   - relation viewer, POIs filtering, collaborative maps, embed etc.
   - https://facilmap.org/ ([Github](https://github.com/FacilMap/facilmap))

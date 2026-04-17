@@ -11,6 +11,7 @@ import {
   ImageClickHandler,
   initialSize,
   UncertainCover,
+  useImgError,
   useImgSizeOnload,
 } from './helpers';
 import { PanoramaImg } from './PanoramaImg';
@@ -68,7 +69,12 @@ type Props = {
 };
 
 export const Image = ({ def, image, onClick, alt }: Props) => {
-  const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
+  const { error, onError } = useImgError();
+  const { imgRef, size, onLoad } = useImgSizeOnload();
+
+  if (error) {
+    return null; // TODO perhaps offer a retry button? But it would need investment in UX.
+  }
 
   const hasPaths =
     isTag(def) && !!(def.path?.length || def.memberPaths?.length);
@@ -84,7 +90,8 @@ export const Image = ({ def, image, onClick, alt }: Props) => {
           src={image.imageUrl}
           height={HEIGHT}
           alt={alt || getImageDefId(def)}
-          onLoad={onPhotoLoad}
+          onLoad={onLoad}
+          onError={onError}
           $hasPaths={hasPaths}
           ref={imgRef}
         />

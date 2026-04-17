@@ -65,6 +65,7 @@ export default {
   'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld ein.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.go_to_map_button': 'Gehe zur Karte',
   'homepage.examples.eg': 'z.B.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',
   'homepage.screenshot_alt': 'Screenshot der OsmAPP',
   'homepage.about_osm': `Alle Kartendaten sind von

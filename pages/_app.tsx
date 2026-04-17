@@ -42,6 +42,11 @@ import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
 import { HotJar } from '../src/components/App/hotjar';
 import { TicksProvider } from '../src/components/utils/TicksContext';
+import {
+  fakeStaticExportCookies,
+  fakeStaticExportMapView,
+  fakeStaticExportStartup,
+} from '../src/components/App/fakeStaticExportHelpers';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -62,15 +67,14 @@ type OwnProps = {
 };
 
 type Props = AppProps & EmotionCacheProviderProps & OwnProps;
-
 const MyApp = (props: Props) => {
+  const cookies = fakeStaticExportCookies(props.cookies);
+  const initialMapView = fakeStaticExportMapView(props.initialMapView);
   const {
     Component,
     pageProps,
     emotionCache,
     userThemeCookie,
-    initialMapView,
-    cookies,
     featureFromRouter,
   } = props;
   const mapView = getMapViewFromHash() || initialMapView;
@@ -82,6 +86,8 @@ const MyApp = (props: Props) => {
       Router.prefetch('/directions/[[...all]]');
       fetchSchemaTranslations();
     }, 1000);
+
+    fakeStaticExportStartup();
   }, []);
 
   return (

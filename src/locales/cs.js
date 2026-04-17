@@ -62,6 +62,7 @@ export default {
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.go_to_map_button': 'Přejít na mapu',
   'homepage.examples.eg': 'např.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
     miliony dobrovolníků — podobně jako Wikipedii.
@@ -113,6 +114,7 @@ export default {
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
   'searchbox.overpass_custom_query': 'vlastní dotaz',
+  'searchbox.tile_boundaries': 'hranice dlaždice z/x/y',
 
   'directions.get_directions': 'Vyhledat trasu',
   'directions.form.start_or_click': 'Zvolte začátek nebo klikněte do mapy',
@@ -413,9 +415,6 @@ export default {
   weather: 'Počasí',
 
   'climbing_tiles.stats': `Obnovuje se: 1× / noc<br />Naposledy: __lastRefresh__<br />OSM timestamp: __osmTime__<br/>CDN cache: 1 hodina`,
-  'climbing.type.area': 'Lezecká oblast',
-  'climbing.type.crag': 'Lezecký sektor/skála',
-  'climbing.type.gym': 'Lezecká stěna',
   'climbing.type.ferrata': 'Via Ferrata',
   'climbing.forum': 'Diskusní fórum',
 

@@ -18,6 +18,7 @@ import {
   useCurrentItem,
   useExpandedSections,
 } from '../../../context/EditContext';
+import { OSM_WEBSITE } from '../../../../../../services/osm/consts';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,
@@ -27,7 +28,7 @@ const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
 const NotYetEditableWarning = () => {
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
-  const link = `https://www.openstreetmap.org/edit?${osmId.type}=${osmId.id}`;
+  const link = `${OSM_WEBSITE}/edit?${osmId.type}=${osmId.id}`;
 
   return (
     <Translation

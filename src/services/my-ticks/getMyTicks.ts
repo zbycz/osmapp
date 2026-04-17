@@ -1,7 +1,5 @@
 import { getApiId } from '../helpers';
-import { fetchJson } from '../fetch';
 import {
-  getOverpassUrl,
   OverpassFeature,
   overpassGeomToGeojson,
 } from '../overpass/overpassSearch';
@@ -9,6 +7,7 @@ import { FeatureTags, OsmId } from '../types';
 import { publishDbgObject } from '../../utils';
 import { TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import { ClimbingTick } from '../../types';
+import { fetchOverpass } from '../overpass/fetchOverpass';
 
 export type FetchedClimbingTick = {
   key: string;
@@ -34,7 +33,7 @@ export const getMyTicksFeatures = async (ticks): Promise<OverpassFeature[]> => {
     })
     .join('');
   const query = `[out:json];(${queryTicks});out body qt;`;
-  const overpass = await fetchJson(getOverpassUrl(query));
+  const overpass = await fetchOverpass(query);
 
   return overpassGeomToGeojson(overpass);
 };

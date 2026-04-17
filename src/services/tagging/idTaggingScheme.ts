@@ -46,7 +46,7 @@ const getUiField = (
   const fieldTranslation = getFieldTranslation(field);
 
   return {
-    key,
+    fieldKey: field.fieldKey,
     value: getValueForField(field, fieldTranslation, value, tagsForField), // TODO this may be removed
     label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
     tagsForField,

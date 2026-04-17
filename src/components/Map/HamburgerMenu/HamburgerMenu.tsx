@@ -30,7 +30,7 @@ import { PROJECT_ID } from '../../../services/project';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import Link from 'next/link';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import { UserHeader } from './UserMenu';
+import { UserHeader } from './UserHeader';
 import { MyTicksMenuItem } from './MyTicksMenuItem';
 import ContrastIcon from '@mui/icons-material/Contrast';
 
@@ -175,17 +175,17 @@ export const HamburgerMenu = () => {
           <div>
             <UserHeader closeMenu={close} />
             <Divider sx={{ mt: 1, mb: 2 }} />
-            {(hasClimbingLayer || PROJECT_ID === 'openclimbing') && (
-              <MyTicksMenuItem closeMenu={close} />
+            {isOpenClimbing && <MyTicksMenuItem closeMenu={close} />}
+            {(hasClimbingLayer || isOpenClimbing) && (
+              <ClimbingGradesTableLink closeMenu={close} />
             )}
-            {isOpenClimbing && <ClimbingGradesTableLink closeMenu={close} />}
           </div>
           <div>
             <AboutLink closeMenu={close} />
             <InstallLink />
             <Divider />
             <Box mb={2}>
-              <ClimbingForumLink />
+              {isOpenClimbing && <ClimbingForumLink />}
               <EditLink />
             </Box>
             <Divider />

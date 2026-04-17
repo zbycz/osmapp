@@ -115,10 +115,10 @@ export type FieldTranslation = {
 };
 
 export interface UiField {
-  key: string;
+  fieldKey: string;
   value: string;
   label: string;
-  tagsForField: Array<{ key: string; value: string }>;
+  tagsForField: Array<{ key: string; value: string }>; // there always have to be at least one item in array
   fieldTranslation?: FieldTranslation;
   field: Field; // debug only
 }

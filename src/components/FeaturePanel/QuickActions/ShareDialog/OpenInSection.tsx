@@ -12,8 +12,7 @@ import styled from '@emotion/styled';
 import { t } from '../../../../services/intl';
 import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { QRCodeSVG } from 'qrcode.react';
-import { useTheme } from '@emotion/react';
+import { QrCode } from './QrCode';
 
 const AccordionStyle = {
   '&:before': {
@@ -50,7 +49,6 @@ const LinkItem = ({ href, label }: LinkItemProps) => (
 
 export const OpenInSection = () => {
   const { items } = useGetItems();
-  const theme = useTheme();
   const [expanded, setExpanded] = useState<number | undefined>(undefined);
 
   return (
@@ -74,24 +72,7 @@ export const OpenInSection = () => {
             </AccordionSummary>
             <AccordionDetails>
               <Stack direction="column" gap={2}>
-                <QRCodeSVG
-                  value={href}
-                  size={128}
-                  level="M"
-                  bgColor="transparent"
-                  fgColor={theme.palette.text.primary}
-                  imageSettings={
-                    image
-                      ? {
-                          src: image,
-                          width: 32,
-                          height: 32,
-                          excavate: true,
-                        }
-                      : undefined
-                  }
-                />
-
+                <QrCode payload={href} image={image} />
                 <LinkItem href={href} label={label} />
               </Stack>
             </AccordionDetails>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import React from 'react';
 import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
@@ -15,18 +15,19 @@ import { ActionButtons } from './ActionButtons';
 import { t } from '../../../../services/intl';
 import { useMobileMode } from '../../../helpers';
 import { Setter } from '../../../../types';
+import { QrCode } from './QrCode';
+import { PROJECT_ID } from '../../../../services/project';
 
-const useLink = (short: boolean) => {
+const getProjectLogo = () => {
+  if (PROJECT_ID === 'openclimbing') {
+    return '/openclimbing/logo/openclimbing_64.png';
+  }
+  return '/osmapp/logo/osmapp_64.png';
+};
+
+const useProjectLink = (short: boolean) => {
   const { feature } = useFeatureContext();
-  const [link, setLink] = useState(
-    short ? getShortLink(feature) : getFullOsmappLink(feature),
-  );
-
-  useEffect(() => {
-    const url = short ? getShortLink(feature) : getFullOsmappLink(feature);
-    setLink(url);
-  }, [short, feature]);
-  return link;
+  return short ? getShortLink(feature) : getFullOsmappLink(feature);
 };
 
 const StyledTextField = styled(TextField)`
@@ -61,27 +62,30 @@ export const LinkSection = () => {
   const { feature } = useFeatureContext();
   const supportsShortUrl = !feature.point;
   const [short, setShort] = useState(false);
-  const link = useLink(short);
+  const link = useProjectLink(short);
 
   return (
-    <Box mb={2}>
-      <Typography variant="overline">{t('sharedialog.link')}</Typography>
-      <Stack spacing={0}>
-        <StyledTextField
-          fullWidth
-          value={link}
-          variant="outlined"
-          size={useMobileMode() ? 'small' : 'medium'}
-        />
-        <Stack direction="row" alignItems="center">
-          {supportsShortUrl && (
-            <ShortenCheckbox short={short} setShort={setShort} />
-          )}
-          <div style={{ flex: 1 }} />
+    <>
+      <Box mb={2}>
+        <Typography variant="overline">{t('sharedialog.link')}</Typography>
+        <Stack spacing={0}>
+          <StyledTextField
+            fullWidth
+            value={link}
+            variant="outlined"
+            size={useMobileMode() ? 'small' : 'medium'}
+          />
+          <Stack direction="row" alignItems="center">
+            {supportsShortUrl && (
+              <ShortenCheckbox short={short} setShort={setShort} />
+            )}
+            <div style={{ flex: 1 }} />
 
-          <ActionButtons payload={link} type="url" />
+            <ActionButtons payload={link} type="url" />
+          </Stack>
         </Stack>
-      </Stack>
-    </Box>
+      </Box>
+      <QrCode payload={link} image={getProjectLogo()} />
+    </>
   );
 };

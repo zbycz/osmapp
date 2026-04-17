@@ -25,6 +25,7 @@ import { useMobileMode } from '../helpers';
 import { HomepageOpenClimbingGallery } from './HomepageOpenClimbingGallery';
 import { SupportUs } from './SupportUs';
 import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import { PROJECT_NAME } from '../../services/project';
 const AccordionStyle = {
   '&:before': {
     backgroundColor: 'transparent !important',
@@ -83,7 +84,7 @@ const Header = () => {
           color="inherit"
           fontWeight={900}
         >
-          openclimbing.org
+          {PROJECT_NAME}
         </Typography>
       </Stack>
     </Stack>
@@ -201,12 +202,6 @@ const Banners = () => (
       title="MapTiler"
     >
       <LogoMaptiler width={140} />
-    </a>
-    <a
-      href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
-      target="_blank"
-    >
-      <img src="/vercel.svg" alt="Vercel" width="160" />
     </a>
   </Stack>
 );

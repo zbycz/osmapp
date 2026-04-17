@@ -1,7 +1,7 @@
 import { isServer } from '../../components/helpers';
 
 const retina = (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
-const WIDTH = 300 * retina;
+const WIDTH = 300 * retina; // canvas dimensions of the composite image
 const HEIGHT = 238 * retina;
 const PADDING = 2 * retina;
 

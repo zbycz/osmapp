@@ -43,7 +43,7 @@ const generateScriptContent = (feature, userSettings) => {
       ...(photoPaths.length > 0
         ? {
             image: photoPaths.map((photoPath) =>
-              getCommonsImageUrl(feature.tags[photoPath], 800),
+              getCommonsImageUrl(feature.tags[photoPath], 960),
             ),
           }
         : {}),
@@ -75,7 +75,7 @@ const generateScriptContent = (feature, userSettings) => {
       ...(photoPaths.length > 0
         ? {
             image: photoPaths.map((photoPath) =>
-              getCommonsImageUrl(feature.tags[photoPath], 800),
+              getCommonsImageUrl(feature.tags[photoPath], 960),
             ),
           }
         : {}),

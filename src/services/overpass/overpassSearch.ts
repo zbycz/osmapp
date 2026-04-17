@@ -1,20 +1,15 @@
-import { LineString, OsmId, Point, GeometryCollection, LonLat } from '../types';
+import { GeometryCollection, LineString, LonLat, OsmId, Point } from '../types';
 import { getPoiClass } from '../getPoiClass';
 import { getCenter } from '../getCenter';
-import { fetchJson } from '../fetch';
 import { Feature as FeatureGeojson, FeatureCollection, Polygon } from 'geojson';
 import { ASTNode } from '../../components/SearchBox/queryWizard/ast';
 import { Bbox } from '../../components/utils/MapStateContext';
 import { generateQuery } from '../../components/SearchBox/queryWizard/generateQuery';
 import { isAstNode } from '../../components/SearchBox/queryWizard/isAst';
+import { fetchOverpass } from './fetchOverpass';
 
 const getOverpassQuery = ([a, b, c, d], query: string) =>
   `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
-
-export const getOverpassUrl = (fullQuery: string) =>
-  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    fullQuery,
-  )}`;
 
 type OverpassObject = {
   type: 'node' | 'way' | 'relation';
@@ -165,7 +160,7 @@ export const performOverpassSearch = async (
   const query = getOverpassQuery(bbox, body);
 
   console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
-  const overpass = await fetchJson(getOverpassUrl(query));
+  const overpass = await fetchOverpass(query);
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
   const features = overpassGeomToGeojson(overpass);

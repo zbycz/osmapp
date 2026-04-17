@@ -91,6 +91,7 @@ export default {
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.go_to_map_button': 'Go to map',
   'homepage.examples.eg': 'eg.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
   'homepage.about_osm': `All map data is from
@@ -99,8 +100,7 @@ export default {
       <em>Edit</em> button on each map feature.`,
   'homepage.heading_about_osmapp': 'About OsmAPP',
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
-     including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
-     Features such as navigation or favorite places are planned.`,
+     including editing options. <br/>Currently it includes various map layers, POI editing, navigation, saving your favorite places and a basic search engine.`,
   'homepage.github_link': `Repository is open-source. You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.for_images': 'for images 🖼',
@@ -145,6 +145,7 @@ export default {
   'searchbox.overpass_error': 'Error fetching results. __message__',
   'searchbox.overpass_custom_query': 'custom query',
   'searchbox.coordinate_subtitle': 'Latitude, Longitude',
+  'searchbox.tile_boundaries': 'z/x/y tile boundaries',
 
   'directions.get_directions': 'Get Directions',
   'directions.add_destination': 'Add destination',
@@ -323,6 +324,8 @@ export default {
   'layerswitcher.heading': 'Map layers',
   'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
   'layerswitcher.add_layer_button': 'Add custom layer',
+  'layerswitcher.add_layer_title': 'Add a layer',
+  'layerswitcher.layers_source_info': 'Layers are sourced from the <link>editor-layer-index</link> list.',
   'layerswitcher.overlays': 'Overlays',
   'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
   'layerswitcher.license': 'License',
@@ -388,6 +391,8 @@ export default {
   'publictransport.bus': 'Bus',
   'publictransport.trolleybus': 'Trolleybus',
   'publictransport.subway': 'Subway',
+  'publictransport.tram': 'Tram',
+  'publictransport.funicular': 'Funicular',
   'publictransport.unknown': 'Unknown type',
 
   'publictransport.show_this_category': 'Show this category',
@@ -465,9 +470,6 @@ export default {
   weather: 'Weather',
 
   'climbing_tiles.stats': `Refreshed: 1× / night<br />Last refresh: __lastRefresh__<br />OSM timestamp: __osmTime__<br/>CDN cache: 1 hour`,
-  'climbing.type.area': 'Climbing area',
-  'climbing.type.crag': 'Climbing crag',
-  'climbing.type.gym': 'Climbing gym',
   'climbing.type.ferrata': 'Via Ferrata',
   'climbing.forum': 'Community board',
 

@@ -67,6 +67,7 @@ export default {
   'homepage.how_to_start': 'まず、検索ボックスにクエリを入力する。\nまたは、マップ上の任意の項目をクリックする。',
   'homepage.go_to_map_button': '地図へ',
   'homepage.examples.eg': '例えば',
+  'homepage.examples.empire_state_building': 'エンパイア・ステート・ビル',
   'homepage.examples.charles_bridge_statues': 'カレル橋の彫像',
   'homepage.screenshot_alt': 'OsmAPPのスクショ',
   'homepage.about_osm': `すべての地図データは <a href="https://osm.org">OpenStreetMap</a> からのものです。これは、Wikipedia に似た、数百万人の寄稿者によって作成された地図です。各マップ フィーチャには<em>編集</em>ボタンがあります。`,

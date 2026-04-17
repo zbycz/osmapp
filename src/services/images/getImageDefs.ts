@@ -9,9 +9,9 @@ import {
   OsmType,
   PathType,
 } from '../types';
-import { getCommonsImageUrl } from './getCommonsImageUrl';
+import { CommonsAllowedWidth, getCommonsImageUrl } from './getCommonsImageUrl';
 
-export const WIDTH = 410;
+export const WIDTH: CommonsAllowedWidth = 500; // requesting bigger size than FEATURE_IMAGE_WIDTH (410px)
 
 export type ImageType = {
   imageUrl: string;

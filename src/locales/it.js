@@ -63,6 +63,7 @@ export default {
   'homepage.how_to_start': 'Inizia scrivendo la tua richiesta nella casella di ricerca.\nOppure clicca un qualsiasi elemento sulla mappa.',
   'homepage.go_to_map_button': 'Vai alla mappa',
   'homepage.examples.eg': 'ad es.',
+  'homepage.examples.empire_state_building': 'Empire State Building',
   'homepage.examples.charles_bridge_statues': 'Statue del ponte Carlo',
   'homepage.screenshot_alt': 'Schermata di OsmAPP',
   'homepage.about_osm': `Ogni dato della mappa proviene da

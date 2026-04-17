@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { xataRestQuery } from '../../../src/server/climbing-tiles/db';
+import { getDb } from '../../../src/server/db/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
-import format from 'pg-format';
 import { ClimbingTickDb } from '../../../src/types';
 
 const addTickToDB = async (req: NextApiRequest) => {
@@ -20,31 +19,33 @@ const addTickToDB = async (req: NextApiRequest) => {
     pairing,
   };
 
-  const insertResult = await xataRestQuery<ClimbingTickDb>(
-    format(
-      'INSERT INTO climbing_ticks (%I) VALUES (%L) RETURNING id',
-      Object.keys(newTick),
-      Object.values(newTick),
-    ),
-  );
-  return insertResult.rows[0]?.id;
+  const columns = Object.keys(newTick);
+  const columnNames = columns.map((c) => `"${c}"`).join(', ');
+  const placeholders = columns.map((c) => `@${c}`).join(', ');
+
+  const result = getDb()
+    .prepare(
+      `INSERT INTO climbing_ticks (${columnNames}) VALUES (${placeholders})`,
+    )
+    .run(newTick);
+
+  return result.lastInsertRowid;
 };
 
 const getAllTicks = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const result = await xataRestQuery<ClimbingTickDb>(
-    'SELECT * FROM climbing_ticks WHERE "osmUserId" = $1',
-    [user.id],
+  const statement = getDb().prepare<[number], ClimbingTickDb>(
+    'SELECT * FROM climbing_ticks WHERE "osmUserId" = ?',
   );
-  return result.rows;
+  return statement.all(user.id);
 };
 
 const performGetOrPost = async (req: NextApiRequest) => {
   if (req.method === 'GET') {
-    return getAllTicks(req);
+    return await getAllTicks(req);
   }
   if (req.method === 'POST') {
-    return addTickToDB(req);
+    return await addTickToDB(req);
   }
   throw new Error('Method not implemented.');
 };

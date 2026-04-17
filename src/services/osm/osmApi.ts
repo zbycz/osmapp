@@ -13,7 +13,6 @@ import {
   isPublictransportRoute,
   isRouteMaster,
 } from '../../utils';
-import { getOverpassUrl } from '../overpass/overpassSearch';
 import { getOsmHistoryUrl, getOsmUrl } from './urls';
 import { getOsmElement } from './quickFetchFeature';
 import { fetchParentFeatures } from './fetchParentFeatures';
@@ -22,6 +21,7 @@ import { getCountryCode } from './getCountryCode';
 import { getItemsMap, getMemberFeatures } from './helpers';
 import { getFullFeatureWithMemberFeatures } from './getFullFeatureWithMemberFeatures';
 import { OsmElement, OsmResponse } from './types';
+import { fetchOverpass } from '../overpass/fetchOverpass';
 
 export const getLastBeforeDeleted = async (
   e: FetchError,
@@ -150,8 +150,9 @@ const fetchFeatureWithCenter = async (apiId: OsmId) => {
 
 const addMemberFeaturesToArea = async (relation: Feature) => {
   const { osmMeta } = relation;
-  const url = getOverpassUrl(`[out:json];rel(${osmMeta.id});>>;out center qt;`);
-  const overpass = await fetchJson(url);
+  const fullQuery = `[out:json];rel(${osmMeta.id});>>;out center qt;`;
+
+  const overpass = await fetchOverpass(fullQuery);
   const itemsMap = getItemsMap(overpass.elements);
   const memberFeatures = getMemberFeatures(relation.members, itemsMap).map(
     (memberFeature) => {
