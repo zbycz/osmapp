@@ -59,7 +59,7 @@ export const convertMapIdToOsmId = (feature): OsmId | false => {
   // For point features (symbol/circle) we assume 'node'; for lines we assume 'way'.
   if (thunderforestTransportSources.has(feature.source)) {
     const rawId = Number(feature.id);
-    if (!rawId) return false;
+    if (!Number.isFinite(rawId) || rawId <= 0) return false;
     const geometryType = feature.geometry?.type as string | undefined;
     let type: OsmId['type'] = 'node';
     if (

@@ -192,7 +192,7 @@ export const useUpdateStyle = createMapEffectHook(
         })
         .catch((err) => {
           if (!cancelled)
-            console.error('transportVector style fetch failed', err); // eslint-disable-line no-console
+            console.error('transportVector style fetch failed for theme:', currentTheme, err); // eslint-disable-line no-console
         });
 
       return () => {
