@@ -165,6 +165,12 @@ export const osmappLayers: Layers = {
     darkUrl: `https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     Icon: DirectionsBusIcon,
   },
+  transportVector: {
+    name: `${t('layers.transport')} (vector)`,
+    secondLine: 'Thunderforest.com',
+    type: 'basemap',
+    Icon: DirectionsBusIcon,
+  },
   ...(process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL
     ? {
         indoor: {
