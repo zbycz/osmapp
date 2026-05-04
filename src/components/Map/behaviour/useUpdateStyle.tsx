@@ -23,6 +23,7 @@ import { isUrlForRasterLayer, layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import { emptyStyle } from '../styles/emptyStyle';
 import { fetchTransportVectorStyle } from '../styles/transportVectorStyle';
 import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
 import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
