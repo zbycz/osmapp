@@ -56,6 +56,18 @@ export const WAY = {
       nodes: [1, 2],
       tags: { amenity: 'school' },
     },
+    {
+      type: 'node',
+      id: 1,
+      lat: 49,
+      lon: 13,
+    },
+    {
+      type: 'node',
+      id: 2,
+      lat: 51,
+      lon: 15,
+    },
   ],
 };
 export const WAY_FEATURE = {
