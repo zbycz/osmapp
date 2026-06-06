@@ -30,7 +30,7 @@ export const getBbox = (coordinates: LonLat[]): NamedBbox => {
   );
 };
 
-const getCenterOfBbox = (points: LonLat[]): LonLat | undefined => {
+export const getCenterOfBbox = (points: LonLat[]): LonLat | undefined => {
   if (!points.length) return undefined;
 
   const { w, s, e, n } = getBbox(points);

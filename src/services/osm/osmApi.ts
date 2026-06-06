@@ -13,7 +13,8 @@ import {
   isPublictransportRoute,
   isRouteMaster,
 } from '../../utils';
-import { getOsmHistoryUrl, getOsmUrl } from './urls';
+import { getOsmFullUrl, getOsmHistoryUrl, getOsmUrl } from './urls';
+import { getCenterOfBbox } from '../getCenter';
 import { getOsmElement } from './quickFetchFeature';
 import { fetchParentFeatures } from './fetchParentFeatures';
 import { featureCenterCache } from './featureCenterToCache';
@@ -58,22 +59,6 @@ const getOsmPromise = async (apiId: OsmId) => {
   }
 };
 
-const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
-  if (apiId.type === 'node') return false;
-
-  if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
-    return featureCenterCache[getShortId(apiId)]; // just use the coordinate where user clicked
-  }
-
-  try {
-    return await fetchOverpassCenter(apiId);
-  } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn('getCenterPromise()', e); // eg. 529 too many requests
-    return false;
-  }
-};
-
 export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmUrl(apiId)); // watch out, must be same as in getOsmPromise()
   removeFetchCache(getOsmHistoryUrl(apiId));
@@ -97,6 +82,26 @@ const getRelationElementsAndCenter = async (apiId: OsmId) => {
   return { element, center };
 };
 
+const getWayElementsAndCenter = async (apiId: OsmId) => {
+  try {
+    const { elements } = await fetchJson<OsmResponse>(getOsmFullUrl(apiId)); // we use the nodes only to get center, then discard them
+    const itemsMap = getItemsMap(elements);
+    const element = itemsMap.way[apiId.id];
+    const coords = (element.nodes ?? [])
+      .map((ref) => itemsMap.node[ref])
+      .filter(Boolean)
+      .map((node): LonLat => [node.lon, node.lat]);
+    const center = getCenterOfBbox(coords) ?? (false as const);
+    return { element, center };
+  } catch (e) {
+    const undeleted = await getLastBeforeDeleted(e, apiId);
+    if (undeleted) {
+      return { element: undeleted, center: false as const };
+    }
+    throw e;
+  }
+};
+
 const getElementsAndCenter = async (apiId: OsmId) => {
   const cachedCenter = featureCenterCache[getShortId(apiId)];
   if (isBrowser() && cachedCenter) {
@@ -112,11 +117,7 @@ const getElementsAndCenter = async (apiId: OsmId) => {
         center: false as const,
       };
     case 'way':
-      const [elementWay, center] = await Promise.all([
-        getOsmPromise(apiId),
-        getCenterPromise(apiId),
-      ]);
-      return { element: elementWay, center };
+      return getWayElementsAndCenter(apiId);
     case 'relation':
       return getRelationElementsAndCenter(apiId);
   }
