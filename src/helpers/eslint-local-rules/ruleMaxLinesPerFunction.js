@@ -21,12 +21,16 @@ const parseGitDiff = (diffText) => {
   const result = {};
   let currentFile = null;
   for (const line of lines) {
-    if (line.startsWith('+++ b/')) {
-      const relativePath = line.replace('+++ b/', '');
-      currentFile = path.resolve(process.cwd(), relativePath);
-      if (!result[currentFile]) result[currentFile] = [];
+    if (line.startsWith('+++ ')) {
+      if (line.startsWith('+++ b/')) {
+        const relativePath = line.replace('+++ b/', '');
+        currentFile = path.resolve(process.cwd(), relativePath);
+        if (!result[currentFile]) result[currentFile] = [];
+      } else {
+        currentFile = null; // e.g. deleted files point to /dev/null
+      }
     }
-    if (line.startsWith('@@')) {
+    if (line.startsWith('@@') && currentFile) {
       const match = /@@ -\d+(?:,\d+)? \+(\d+)(?:,(\d+))? @@/.exec(line);
       if (match) {
         const start = parseInt(match[1], 10);

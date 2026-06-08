@@ -10,11 +10,16 @@ import { MembersEditor } from './FeatureEditSection/MembersEditor/MembersEditor'
 import React from 'react';
 import { ClimbingEditor } from './FeatureEditSection/ClimbingEditor/ClimbingEditor';
 import { Box } from '@mui/material';
-import { FieldsEditor } from './FeatureEditSection/FieldsEditor';
+import {
+  FieldsEditor,
+  useFieldsEditorEnabled,
+} from './FeatureEditSection/FieldsEditor';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
   const { shortId } = useCurrentItem();
+  const [fieldsEditorEnabled] = useFieldsEditorEnabled();
+
   if (toBeDeleted) {
     return (
       <>
@@ -28,8 +33,7 @@ export const ItemEditSection = () => {
     <>
       <ItemHeading />
       <PresetSelect />
-      <MajorKeysEditor />
-      <FieldsEditor />
+      {fieldsEditorEnabled ? <FieldsEditor /> : <MajorKeysEditor />}
       <ClimbingEditor />
       <ParentsEditor />
       <MembersEditor />

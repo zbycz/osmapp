@@ -18,6 +18,10 @@ import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect'
 import { t } from '../../services/intl';
 import { usePersistedState } from '../utils/usePersistedState';
 import { LOCAL_STORAGE_CACHE } from '../../services/fetchCache';
+import {
+  FIELDS_EDITOR_DEBUG_FLAG,
+  FIELDS_EDITOR_FLAG,
+} from '../FeaturePanel/EditDialog/EditContent/FeatureEditSection/FieldsEditor';
 
 type Props = {
   onClose: (event: unknown) => void;
@@ -71,6 +75,38 @@ const ShowAllClimbingOutlines = () => {
         checked={!!value}
       />
     </ListItem>
+  );
+};
+
+const FieldsEditorFlag = () => {
+  const [enabled, setEnabled] = usePersistedState(FIELDS_EDITOR_FLAG, false);
+  const [debug, setDebug] = usePersistedState(FIELDS_EDITOR_DEBUG_FLAG, false);
+
+  return (
+    <>
+      <ListItem>
+        <ListItemText>
+          Develop: use experimental iD-style fields editor (EditDialog)
+        </ListItemText>
+        <Switch
+          color="primary"
+          edge="end"
+          onChange={() => setEnabled((prev) => !prev)}
+          checked={!!enabled}
+        />
+      </ListItem>
+      {enabled && (
+        <ListItem sx={{ paddingLeft: 4 }}>
+          <ListItemText>Develop: show field type debug captions</ListItemText>
+          <Switch
+            color="primary"
+            edge="end"
+            onChange={() => setDebug((prev) => !prev)}
+            checked={!!debug}
+          />
+        </ListItem>
+      )}
+    </>
   );
 };
 
@@ -226,6 +262,7 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
 
           <StoreRequests />
           <ShowAllClimbingOutlines />
+          <FieldsEditorFlag />
         </List>
       </DialogContent>
     </Dialog>
