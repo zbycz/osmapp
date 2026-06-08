@@ -61,11 +61,10 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         run: |
           mkdir ~/.ssh
-          echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H "$DEPLOY_HOST" >> ~/.ssh/known_hosts
+          echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519 && chmod 600 ~/.ssh/id_ed25519
+          echo -e "Host vps\n  HostName $DEPLOY_HOST\n  Port 11122\n  User nodeuser\n  StrictHostKeyChecking accept-new" > ~/.ssh/config && chmod 600 ~/.ssh/config
 
           cd .next/standalone
           zip -q -r "build-$RUN_ID.zip" ./
-          rsync -avz "build-$RUN_ID.zip" nodeuser@"$DEPLOY_HOST":/app/
-          ssh nodeuser@"$DEPLOY_HOST" "/app/deploy.sh $RUN_ID"
+          rsync -avz "build-$RUN_ID.zip" vps:/app/
+          ssh vps "/app/deploy.sh $RUN_ID"
