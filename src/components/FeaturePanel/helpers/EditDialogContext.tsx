@@ -17,6 +17,14 @@ type EditDialogType = {
 
 const EditDialogContext = createContext<EditDialogType>(undefined);
 
+const getFeatureEditUrl = () => {
+  const path = Router.query.all as string[] | undefined;
+  if (path?.[0]?.match(/^node|way|relation$/) && path?.[1]?.match(/^\d+$/)) {
+    return { featureUrl: `/${path[0]}/${path[1]}`, editUrl: `/${path[0]}/${path[1]}/edit` };
+  }
+  return null;
+};
+
 // lives in App.tsx because the context is needed in SSR
 export const EditDialogProvider = ({ children }) => {
   const initialState = isBrowser() ? Router.query.all?.[2] === 'edit' : false;
@@ -28,16 +36,29 @@ export const EditDialogProvider = ({ children }) => {
       Router.replace('/').then(() => {
         Router.replace(redirectOnClose); // to reload the panel, we need two redirects, see https://github.com/zbycz/osmapp/pull/685
       });
+    } else if ((Router.query.all as string[])?.[2] === 'edit') {
+      const urls = getFeatureEditUrl();
+      if (urls) {
+        Router.replace(urls.featureUrl, undefined, { shallow: true });
+      }
     }
     setOpened(false);
     setRedirectOnClose(undefined);
   };
 
+  const openEdit = (value: boolean | Tag) => {
+    const urls = getFeatureEditUrl();
+    if (urls && (Router.query.all as string[])?.[2] !== 'edit') {
+      Router.push(urls.editUrl, undefined, { shallow: true });
+    }
+    setOpened(value);
+  };
+
   const value: EditDialogType = {
     opened: !!opened,
     focusTag: opened,
-    open: () => setOpened(true),
-    openWithTag: (tag: Tag) => setOpened(tag),
+    open: () => openEdit(true),
+    openWithTag: (tag: Tag) => openEdit(tag),
     close,
     redirectOnClose,
     setRedirectOnClose,
