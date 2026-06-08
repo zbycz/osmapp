@@ -28,7 +28,6 @@ const isEditDeeplink = () => {
   return EDIT_DEEPLINK_REGEX.test(window.location.pathname);
 };
 
-// when the dialog was opened via the /edit deeplink, drop the suffix on close
 const removeEditDeeplink = () => {
   if (!isBrowser()) {
     return;
