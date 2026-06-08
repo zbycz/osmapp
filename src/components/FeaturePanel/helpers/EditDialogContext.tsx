@@ -21,14 +21,10 @@ const EDIT_DEEPLINK_REGEX =
   /^\/(?:[a-z]{2}\/)?(?:node|way|relation)\/\d+\/edit\/?$/i;
 
 const isEditDeeplink = () => {
-  if (!isBrowser()) {
-    return false;
-  }
   if (Router.query.all?.[2] === 'edit') {
     return true;
   }
-  // In the hacky static export the page is served from 404.html, so Router.query
-  // is not yet populated on the first render – fall back to the real browser URL.
+  // hacky static export:
   return EDIT_DEEPLINK_REGEX.test(window.location.pathname);
 };
 
