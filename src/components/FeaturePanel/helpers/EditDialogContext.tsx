@@ -17,6 +17,9 @@ type EditDialogType = {
 
 const EditDialogContext = createContext<EditDialogType>(undefined);
 
+const EDIT_DEEPLINK_REGEX =
+  /^\/(?:[a-z]{2}\/)?(?:node|way|relation)\/\d+\/edit\/?$/i;
+
 const isEditDeeplink = () => {
   if (!isBrowser()) {
     return false;
@@ -26,9 +29,21 @@ const isEditDeeplink = () => {
   }
   // In the hacky static export the page is served from 404.html, so Router.query
   // is not yet populated on the first render – fall back to the real browser URL.
-  return /^\/(?:[a-z]{2}\/)?(?:node|way|relation)\/\d+\/edit\/?$/i.test(
-    window.location.pathname,
-  );
+  return EDIT_DEEPLINK_REGEX.test(window.location.pathname);
+};
+
+// when the dialog was opened via the /edit deeplink, drop the suffix on close
+const removeEditDeeplink = () => {
+  if (!isBrowser()) {
+    return;
+  }
+  const { pathname, search, hash } = window.location;
+  if (EDIT_DEEPLINK_REGEX.test(pathname)) {
+    const cleanPathname = pathname.replace(/\/edit\/?$/, '');
+    Router.replace(`${cleanPathname}${search}${hash}`, undefined, {
+      shallow: true,
+    });
+  }
 };
 
 // lives in App.tsx because the context is needed in SSR
@@ -42,6 +57,8 @@ export const EditDialogProvider = ({ children }) => {
       Router.replace('/').then(() => {
         Router.replace(redirectOnClose); // to reload the panel, we need two redirects, see https://github.com/zbycz/osmapp/pull/685
       });
+    } else {
+      removeEditDeeplink();
     }
     setOpened(false);
     setRedirectOnClose(undefined);
