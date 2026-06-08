@@ -3,6 +3,29 @@ import Router from 'next/router';
 import { isBrowser } from '../../helpers';
 import { Setter } from '../../../types';
 
+const EDIT_DEEPLINK_REGEX =
+  /^\/(?:[a-z]{2}\/)?(?:node|way|relation)\/\d+\/edit\/?$/i;
+
+const isEditDeeplink = () => {
+  if (!isBrowser()) {
+    return;
+  }
+  if (Router.query.all?.[2] === 'edit') {
+    return true;
+  }
+  return EDIT_DEEPLINK_REGEX.test(window.location.pathname); // hacky static export
+};
+
+const removeEditDeeplink = () => {
+  const { pathname, search, hash } = window.location;
+  if (EDIT_DEEPLINK_REGEX.test(pathname)) {
+    const cleanPathname = pathname.replace(/\/edit\/?$/, '');
+    Router.replace(`${cleanPathname}${search}${hash}`, undefined, {
+      shallow: true,
+    });
+  }
+};
+
 type Tag = string;
 
 type EditDialogType = {
@@ -19,7 +42,7 @@ const EditDialogContext = createContext<EditDialogType>(undefined);
 
 // lives in App.tsx because the context is needed in SSR
 export const EditDialogProvider = ({ children }) => {
-  const initialState = isBrowser() ? Router.query.all?.[2] === 'edit' : false;
+  const initialState = isEditDeeplink();
   const [opened, setOpened] = useState<boolean | Tag>(initialState);
   const [redirectOnClose, setRedirectOnClose] = useState<string | undefined>();
 
@@ -28,6 +51,8 @@ export const EditDialogProvider = ({ children }) => {
       Router.replace('/').then(() => {
         Router.replace(redirectOnClose); // to reload the panel, we need two redirects, see https://github.com/zbycz/osmapp/pull/685
       });
+    } else {
+      removeEditDeeplink();
     }
     setOpened(false);
     setRedirectOnClose(undefined);
