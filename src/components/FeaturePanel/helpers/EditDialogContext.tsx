@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import Router from 'next/router';
 import { isBrowser } from '../../helpers';
 import { Setter } from '../../../types';
@@ -53,6 +53,20 @@ export const EditDialogProvider = ({ children }) => {
     }
     setOpened(value);
   };
+
+  // Handle static export: fakeStaticExportStartup navigates to the actual URL after
+  // mount, so initialState may have been computed before the router was ready.
+  useEffect(() => {
+    const syncWithUrl = () => {
+      if ((Router.query.all as string[])?.[2] === 'edit') {
+        setOpened((prev) => prev || true);
+      }
+    };
+
+    syncWithUrl(); // catch case where router wasn't ready at mount
+    Router.events.on('routeChangeComplete', syncWithUrl);
+    return () => Router.events.off('routeChangeComplete', syncWithUrl);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const value: EditDialogType = {
     opened: !!opened,

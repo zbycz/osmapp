@@ -1,0 +1,51 @@
+name: E2E – Edit deep link
+
+on:
+  push:
+    branches:
+      - claude/issue-1489-PDr2b
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+
+      - name: Install deps
+        run: yarn install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: npx playwright install chromium --with-deps
+
+      - name: Build (same env as hacky-static-export)
+        run: |
+          export VERCEL_GIT_COMMIT_SHA="$(git rev-parse HEAD)"
+          export VERCEL_GIT_COMMIT_MESSAGE="$(git log -1 --pretty=%B)"
+          export NEXT_PUBLIC_FAKE_STATIC_EXPORT=true
+          export NEXT_PUBLIC_FORCE_PROJECT=osmapp.org
+          export NEXT_PUBLIC_OG_IMAGE_FETCHER_HOST=https://osmapp-preview.vercel.app
+          yarn build
+
+      - name: Start server
+        run: yarn start &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 30000
+
+      - name: Run Playwright tests
+        run: npx playwright test e2e/edit-deeplink.spec.ts --reporter=list
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7
