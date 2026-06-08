@@ -17,9 +17,23 @@ type EditDialogType = {
 
 const EditDialogContext = createContext<EditDialogType>(undefined);
 
+const isEditDeeplink = () => {
+  if (!isBrowser()) {
+    return false;
+  }
+  if (Router.query.all?.[2] === 'edit') {
+    return true;
+  }
+  // In the hacky static export the page is served from 404.html, so Router.query
+  // is not yet populated on the first render – fall back to the real browser URL.
+  return /^\/(?:[a-z]{2}\/)?(?:node|way|relation)\/\d+\/edit\/?$/i.test(
+    window.location.pathname,
+  );
+};
+
 // lives in App.tsx because the context is needed in SSR
 export const EditDialogProvider = ({ children }) => {
-  const initialState = isBrowser() ? Router.query.all?.[2] === 'edit' : false;
+  const initialState = isEditDeeplink();
   const [opened, setOpened] = useState<boolean | Tag>(initialState);
   const [redirectOnClose, setRedirectOnClose] = useState<string | undefined>();
 
