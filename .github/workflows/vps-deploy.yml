@@ -19,7 +19,7 @@ concurrency:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04-arm
     environment: VPS
     steps:
       - name: Checkout
