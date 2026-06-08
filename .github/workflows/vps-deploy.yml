@@ -11,7 +11,7 @@ on:
         required: true
         default: 'master'
   push:
-    branches: [master]
+    branches: [master, deploy-test]
 
 concurrency:
   group: production-vps-deploy
