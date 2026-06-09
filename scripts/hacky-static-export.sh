@@ -26,14 +26,18 @@ cp -r public "$OUT"
 mkdir -p "$OUT/_next"
 cp -r .next/static "$OUT/_next"
 
-yarn start &
+yarn start > /dev/null 2>&1 &
 SERVER_PID=$!
 cleanup() { kill "$SERVER_PID" 2>/dev/null || true; }
 trap cleanup EXIT
-for i in $(seq 1 5); do sleep 1; curl -sf localhost:3000 > /dev/null 2>&1 && break; done
+for i in $(seq 1 5); do curl -sf localhost:3000/node/6 > /dev/null 2>&1 && break; sleep 5; done
 
 echo "> Checking SSR..."
-curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)" && echo "SSR OK" || exit 1
+if curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)"; then
+    echo "SSR OK"
+else
+    echo "SSR FAILED"; exit 1
+fi
 
 echo "> Get index.html and 404.html..."
 curl -s --cookie "hideHomepage=yes" localhost:3000 > "$OUT/index.html"
