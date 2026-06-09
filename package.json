@@ -13,7 +13,7 @@
     "build": "next build",
     "start": "next start",
     "dist": "next build && next export -o dist",
-    "hacky-static-export": "bash .github/workflows/build-static-export.sh",
+    "hacky-static-export": "bash scripts/hacky-static-export.sh",
     "postinstall": "copyfiles -u 2 node_modules/maplibre-gl-indoorequal/sprite/* public/icons-indoor/"
   },
   "husky": {

@@ -30,7 +30,7 @@ jobs:
       - name: Install deps
         run: yarn install --frozen-lockfile
 
-      - name: Build next.js (hacky static export)
+      - name: Run hacky-static-export
         run: yarn hacky-static-export
 
       - name: Setup Pages
