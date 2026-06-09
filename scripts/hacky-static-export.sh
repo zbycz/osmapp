@@ -35,6 +35,9 @@ trap cleanup EXIT
 echo "> Waiting for server to start..."
 for i in $(seq 1 9); do curl -sf http://localhost:3000 > /dev/null 2>&1 && break; sleep 1; done
 
+echo "> Checking SSR..."
+curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)" && echo "SSR OK"
+
 echo "> Get index.html and 404.html..."
 curl -s --cookie "hideHomepage=yes" http://localhost:3000 > "$OUT/index.html"
 curl -s --cookie "hideHomepage=yes" http://localhost:3000 > "$OUT/404.html"
@@ -50,4 +53,4 @@ mkdir -p "$OUT/node/1601837931"
 curl -s --cookie "hideHomepage=yes" http://localhost:3000/node/1601837931 > "$OUT/node/1601837931/index.html"
 
 echo ""
-echo "Done. Output in: $OUT"
+echo "Output in: $OUT"
