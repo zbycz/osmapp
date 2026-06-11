@@ -2,6 +2,7 @@ import { OsmId } from '../../services/types';
 import { isBrowser } from '../helpers';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
+import { thunderforestTransportSources } from './styles/transportVectorStyle';
 
 type OsmappMetadata = { clickableWithOsmId?: boolean };
 
@@ -53,6 +54,24 @@ export const getIsOsmObject = ({ id, layer }) => {
 
 export const convertMapIdToOsmId = (feature): OsmId | false => {
   if (!feature || !feature.id) return false;
+
+  // Thunderforest transport tiles use raw OSM IDs (no last-digit type encoding).
+  // For point features (symbol/circle) we assume 'node'; for lines we assume 'way'.
+  if (thunderforestTransportSources.has(feature.source)) {
+    const rawId = Number(feature.id);
+    if (!Number.isFinite(rawId) || rawId <= 0) return false;
+    const geometryType = feature.geometry?.type as string | undefined;
+    let type: OsmId['type'] = 'node';
+    if (
+      geometryType === 'LineString' ||
+      geometryType === 'MultiLineString' ||
+      geometryType === 'Polygon' ||
+      geometryType === 'MultiPolygon'
+    ) {
+      type = 'way';
+    }
+    return { id: rawId, type };
+  }
 
   const mapTypeToOsm =
     feature.source === 'ofr_planet'

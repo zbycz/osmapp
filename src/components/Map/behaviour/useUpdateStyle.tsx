@@ -24,6 +24,7 @@ import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
+import { fetchTransportVectorStyle } from '../styles/transportVectorStyle';
 import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
 import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
 import { ShowToast } from '../../utils/SnackbarContext';
@@ -169,6 +170,36 @@ export const useUpdateStyle = createMapEffectHook(
     const osmappLayerMinZoom = osmappLayers[key]?.minzoom;
     const userLayerMinZoom = userLayers.find(({ url }) => url === key)?.minzoom;
     map.setMinZoom(osmappLayerMinZoom ?? userLayerMinZoom ?? 0);
+
+    // Thunderforest transport vector style must be fetched asynchronously.
+    if (key === 'transportVector') {
+      let cancelled = false;
+
+      fetchTransportVectorStyle(currentTheme)
+        .then((baseStyle) => {
+          if (cancelled) return;
+
+          const style = cloneDeep(baseStyle);
+          addOverlaysToStyle(map, style, overlays, currentTheme);
+          style.projection = { type: 'globe' };
+          map.setStyle(style, { diff: false });
+
+          const languageControl = new OpenMapTilesLanguage({
+            defaultLanguage: intl.lang,
+          });
+          map.addControl(languageControl);
+
+          setUpHover(map, layersWithOsmId(style));
+        })
+        .catch((err) => {
+          if (!cancelled)
+            console.error('transportVector style fetch failed for theme:', currentTheme, err); // eslint-disable-line no-console
+        });
+
+      return () => {
+        cancelled = true;
+      };
+    }
 
     const style = cloneDeep(getBaseStyle(key, currentTheme));
     addOverlaysToStyle(map, style, overlays, currentTheme);
