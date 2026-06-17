@@ -28,12 +28,30 @@ cp -r .next/static "$OUT/_next"
 
 yarn start > /dev/null 2>&1 &
 SERVER_PID=$!
-cleanup() { kill "$SERVER_PID" 2>/dev/null || true; }
+# Killing only the yarn wrapper ($SERVER_PID) leaves the actual `next-server`
+# listener orphaned on port 3000. A stale server then keeps answering and makes
+# the SSR check below validate outdated output on the next run. So also kill
+# whatever is really listening on the port, plus its render-worker children.
+cleanup() {
+  local listener
+  listener="$(lsof -tiTCP:3000 -sTCP:LISTEN 2>/dev/null | head -n1 || true)"
+  if [ -n "$listener" ]; then
+    pkill -P "$listener" 2>/dev/null || true
+    kill "$listener" 2>/dev/null || true
+  fi
+  kill "$SERVER_PID" 2>/dev/null || true
+}
 trap cleanup EXIT
 for i in $(seq 1 5); do curl -sf localhost:3000/node/6 > /dev/null 2>&1 && break; sleep 5; done
 
 echo "> Checking SSR..."
-if curl --silent --fail localhost:3000/node/6 | grep -q "Originally Detonátor route (this message used for SSR check)"; then
+# Capture the whole response before grepping: piping curl into `grep -q` makes
+# grep close the pipe on its first match, so curl gets SIGPIPE and exits non-zero
+# while still writing the body. Under `set -o pipefail` that fails the pipeline
+# and reports "SSR FAILED" even though the string was found (passes when run by
+# hand without pipefail). A here-string avoids the pipe entirely.
+SSR_HTML="$(curl --silent --fail localhost:3000/node/6 || true)"
+if grep -q "Originally Detonátor route (this message used for SSR check)" <<< "$SSR_HTML"; then
     echo "SSR OK"
 else
     echo "SSR FAILED"; exit 1
