@@ -29,6 +29,7 @@ export default {
   'user_settings.crag_view_layout_vertical': 'Vedle sebe',
   'user_settings.crag_view_layout_horizontal': 'Pod sebou',
   'user_settings.crag_view_layout_auto': 'Automaticky (podle rozlišení)',
+  'user_settings.is_imperial': 'Použít imperiální jednotky (vyžaduje obnovení)',
 
   'climbing_renderer.climbing_grade_single': 'obtížnost cesty',
   'climbing_renderer.climbing_grade_average': 'průměrná obtížnost cest',
