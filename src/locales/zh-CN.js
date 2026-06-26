@@ -35,7 +35,7 @@ export default {
   'user_settings.crag_view_layout_vertical': '并排',
   'user_settings.crag_view_layout_horizontal': '上下',
   'user_settings.crag_view_layout_auto': '自动（根据分辨率）',
-  'user_settings.is_imperial': '使用英制单位',
+  'user_settings.is_imperial': '使用英制单位（需要重新加载）',
 
   'my_ticks.title': '我的完攀记录',
   'my_ticks.route_name': '路线名称',
