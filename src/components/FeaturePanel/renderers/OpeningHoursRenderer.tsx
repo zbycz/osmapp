@@ -42,7 +42,9 @@ const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
 const formatTimes = (times: string[]) =>
   times.length
-    ? times.map((x) => (isImperialUnits() ? x.replace(/:00/g, '') : x)).join(', ')
+    ? times
+        .map((x) => (isImperialUnits() ? x.replace(/:00/g, '') : x))
+        .join(', ')
     : '-';
 
 const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
