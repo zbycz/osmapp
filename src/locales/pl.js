@@ -41,6 +41,7 @@ export default {
   'homepage.maptiler': 'za niesamowite mapy wektorowe i za wsparcie dla tego projektu ❤️ ',
 
   'searchbox.placeholder': 'Przeszukaj OpenStreetMap',
+  'user_settings.is_imperial': 'Użyj jednostek imperialnych (wymagane przeładowanie)',
 
   'featurepanel.no_name': 'Brak nazwy',
   'featurepanel.share_button': 'Udostępnij',

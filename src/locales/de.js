@@ -19,7 +19,7 @@ export default {
   'user_settings.general': 'Allgemein',
   'user_settings.show_weather_widget': 'Zeige das Wetter an',
   'user_settings.climbing': 'Klettern',
-  'user_settings.is_imperial': 'Nutze imperiale Einheiten',
+  'user_settings.is_imperial': 'Nutze imperiale Einheiten (Reload erforderlich)',
 
   'my_ticks.title': 'Meine Begehungen',
   'my_ticks.route_name': 'Name',

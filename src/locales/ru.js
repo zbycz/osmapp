@@ -34,7 +34,7 @@ export default {
   'user_settings.crag_view_layout_vertical': 'Рядом',
   'user_settings.crag_view_layout_horizontal': 'Один под другим',
   'user_settings.crag_view_layout_auto': 'Авто (по разрешению)',
-  'user_settings.is_imperial': 'Использовать имперские единицы',
+  'user_settings.is_imperial': 'Использовать имперские единицы (требуется перезагрузка)',
 
   'my_ticks.title': 'Мои пролазы',
   'my_ticks.route_name': 'Маршрут',

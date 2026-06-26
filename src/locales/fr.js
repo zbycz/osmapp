@@ -48,6 +48,7 @@ export default {
   'homepage.maptiler': 'pour de superbes cartes vectorielles et son support pour ce projet ❤️',
 
   'searchbox.placeholder': 'Recherche OpenStreetMap',
+  'user_settings.is_imperial': 'Utiliser les unités impériales (rechargement requis)',
 
   'featurepanel.no_name': 'Sans nom',
   'featurepanel.share_button': 'Partager',

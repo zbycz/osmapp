@@ -34,7 +34,7 @@ export default {
   'user_settings.crag_view_layout_vertical': 'Side by side',
   'user_settings.crag_view_layout_horizontal': 'Underneath',
   'user_settings.crag_view_layout_auto': 'Auto (according to resolution)',
-  'user_settings.is_imperial': 'Use imperial units',
+  'user_settings.is_imperial': 'Use imperial units (reload needed)',
 
   'my_ticks.title': 'My ticks',
   'my_ticks.route_name': 'Name',

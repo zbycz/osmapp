@@ -18,6 +18,7 @@ export default {
   'install.desktop_install': '<strong>የመጫኛ ቁልፍ</strong>ን ጫን ያድርጉ',
   'install.outro': ' ይኼው ነው ተጠናቋል! OsmAPP የሚለውን ምልክት በዋና ገፅዎ ላይ ይፈልጋል.',
   'install.note': 'ማስታወሻ: ይህ አፕሊኬሽን PWA ቴክኖሎጂን ይጠቀማል – ይህም Google Play or App Store መጠቀም ሳያስፈልግ በፈጣኑ መጫን የሚችል ነው።',
+  'user_settings.is_imperial': 'ኢምፔሪያል ዩኒት ተጠቀም (ገጽ ዳግም ማስጫን ያስፈልጋል)',
 
   'project.osmapp.description': 'ዓለማቀፍ OpenStreetMap አፕሊኬሽን',
   'homepage.how_to_start': 'ጥያቄዎን በመፈለጊያ ሳጥን ውስጥ መፃፍ ይጅምሩ.\n ወይንም ማንኛውንም በካርታው ላይ የሚገኝ ምልክት ጫን ያድርጉ ',
