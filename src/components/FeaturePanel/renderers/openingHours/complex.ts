@@ -18,8 +18,16 @@ const weekdayMappings: Record<string, Weekday> = {
   Sat: 'sa',
 };
 
+export const isImperialUnits = () =>
+  !!JSON.parse(global?.window?.localStorage.getItem('userSettings') ?? '{}')
+    ?.isImperial;
+
 const fmtDate = (d: Date) =>
-  d.toLocaleTimeString(intl.lang, { hour: 'numeric', minute: 'numeric' });
+  d.toLocaleTimeString(intl.lang, {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: isImperialUnits(),
+  });
 
 const fmtDateRange = ([start, end]: DateRange) => {
   if (isMidnight(start) && isMidnight(end)) {

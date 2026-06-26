@@ -7,7 +7,7 @@ import { ToggleButton } from '../helpers/ToggleButton';
 import { parseOpeningHours } from './openingHours';
 import { SimpleOpeningHoursTable } from './openingHours/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { Status } from './openingHours/complex';
+import { isImperialUnits, Status } from './openingHours/complex';
 
 const Table = styled.table`
   margin: 1em;
@@ -41,7 +41,9 @@ const StatusText = styled.span<{ status: Status }>`
 const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
 const formatTimes = (times: string[]) =>
-  times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
+  times.length
+    ? times.map((x) => (isImperialUnits() ? x.replace(/:00/g, '') : x)).join(', ')
+    : '-';
 
 const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
   const timesByDay = Object.values(days);
