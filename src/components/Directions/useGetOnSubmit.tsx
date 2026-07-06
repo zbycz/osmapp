@@ -53,9 +53,12 @@ export const useReactToUrl = (
     if (mode && options.length >= 2) {
       setMode(mode);
       setPoints(options);
-      handleRouting(mode, options.map(getOptionToLonLat))
-        .then(setResult)
-        .catch(getRoutingFailed(showToast));
+      const filledOptions = options.filter(Boolean);
+      if (filledOptions.length >= 2) {
+        handleRouting(mode, filledOptions.map(getOptionToLonLat))
+          .then(setResult)
+          .catch(getRoutingFailed(showToast));
+      }
     } else {
       if (initialModeWasSet.current === false && getLastMode()) {
         setMode(getLastMode());

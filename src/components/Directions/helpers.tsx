@@ -20,7 +20,10 @@ export const splitByFirstTilda = (str: string) => {
   return [str.slice(0, index), str.slice(index + 1)];
 };
 
+const EMPTY_POINT_PLACEHOLDER = '-';
+
 const getOptionToUrl = (point: Option) => {
+  if (!point) return EMPTY_POINT_PLACEHOLDER;
   const lonLat = getOptionToLonLat(point);
   return `${lonLat.join(',')}~${getOptionLabel(point)}`;
 };
@@ -30,11 +33,19 @@ export const buildUrl = (mode: 'car' | 'bike' | 'walk', points: Option[]) => {
   return encodeUrl`/directions/${mode}/${urlParts}`;
 };
 
+export const buildDirectionsUrl = (
+  mode: 'car' | 'bike' | 'walk',
+  to: Option,
+) => {
+  return encodeUrl`/directions/${mode}/${EMPTY_POINT_PLACEHOLDER}/${getOptionToUrl(to)}`;
+};
+
 const urlCoordsToLonLat = (coords: string) =>
   coords.split(',').map(Number) as LonLat;
 
 export const parseUrlParts = (urlParts: string[]): Option[] =>
   urlParts.map((urlPart) => {
+    if (urlPart === EMPTY_POINT_PLACEHOLDER) return null;
     const [coords, label] = splitByFirstTilda(urlPart);
     return getDirectionsCoordsOption(urlCoordsToLonLat(coords), label);
   });
