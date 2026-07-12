@@ -43,8 +43,12 @@ export const mockSchemaTranslations = (mockTranslations) => {
 export const getPresetTranslation = (key: string): string =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
-export const getPresetTermsTranslation = (key: string) =>
-  translations?.[intl.lang]?.presets?.presets?.[key]?.terms ?? '';
+export const getPresetTermsTranslation = (key: string): string[] => {
+  const terms = translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
+  if (Array.isArray(terms)) return terms; // id-tagging-schema v7+
+  if (typeof terms === 'string') return terms.split(','); // v6 CSV string
+  return [];
+};
 
 export const getAllTranslations = () => translations?.[intl.lang];
 
