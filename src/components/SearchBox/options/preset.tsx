@@ -41,7 +41,7 @@ const getPresetsForSearch = async () => {
         tags,
         tagsAsOneString: tagsAsStrings.join(', '),
         texts: [
-          ...getPresetTermsTranslation(presetKey).split(','),
+          ...getPresetTermsTranslation(presetKey),
           ...tagsAsStrings,
           presetKey,
         ],
