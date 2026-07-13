@@ -9,13 +9,20 @@ import { getOurTranslations } from './ourPresets';
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
+// Pinned to the same major as the `@openstreetmap/id-tagging-schema` dependency
+// in package.json (bump both together) - an unpinned `latest` silently pulled
+// in a breaking change to the `terms` format once (see getPresetTermsTranslation).
+const CDN_VERSION_RANGE = '7';
+
 // TODO download up-to-date or use node_module?
 let translations = {};
 export const fetchSchemaTranslations = async () => {
   if (translations[intl.lang]) return;
 
   try {
-    const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
+    const presetsPackage = await fetchJson(
+      `${cdnUrl}@${CDN_VERSION_RANGE}/package.json`,
+    );
     const { version } = presetsPackage;
 
     // this request is cached in browser
