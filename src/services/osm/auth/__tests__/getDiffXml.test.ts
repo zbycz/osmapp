@@ -48,6 +48,33 @@ test('should convert nodes', () => {
   );
 });
 
+const nodeCancelledWithAddress = {
+  shortId: 'n8888',
+  version: 3,
+  tagsEntries: [
+    ['amenity', 'cafe'],
+    ['name', 'Coffee'],
+    ['addr:street', 'Main'],
+  ],
+  toBeDeleted: true,
+  nodeLonLat: [14, 50],
+} as DataItem;
+
+const cancelledXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<osmChange generator="OsmAPP" version="0.6">
+  <create/>
+  <modify>
+    <node id="8888" lon="14" lat="50" version="3" changeset="123">
+      <tag k="addr:street" v="Main"/>
+    </node>
+  </modify>
+  <delete if-unused="true"/>
+</osmChange>`;
+
+test('should keep the address instead of deleting a cancelled place', () => {
+  expect(getDiffXml([nodeCancelledWithAddress], '123')).toEqual(cancelledXml);
+});
+
 const wayNew = {
   shortId: 'w-1',
   version: undefined,

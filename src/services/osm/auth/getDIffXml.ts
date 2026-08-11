@@ -7,6 +7,10 @@ import {
 } from './xmlTypes';
 import { xmljsBuildOsmChange } from './xmlHelpers';
 import { DataItem } from '../../../components/FeaturePanel/EditDialog/context/types';
+import {
+  getFinalTagsEntries,
+  willBeDeleted,
+} from '../../../components/FeaturePanel/EditDialog/context/placeCancelled';
 
 const isNode = ({ shortId }: DataItem) => shortId.startsWith('n');
 const isWay = ({ shortId }: DataItem) => shortId.startsWith('w');
@@ -17,18 +21,20 @@ const TAG = ([k, v]: [string, string]) => k && v;
 type Changeset = {} | { changeset: string };
 
 const nodeItemToXml = (change: DataItem, changeset: Changeset): NodeItemXml => {
-  const { shortId, version = 0, tagsEntries, nodeLonLat } = change;
+  const { shortId, version = 0, nodeLonLat } = change;
   const { id } = getApiId(shortId);
   const [lon, lat] = nodeLonLat;
 
   return {
     $: { id, lon, lat, version, ...changeset },
-    tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
+    tag: getFinalTagsEntries(change)
+      .filter(TAG)
+      .map(([k, v]) => ({ $: { k, v } })),
   };
 };
 
 const wayItemToXml = (change: DataItem, changeset: Changeset): WayItemXml => {
-  const { shortId, version = 0, tagsEntries, nodes } = change;
+  const { shortId, version = 0, nodes } = change;
   const { id } = getApiId(shortId);
 
   if (!nodes) {
@@ -37,7 +43,9 @@ const wayItemToXml = (change: DataItem, changeset: Changeset): WayItemXml => {
 
   return {
     $: { id, version, ...changeset },
-    tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
+    tag: getFinalTagsEntries(change)
+      .filter(TAG)
+      .map(([k, v]) => ({ $: { k, v } })),
     nd: nodes.map((ref) => ({ $: { ref } })),
   };
 };
@@ -46,12 +54,14 @@ const relationItemToXml = (
   change: DataItem,
   changeset: Changeset,
 ): RelationItemXml => {
-  const { shortId, version = 0, tagsEntries, members } = change;
+  const { shortId, version = 0, members } = change;
   const { id } = getApiId(shortId);
 
   return {
     $: { id, version, ...changeset },
-    tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
+    tag: getFinalTagsEntries(change)
+      .filter(TAG)
+      .map(([k, v]) => ({ $: { k, v } })),
     member: members.map(({ shortId, role }) => {
       const { type, id } = getApiId(shortId);
       return { $: { type, ref: id, role } };
@@ -60,12 +70,11 @@ const relationItemToXml = (
 };
 
 const isNew = ({ shortId }: DataItem) => shortId.includes('-');
-const isDeleted = ({ toBeDeleted }: DataItem) => toBeDeleted;
 const condition = {
-  _ignore_: (item: DataItem) => isNew(item) && isDeleted(item),
-  create: (item: DataItem) => isNew(item) && !isDeleted(item),
-  delete: (item: DataItem) => !isNew(item) && isDeleted(item),
-  modify: (item: DataItem) => !isNew(item) && !isDeleted(item),
+  _ignore_: (item: DataItem) => isNew(item) && item.toBeDeleted,
+  create: (item: DataItem) => isNew(item) && !item.toBeDeleted,
+  delete: (item: DataItem) => !isNew(item) && willBeDeleted(item),
+  modify: (item: DataItem) => !isNew(item) && !willBeDeleted(item),
 };
 
 const getXmlByAction = (

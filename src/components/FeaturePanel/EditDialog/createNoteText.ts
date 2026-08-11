@@ -1,13 +1,15 @@
 import { getApiId, getUrlOsmId } from '../../../services/helpers';
 import { EditDataItem } from './context/types';
+import { getFinalTagsEntries, willBeDeleted } from './context/placeCancelled';
 
-export const createNoteText = (
-  change: EditDataItem,
-  location: string,
-  note: string,
-  isUndelete: boolean,
-) => {
-  const { tags, toBeDeleted, originalState: orig } = change;
+const getPlaceCancelledText = (change: EditDataItem) =>
+  willBeDeleted(change)
+    ? '! Place was marked permanently closed – the object should be deleted.'
+    : '! Place was marked permanently closed – only the address should be kept.';
+
+const getTagsDiff = (change: EditDataItem) => {
+  const orig = change.originalState;
+  const tags = Object.fromEntries(getFinalTagsEntries(change));
 
   const isAdded = ([k, v]) => v && !orig.tags[k];
   const isRemoved = ([k, v]) => v && !tags[k];
@@ -16,7 +18,18 @@ export const createNoteText = (
   const changedTags = Object.entries(tags).filter(
     ([k, v]) => !isAdded([k, v]) && v && v !== orig.tags[k],
   );
-  const changeOrAddedTags = [...addedTags, ...changedTags];
+
+  return { changeOrAddedTags: [...addedTags, ...changedTags], removedTags };
+};
+
+export const createNoteText = (
+  change: EditDataItem,
+  location: string,
+  note: string,
+  isUndelete: boolean,
+) => {
+  const { toBeDeleted } = change;
+  const { changeOrAddedTags, removedTags } = getTagsDiff(change);
 
   const noteText = [];
   if (change.shortId.includes('-')) {
@@ -36,7 +49,7 @@ export const createNoteText = (
     noteText.push('! Suggested undelete');
   }
   if (toBeDeleted) {
-    noteText.push('! Place was marked permanently closed.');
+    noteText.push(getPlaceCancelledText(change));
   }
   if (location || change.nodeLonLat) {
     noteText.push('Suggested location change:');

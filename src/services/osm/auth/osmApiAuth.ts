@@ -15,6 +15,7 @@ import {
   DataItem,
   Members,
 } from '../../../components/FeaturePanel/EditDialog/context/types';
+import { willBeDeleted } from '../../../components/FeaturePanel/EditDialog/context/placeCancelled';
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
@@ -30,13 +31,22 @@ export const getChangesetXml = ({ changesetComment, feature }) => {
     </osm>`;
 };
 
+const getAction = (cancelledItem: DataItem | undefined, original: Feature) => {
+  if (original.deleted) {
+    return 'Undeleted';
+  }
+  if (cancelledItem) {
+    return willBeDeleted(cancelledItem) ? 'Deleted' : 'Closed';
+  }
+  return 'Edited';
+};
+
 const getChangesetComment = (
   comment: string,
-  toBeDeleted: boolean,
+  cancelledItem: DataItem | undefined,
   original: Feature,
 ) => {
-  const undelete = original.deleted;
-  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
+  const action = getAction(cancelledItem, original);
   const name = getLabel(original) || getUrlOsmId(original.osmMeta);
   const description = `${action} ${name}`;
   return join(comment, ' • ', `${description} #osmapp`);
@@ -97,8 +107,13 @@ const getCommentMulti = (
     return join(comment, ' • ', `Added ${label} #osmapp${suffix}`);
   }
 
-  const toBeDeleted = changes.length === 1 && changes[0].toBeDeleted;
-  const changesetComment = getChangesetComment(comment, toBeDeleted, original);
+  const cancelledItem =
+    changes.length === 1 && changes[0].toBeDeleted ? changes[0] : undefined;
+  const changesetComment = getChangesetComment(
+    comment,
+    cancelledItem,
+    original,
+  );
   return `${changesetComment}${suffix}`;
 };
 
