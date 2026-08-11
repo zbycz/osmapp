@@ -1,15 +1,18 @@
 import React from 'react';
-import { Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Alert, Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useEditDialogFeature } from '../../utils';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import { t, Translation } from '../../../../../services/intl';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { useToggleState } from '../../../../helpers';
 import { getIdEditorLink } from '../../../helpers/externalLinks';
+import { getKeptTagsEntries } from '../../context/placeCancelled';
 
-// TODO don't delete objects, but only remove their Preset tags https://github.com/zbycz/osmapp/issues/222
 export const PlaceCancelledToggle = () => {
-  const { toBeDeleted, toggleToBeDeleted } = useCurrentItem();
+  const item = useCurrentItem();
+  const { toBeDeleted, toggleToBeDeleted } = item;
+  const keptTagsEntries = getKeptTagsEntries(item.tagsEntries);
+
   return (
     <>
       <FormControlLabel
@@ -18,6 +21,26 @@ export const PlaceCancelledToggle = () => {
         }
         label={t('editdialog.place_cancelled')}
       />
+      {toBeDeleted && (
+        <Alert severity="info" sx={{ mb: 1 }}>
+          {keptTagsEntries.length ? (
+            <>
+              {t('editdialog.place_cancelled_kept_tags')}
+              <ul style={{ margin: '4px 0 0', paddingLeft: 20 }}>
+                {keptTagsEntries.map(([k, v]) => (
+                  <li key={k}>
+                    <code>
+                      {k}={v}
+                    </code>
+                  </li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            t('editdialog.place_cancelled_deleted')
+          )}
+        </Alert>
+      )}
       <br />
     </>
   );
