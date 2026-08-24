@@ -4,6 +4,7 @@ import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
+  isWideResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
 
@@ -65,12 +66,6 @@ const globalStyle = (theme: Theme) => css`
     user-select: none;
     -webkit-user-select: none;
   }
-  .maplibregl-ctrl-bottom-right {
-    bottom: 50px !important;
-  }
-  .edit-feature-map .maplibregl-ctrl-bottom-right {
-    bottom: 0px !important;
-  }
   .maplibregl-ctrl-scale {
     background-color: hsla(0, 0%, 100%, 0.5) !important;
   }
@@ -114,13 +109,17 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: 60px !important;
+    top: 114px !important;
 
     @media ${isTabletResolution} {
-      top: 0px !important;
+      top: 54px !important;
     }
 
     @media ${isDesktopResolution} {
+      top: 118px !important;
+    }
+
+    @media ${isWideResolution} {
       top: 64px !important;
     }
   }
