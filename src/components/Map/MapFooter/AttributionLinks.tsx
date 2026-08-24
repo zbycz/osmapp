@@ -6,7 +6,7 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
 import { isUrlForRasterLayer } from '../helpers';
 
-export const Attribution = ({ label, link, title }) => (
+const Attribution = ({ label, link, title }) => (
   <>
     ©{' '}
     <Tooltip arrow title={title}>
