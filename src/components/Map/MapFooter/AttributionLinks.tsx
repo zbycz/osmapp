@@ -6,7 +6,7 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
 import { isUrlForRasterLayer } from '../helpers';
 
-export const Attribution = ({ label, link, title }) => (
+const Attribution = ({ label, link, title }) => (
   <>
     ©{' '}
     <Tooltip arrow title={title}>
@@ -31,7 +31,7 @@ const OsmAttribution = () => {
   return (
     <Attribution
       label={short ? 'OSM' : 'OpenStreetMap'}
-      link="https://www.openstreetmap.org/"
+      link="https://www.openstreetmap.org/copyright"
       title={<Translation id="map.osm_copyright_tooltip" />}
     />
   );
