@@ -66,12 +66,6 @@ const globalStyle = (theme: Theme) => css`
     user-select: none;
     -webkit-user-select: none;
   }
-  .maplibregl-ctrl-bottom-left {
-    bottom: 50px !important;
-  }
-  .edit-feature-map .maplibregl-ctrl-bottom-left {
-    bottom: 0px !important;
-  }
   .maplibregl-ctrl-scale {
     background-color: hsla(0, 0%, 100%, 0.5) !important;
   }

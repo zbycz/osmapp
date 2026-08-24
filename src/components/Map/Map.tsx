@@ -59,7 +59,7 @@ const TopRight = styled.div`
 const BottomLeft = styled.div`
   position: absolute;
   left: 6px;
-  bottom: 6px;
+  bottom: 34px;
   pointer-events: none;
   z-index: 998;
 `;
