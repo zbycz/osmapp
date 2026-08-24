@@ -24,9 +24,9 @@ const StyledLayerSwitcher = styled.button<{
 
   @media ${isWideResolution} {
     width: auto;
-    height: auto;
+    height: 40px;
     border-radius: 40px;
-    padding: 2px 20px 2px 16px;
+    padding: 0 20px 0 16px;
   }
 
   border: 0;
