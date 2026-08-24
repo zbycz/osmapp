@@ -1,35 +1,33 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { css } from '@emotion/react';
 
 import { t } from '../../services/intl';
-import { useMobileMode } from '../helpers';
+import { isWideResolution } from '../helpers';
 import { convertHexToRgba } from '../utils/colorUtils';
-import { Typography, Tooltip } from '@mui/material';
+import { Typography, Tooltip, useMediaQuery } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 
 const StyledLayerSwitcher = styled.button<{
-  $isMobileMode: boolean;
   $isOpened: boolean;
 }>`
   margin: 0;
-  padding: 2px 20px 2px 16px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  padding: 0;
   display: flex;
   gap: 8px;
   align-items: center;
+  justify-content: center;
   flex-direction: row;
   pointer-events: all;
-  ${({ $isMobileMode }) =>
-    $isMobileMode
-      ? css`
-          width: 44px;
-          height: 44px;
-          border-radius: 50%;
-          padding: 0;
-        `
-      : css`
-          border-radius: 40px;
-        `}
+
+  @media ${isWideResolution} {
+    width: auto;
+    height: auto;
+    border-radius: 40px;
+    padding: 2px 20px 2px 16px;
+  }
 
   border: 0;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
@@ -53,6 +51,14 @@ const StyledLayerSwitcher = styled.button<{
   }
 `;
 
+const Label = styled(Typography)`
+  display: none;
+
+  @media ${isWideResolution} {
+    display: inline-block;
+  }
+`;
+
 export const LayerSwitcherButton = ({
   onClick,
   isOpened,
@@ -60,19 +66,13 @@ export const LayerSwitcherButton = ({
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   isOpened?: boolean;
 }) => {
-  const isMobileMode = useMobileMode(); // TODO this could be done with media queries, is there a reason why it is not?
+  const isWide = useMediaQuery(isWideResolution);
 
   return (
-    <Tooltip title={isMobileMode ? t('layerswitcher.button') : null} arrow>
-      <StyledLayerSwitcher
-        onClick={onClick}
-        $isMobileMode={isMobileMode}
-        $isOpened={isOpened}
-      >
+    <Tooltip title={isWide ? null : t('layerswitcher.button')} arrow>
+      <StyledLayerSwitcher onClick={onClick} $isOpened={isOpened}>
         <MapIcon />
-        {!isMobileMode && (
-          <Typography variant="button">{t('layerswitcher.button')}</Typography>
-        )}
+        <Label variant="button">{t('layerswitcher.button')}</Label>
       </StyledLayerSwitcher>
     </Tooltip>
   );

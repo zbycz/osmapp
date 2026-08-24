@@ -5,6 +5,7 @@ import { HamburgerMenu } from './HamburgerMenu';
 
 const Wrapper = styled.span`
   vertical-align: top;
+  pointer-events: all;
   display: none; // we hide it on mobile by mediaquery, so it don't jump
 
   margin-top: -10px;

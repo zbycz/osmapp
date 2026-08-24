@@ -4,6 +4,7 @@ import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
+  isWideResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
 
@@ -114,13 +115,17 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: 60px !important;
+    top: 114px !important;
 
     @media ${isTabletResolution} {
-      top: 0px !important;
+      top: 54px !important;
     }
 
     @media ${isDesktopResolution} {
+      top: 118px !important;
+    }
+
+    @media ${isWideResolution} {
       top: 64px !important;
     }
   }

@@ -3,8 +3,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
 import BugReport from '@mui/icons-material/BugReport';
-import { Button, CircularProgress, Stack } from '@mui/material';
-import { isDesktop } from '../helpers';
+import { Button, CircularProgress } from '@mui/material';
+import { isDesktop, isWideResolution } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
@@ -36,13 +36,23 @@ const Spinner = styled(CircularProgress)`
 
 const TopRight = styled.div`
   position: absolute;
-  z-index: 100;
+  z-index: 1000;
   padding: 10px;
-  right: -4px;
+  right: 0;
   top: 62px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  gap: 8px;
 
   @media ${isDesktop} {
     top: 0;
+  }
+
+  @media ${isWideResolution} {
+    flex-direction: row;
+    align-items: center;
   }
 `;
 
@@ -90,14 +100,10 @@ const Map = () => {
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>
+        <LayerSwitcherDynamic />
         <TopMenu />
       </TopRight>
-      <BottomLeft>
-        <Stack direction="row" alignItems="center" gap={1}>
-          {hasClimbingLayer && <MapFilter />}
-          <LayerSwitcherDynamic />
-        </Stack>
-      </BottomLeft>
+      <BottomLeft>{hasClimbingLayer && <MapFilter />}</BottomLeft>
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
