@@ -32,7 +32,7 @@ export const MapDataLink = () => {
         <Attribution
           key={attribution}
           label={short ? 'OSM' : 'OpenStreetMap'}
-          link="https://www.openstreetmap.org/"
+          link="https://www.openstreetmap.org/copyright"
           title={<Translation id="map.osm_copyright_tooltip" />}
         />
       );
