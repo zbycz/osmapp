@@ -48,21 +48,21 @@ const TopRight = styled.div`
 
 const BottomLeft = styled.div`
   position: absolute;
-  bottom: 0;
-  pointer-events: none;
-  z-index: 999;
-  left: 0px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 0 0 4px 4px;
-`;
-const BottomRight = styled.div`
-  position: absolute;
-  right: 6px;
+  left: 6px;
   bottom: 6px;
   pointer-events: none;
   z-index: 998;
+`;
+const BottomRight = styled.div`
+  position: absolute;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 999;
+  right: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 0 4px 4px 0;
 `;
 
 const BugReportButton = () => (
@@ -93,16 +93,16 @@ const Map = () => {
         <TopMenu />
       </TopRight>
       <BottomLeft>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
-        <MaptilerLogo />
-        <Weather />
-        <MapFooter />
-      </BottomLeft>
-      <BottomRight>
         <Stack direction="row" alignItems="center" gap={1}>
           {hasClimbingLayer && <MapFilter />}
           <LayerSwitcherDynamic />
         </Stack>
+      </BottomLeft>
+      <BottomRight>
+        {SHOW_PROTOTYPE_UI && <BugReportButton />}
+        <MaptilerLogo />
+        <Weather />
+        <MapFooter />
       </BottomRight>
     </>
   );
