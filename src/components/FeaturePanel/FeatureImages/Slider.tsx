@@ -43,20 +43,23 @@ const ArrowButton = styled.button<{ $side: 'left' | 'right' }>`
   border: 0;
   border-radius: 50%;
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(2px);
+  background-color: transparent;
   cursor: pointer;
 
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease-out;
+  transition:
+    opacity 0.2s ease-out,
+    background-color 0.15s ease-out;
 
   svg {
-    font-size: 18px;
+    font-size: 20px;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.5))
+      drop-shadow(0 1px 3px rgba(0, 0, 0, 0.9));
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.65);
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
   ${SliderWrapper}:hover & {
