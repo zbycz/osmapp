@@ -54,4 +54,10 @@ describe('parseComplexOpeningHours', () => {
     setUp('en', true);
     expect(daysTable('Mo-Su 09:00-00:00').mo).toEqual(['9:00 AM-12:00 AM']);
   });
+
+  it('does not cut off an interval at the end of the displayed week', () => {
+    // the last day of the week window used to be truncated at midnight
+    expect(daysTable('Mo-Su 19:00-01:00').tu).toEqual(['19:00-01:00']);
+    expect(daysTable('Mo-Su 19:00-01:00').th).toEqual(['19:00-01:00']);
+  });
 });
