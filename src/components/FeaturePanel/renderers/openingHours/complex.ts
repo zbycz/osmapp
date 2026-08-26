@@ -56,7 +56,9 @@ const getMinsDiff = (date: Date) =>
 
 export type Status = 'opens-soon' | 'closes-soon' | 'opened' | 'closed';
 
-const getStatus = (interval: [Date, Date, boolean, string] | null): Status => {
+type OpenInterval = [Date, Date, boolean, string];
+
+const getStatus = (interval: OpenInterval | null): Status => {
   if (!interval) {
     return 'closed';
   }
@@ -91,7 +93,7 @@ const splitByDay = (interval: DateRange) =>
     return isEqual(d2, splitPoint) || isAfter(d2, splitPoint);
   });
 
-const getDaysTable = (intervals: DateRange[], until: Date) => {
+const getDaysTable = (intervals: OpenInterval[], until: Date) => {
   const splittedIntervals = intervals
     .flatMap(([openingDate, endDate]) => splitByDay([openingDate, endDate]))
     .filter(([from]) => from < until);
