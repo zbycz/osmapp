@@ -29,12 +29,26 @@ const fmtDate = (d: Date) =>
     hour12: isImperialUnits(),
   });
 
+// midnight at the end of an interval is written as 24:00 (like in the OSM syntax), not as 0:00
+const fmtMidnightAsEndOfDay = (d: Date) =>
+  new Intl.DateTimeFormat(intl.lang, {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: false,
+  })
+    .formatToParts(d)
+    .map(({ type, value }) => (type === 'hour' ? '24' : value))
+    .join('');
+
+const fmtEndDate = (d: Date) =>
+  isMidnight(d) && !isImperialUnits() ? fmtMidnightAsEndOfDay(d) : fmtDate(d);
+
 const fmtDateRange = ([start, end]: DateRange) => {
   if (isMidnight(start) && isMidnight(end)) {
     return t('opening_hours.all_day');
   }
 
-  return `${fmtDate(start)}-${fmtDate(end)}`;
+  return `${fmtDate(start)}-${fmtEndDate(end)}`;
 };
 
 const getMinsDiff = (date: Date) =>
