@@ -1515,10 +1515,10 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
-"@openstreetmap/id-tagging-schema@^6.12.0":
-  version "6.12.0"
-  resolved "https://registry.yarnpkg.com/@openstreetmap/id-tagging-schema/-/id-tagging-schema-6.12.0.tgz#963c0340850b4e40680a87344fea89e90b9a1a70"
-  integrity sha512-uAe0YyXv/QjQGhudc2FBmTg+TT+mks8H8p1FlN/hby9KKpvF9CwLU/ZLe3oDqK0jye6t3GlJ9HAyN/hxk7fTwQ==
+"@openstreetmap/id-tagging-schema@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@openstreetmap/id-tagging-schema/-/id-tagging-schema-7.0.1.tgz#c383d34ba993ad7488f485cb8fd64e548e8022ce"
+  integrity sha512-y58T1905O3SJZlf3SLjhKkxxLsZAvYRNpmjE8zsag39lHh23f0IC20wNRDGrl9iUcBdD8zNs5Z/DxEDa3+Fbcg==
 
 "@opentelemetry/api-logs@0.53.0":
   version "0.53.0"

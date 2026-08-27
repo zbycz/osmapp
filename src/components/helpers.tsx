@@ -114,6 +114,9 @@ export const isDesktop = '(min-width: 500px)';
 export const isTabletResolution = '(min-width: 501px)';
 export const isDesktopResolution = '(min-width: 701px)';
 
+// (>= 800px) LayerSwitcher button shows its label and fits next to the HamburgerMenu
+export const isWideResolution = '(min-width: 800px)';
+
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
   isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error

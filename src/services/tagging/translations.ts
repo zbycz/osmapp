@@ -9,13 +9,20 @@ import { getOurTranslations } from './ourPresets';
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
+// Pinned to the same major as the `@openstreetmap/id-tagging-schema` dependency
+// in package.json (bump both together) - an unpinned `latest` silently pulled
+// in a breaking change to the `terms` format once (see getPresetTermsTranslation).
+const CDN_VERSION_RANGE = '7';
+
 // TODO download up-to-date or use node_module?
 let translations = {};
 export const fetchSchemaTranslations = async () => {
   if (translations[intl.lang]) return;
 
   try {
-    const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
+    const presetsPackage = await fetchJson(
+      `${cdnUrl}@${CDN_VERSION_RANGE}/package.json`,
+    );
     const { version } = presetsPackage;
 
     // this request is cached in browser
@@ -43,8 +50,12 @@ export const mockSchemaTranslations = (mockTranslations) => {
 export const getPresetTranslation = (key: string): string =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
-export const getPresetTermsTranslation = (key: string) =>
-  translations?.[intl.lang]?.presets?.presets?.[key]?.terms ?? '';
+export const getPresetTermsTranslation = (key: string): string[] => {
+  const terms = translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
+  if (Array.isArray(terms)) return terms;
+  if (typeof terms === 'string') return terms ? terms.split(',') : [];
+  return [];
+};
 
 export const getAllTranslations = () => translations?.[intl.lang];
 

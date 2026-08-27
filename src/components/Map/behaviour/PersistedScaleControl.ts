@@ -52,7 +52,7 @@ export const usePersistedScaleControl = (
     });
 
     try {
-      map.addControl(scaleControl, 'bottom-right');
+      map.addControl(scaleControl, 'bottom-left');
     } catch {}
 
     return () => {
