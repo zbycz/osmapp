@@ -37,6 +37,7 @@ import { setIntlForSSR, t } from '../src/services/intl';
 import { Feature } from '../src/services/types';
 import { ResponsiveFeaturePanel } from '../src/components/FeaturePanel/ResponsiveFeaturePanel';
 import { Climbing } from '../src/components/Climbing/Climbing';
+import { DirectionsDeeplink } from '../src/components/Directions/DirectionsDeeplink';
 import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
@@ -121,6 +122,7 @@ const MyApp = (props: Props) => {
                             <ResponsiveFeaturePanel />
                             <HomepagePanel />
                             <Climbing />
+                            <DirectionsDeeplink />
                             <Map />
                             <TitleAndMetaTags />
 
