@@ -25,7 +25,7 @@ const EMPTY_POINT_PLACEHOLDER = '-';
 const getOptionToUrl = (point: Option) => {
   if (!point) return EMPTY_POINT_PLACEHOLDER;
   const lonLat = getOptionToLonLat(point);
-  return `${lonLat.join(',')}~${getOptionLabel(point)}`;
+  return `${lonLat.map((c) => c.toFixed(5)).join(',')}~${getOptionLabel(point)}`;
 };
 
 export const buildUrl = (mode: 'car' | 'bike' | 'walk', points: Option[]) => {
