@@ -2,7 +2,7 @@
   "name": "osmapp",
   "version": "1.9.0",
   "engines": {
-    "node": "^22"
+    "node": "^24"
   },
   "scripts": {
     "dev": "next",
