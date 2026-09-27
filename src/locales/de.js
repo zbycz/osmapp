@@ -1,5 +1,5 @@
 // identifier should be in the form: foldername.messageid.
-
+//
 export default {
   loading: 'Lade',
   error: 'Fehler',
