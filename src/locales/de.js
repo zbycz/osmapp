@@ -50,17 +50,17 @@ export default {
     'Eine wiki-basierte Open-Source-Kletterkarte mit Topos. Basierend auf den OpenStreetMap- und Wikipedia-Projekten.',
 
   'install.button': 'App installieren',
-  'install.tabs_aria_label': 'Platform wählen',
+  'install.tabs_aria_label': 'Plattform wählen',
   'install.ios_intro': 'osmapp.org im <strong>Safari Browser</strong> öffnen',
   'install.ios_share': 'Drücke das <strong>Teilen Icon</strong>',
-  'install.ios_add': 'Drücke <strong>Zum Startbildschirm zufügen</strong>',
+  'install.ios_add': 'Drücke <strong>Zum Startbildschirm hinzufügen</strong>',
   'install.android_intro': 'Öffne osmapp.org in <strong>Chrome oder Firefox Browser</strong>',
   'install.android_share': 'Drücke das <strong>Drei-Punkte Menü</strong>',
   'install.android_add': 'Drücke <strong>App installieren</strong>',
-  'install.desktop_intro': 'Öffne osmapp.org in <strong>Chrome</strong>, <strong>FirefoxOS</strong> oder <strong>Opera</strong>',
+  'install.desktop_intro': 'Öffne osmapp.org in <strong>Chrome</strong>, <strong>Firefox</strong> oder <strong>Opera</strong>',
   'install.desktop_install': 'Drücke die Schaltfläche <strong>Installieren</strong>',
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
-  'install.note': 'Hinweis: Diese App verwendet die PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
+  'install.note': 'Hinweis: Diese App verwendet die PWA-Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
   'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld ein.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.go_to_map_button': 'Gehe zur Karte',
@@ -107,7 +107,7 @@ export default {
   'featurepanel.details_heading': 'Weitere Informationen',
   'featurepanel.all_tags_heading': 'Alle Tags',
   'featurepanel.edit_button_title': 'In OpenStreetMap Datenbank bearbeiten',
-  'featurepanel.note_button': 'Schlage eine Änderung vor.',
+  'featurepanel.note_button': 'Schlage eine Änderung vor',
   'featurepanel.edit_button': 'Ort bearbeiten',
   'featurepanel.add_place_button': 'Ort hinzufügen',
   'featurepanel.undelete_button': 'Löschen rückgängig machen',
@@ -130,7 +130,7 @@ export default {
   'opening_hours.closed_now': 'Geschlossen',
   'opening_hours.opens': 'Öffnet: __todayTime__',
   'opening_hours.today_closed': 'Heute geschlossen',
-  'opening_hours.opens_soon': 'Öfnet bald',
+  'opening_hours.opens_soon': 'Öffnet bald',
   'opening_hours.opens_soon_today': 'Öffnet bald: __todayTime__',
   'opening_hours.closes_soon': 'Schließt bald',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag',
@@ -162,9 +162,9 @@ export default {
   'editdialog.changes_needed': 'Bitte nimm ein paar Änderungen vor.',
   'editdialog.osm_session_expired': 'Deine OpenStreetMap-Sitzung ist abgelaufen. Bitte melde Dich erneut an.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
-  'editdialog.logout': 'logout',
+  'editdialog.logout': 'Logout',
   'editdialog.anonymousMessage':
-    'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt. Wenn du dich auf OpenStreetMap einloggst, werden deine Änderungen direkt gespeichert.',
+    'Eine <b>anonyme</b> Notiz wird der Karte hinzugefügt. Wenn Du dich auf OpenStreetMap einloggst, werden deine Änderungen direkt gespeichert.',
   'editdialog.add_major_tag': 'Hinzufügen',
   'editdialog.location_checkbox': 'Position ändern',
   'editdialog.location_placeholder': 'z.B. gegenüber auf der Straße',
@@ -176,9 +176,9 @@ export default {
   'editdialog.info_edit': `Deine Änderungen werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
   von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, urheberrechtlich geschützte Informationen
   (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
-  'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap Projektes bearbeitet. Hier
+  'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap-Projektes bearbeitet. Hier
   kannst du weitere Hinweise oder Beschreibungen der neuen Position usw. hinzufügen.
-  Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (web,
+  Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (Web,
     Foto, etc.) zu versehen.`,
   'editdialog.other_tags_heading': 'Weitere Eigenschaften – Tags',
   'editdialog.tags_editor': 'Alle Eigenschaften – Tags',
@@ -188,20 +188,20 @@ export default {
 
   'editsuccess.close_button': 'Schließen',
   'editsuccess.note.heading': 'Danke für deinen Hinweis!',
-  'editsuccess.note.subheading': 'Freiwillige des OpenStreetMap Projekts werden diesen mit der Zeit bearbeiten.',
+  'editsuccess.note.subheading': 'Freiwillige des OpenStreetMap-Projekts werden diesen mit der Zeit bearbeiten.',
   'editsuccess.note.body': 'Normalerweise dauert dies ein paar Tage, allerdings kann es an Orten ohne aktive Community auch sehr lange dauern.',
   'editsuccess.note.urlLabel': 'Du kannst hier weitere Informationen hinzufügen und Aktualisierungen verfolgen:',
   'editsuccess.note.textLabel': 'Notiz',
   'editsuccess.edit.heading': 'Danke für deine Bearbeitung!',
   'editsuccess.edit.subheading': 'Deine Änderung erscheint auf Karten auf der ganzen Welt.',
-  'editsuccess.edit.body': `Die Änderung ist bereits in der OSM Datenbank gespeichert. Du wirst diese auf der "OSM Carto" Karte in wenigen Minuten sehen können.
+  'editsuccess.edit.body': `Die Änderung ist bereits in der OSM-Datenbank gespeichert. Du wirst diese auf der "OSM Carto" Karte in wenigen Minuten sehen können.
   Die OsmAPP Karte und verschiedene anderen Karten werden ca. einmal im Monat aktualisiert.
   <br/><br/>Wenn dies ein Versehen war, kannst du die Werte manuell rückgängig machen und erneut speichern.`,
   'editsuccess.edit.urlLabel': `Deine Änderungen:`,
   'editsuccess.edit.textLabel': 'Kommentar',
 
   'tags.name': 'Name',
-  'tags.website': 'Website',
+  'tags.website': 'Webseite',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Öffnungszeiten',
 
@@ -220,7 +220,7 @@ export default {
   'layerswitcher.category_osmbasedmap': 'Normale Ebene',
   'layerswitcher.compatible_license': 'Lizenz kompatibel für die Bearbeitung von OpenStreetMap',
   'layerswitcher.layers_in_area': 'Für Ebenen in diesem Bereich filtern',
-  'layerswitcher.explaination': 'Bitte fügen Sie {z}, {x}, {y} oder {bbox-epsg-3857} ein',
+  'layerswitcher.explaination': 'Bitte füge {z}, {x}, {y} oder {bbox-epsg-3857} ein',
 
   'layers.basic': 'Standard',
   'layers.makina_africa': 'OpenPlaceGuide Afrika',
