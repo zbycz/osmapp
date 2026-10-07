@@ -54,13 +54,23 @@ const fmtDateRange = ([start, end]: DateRange) => {
 const getMinsDiff = (date: Date) =>
   Math.round((date.getTime() - new Date().getTime()) / 60000);
 
-export type Status = 'opens-soon' | 'closes-soon' | 'opened' | 'closed';
+export type Status =
+  | 'opens-soon'
+  | 'closes-soon'
+  | 'opened'
+  | 'closed'
+  | 'maybe';
 
 type OpenInterval = [Date, Date, boolean, string];
 
 const getStatus = (interval: OpenInterval | null): Status => {
   if (!interval) {
     return 'closed';
+  }
+
+  // the third value marks the interval state as unknown (e.g. "by appointment")
+  if (interval[2]) {
+    return 'maybe';
   }
 
   const opensInMins = getMinsDiff(interval[0]);
@@ -132,12 +142,11 @@ export const parseComplexOpeningHours = (
   queryEnd.setDate(queryEnd.getDate() + 1);
 
   const allIntervals = oh.getOpenIntervals(today, queryEnd);
-  const intervals = allIntervals.filter(([_, __, maybe]) => !maybe);
-  const daysTable = getDaysTable(intervals, oneWeekLater);
+  const daysTable = getDaysTable(allIntervals, oneWeekLater);
 
   // intervals are sorted from the present to the future
   // so the first one is either currently opened or the next opened slot
-  const relevantInterval = intervals.find(
+  const relevantInterval = allIntervals.find(
     ([, endDate]) => endDate > new Date(),
   );
 

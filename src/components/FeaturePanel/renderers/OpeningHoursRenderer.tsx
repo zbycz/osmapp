@@ -31,6 +31,8 @@ const StatusText = styled.span<{ status: Status }>`
         return '#ff9800'; // orange
       case 'closes-soon':
         return '#ffc107'; // amber/yellow
+      case 'maybe':
+        return '#9e9e9e'; // grey
       default:
         return 'inherit';
     }
@@ -75,8 +77,45 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
         : { statusText: t('opening_hours.opens_soon'), time: null };
     case 'closes-soon':
       return { statusText: t('opening_hours.closes_soon'), time: null };
+    case 'maybe':
+      return isOpenedToday
+        ? {
+            statusText: t('opening_hours.maybe_open_today', {
+              todayTime: '',
+            }).trim(),
+            time: todayTime,
+          }
+        : { statusText: t('opening_hours.maybe_open'), time: null };
   }
 };
+
+type DayRow = { day: string; times: string[] };
+
+const getDaysStartingToday = (
+  daysTable: SimpleOpeningHoursTable,
+  currentDay: number,
+): DayRow[] => {
+  const { ph, ...days } = daysTable;
+  const timesByDay = Object.values(days).map((times, idx) => ({
+    times,
+    day: weekDays[idx],
+  }));
+
+  return [...timesByDay.slice(currentDay), ...timesByDay.slice(0, currentDay)];
+};
+
+const OpeningHoursTable = ({ days }: { days: DayRow[] }) => (
+  <Table>
+    <tbody>
+      {days.map(({ day, times }) => (
+        <tr key={day}>
+          <th>{day}</th>
+          <td>{formatTimes(times)}</td>
+        </tr>
+      ))}
+    </tbody>
+  </Table>
+);
 
 export const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
@@ -91,17 +130,8 @@ export const OpeningHoursRenderer = ({ v }) => {
 
   const { daysTable, status, maybeReasons } = openingHours;
 
-  const { ph, ...days } = daysTable;
-  const timesByDay = Object.values(days).map((times, idx) => ({
-    times,
-    day: weekDays[idx],
-  }));
-
   const currentDay = new Date().getDay();
-  const daysStartingToday = [
-    ...timesByDay.slice(currentDay),
-    ...timesByDay.slice(0, currentDay),
-  ];
+  const daysStartingToday = getDaysStartingToday(daysTable, currentDay);
 
   const description = formatDescription(status, daysTable);
 
@@ -115,22 +145,11 @@ export const OpeningHoursRenderer = ({ v }) => {
         {maybeReasons.length > 0 && (
           <>
             <br />
-            Maybe: {maybeReasons.join(' or ')}
+            {t('opening_hours.maybe')}: {maybeReasons.join(' or ')}
           </>
         )}
         <ToggleButton onClick={toggle} isShown={isExpanded} />
-        {isExpanded && (
-          <Table>
-            <tbody>
-              {daysStartingToday.map(({ day, times }) => (
-                <tr key={day}>
-                  <th>{day}</th>
-                  <td>{formatTimes(times)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        )}
+        {isExpanded && <OpeningHoursTable days={daysStartingToday} />}
       </div>
     </>
   );
