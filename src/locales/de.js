@@ -133,6 +133,8 @@ export default {
   'opening_hours.opens_soon': 'Öffnet bald',
   'opening_hours.opens_soon_today': 'Öffnet bald: __todayTime__',
   'opening_hours.closes_soon': 'Schließt bald',
+  'opening_hours.maybe_open': 'Vielleicht geöffnet',
+  'opening_hours.maybe_open_today': 'Vielleicht geöffnet: __todayTime__',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag',
   'opening_hours.editor.closed': 'Geschlossen',
   'opening_hours.editor.create_advanced': 'Du kannst detailliertere Öffnungszeiten im <link>YoHours-Tool</link> erstellen.',
