@@ -206,7 +206,6 @@ export default {
   'opening_hours.opens_soon': 'Opens soon',
   'opening_hours.opens_soon_today': 'Opens soon: __todayTime__',
   'opening_hours.closes_soon': 'Closes soon',
-  'opening_hours.maybe': 'Maybe',
   'opening_hours.maybe_open': 'Maybe open',
   'opening_hours.maybe_open_today': 'Maybe open: __todayTime__',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',

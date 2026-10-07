@@ -89,16 +89,19 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
   }
 };
 
-type DayRow = { day: string; times: string[] };
+type DayRow = { day: string; times: string[]; reasons: string[] };
 
 const getDaysStartingToday = (
   daysTable: SimpleOpeningHoursTable,
+  maybeReasonsByDay: SimpleOpeningHoursTable,
   currentDay: number,
 ): DayRow[] => {
   const { ph, ...days } = daysTable;
+  const { ph: _, ...dayReasons } = maybeReasonsByDay;
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,
     day: weekDays[idx],
+    reasons: Object.values(dayReasons)[idx],
   }));
 
   return [...timesByDay.slice(currentDay), ...timesByDay.slice(0, currentDay)];
@@ -107,10 +110,13 @@ const getDaysStartingToday = (
 const OpeningHoursTable = ({ days }: { days: DayRow[] }) => (
   <Table>
     <tbody>
-      {days.map(({ day, times }) => (
+      {days.map(({ day, times, reasons }) => (
         <tr key={day}>
           <th>{day}</th>
-          <td>{formatTimes(times)}</td>
+          <td>
+            {formatTimes(times)}
+            {reasons.length > 0 && ` (${reasons.join(' or ')})`}
+          </td>
         </tr>
       ))}
     </tbody>
@@ -128,10 +134,14 @@ export const OpeningHoursRenderer = ({ v }) => {
   });
   if (!openingHours) return null;
 
-  const { daysTable, status, maybeReasons } = openingHours;
+  const { daysTable, maybeReasonsByDay, status, maybeReasons } = openingHours;
 
   const currentDay = new Date().getDay();
-  const daysStartingToday = getDaysStartingToday(daysTable, currentDay);
+  const daysStartingToday = getDaysStartingToday(
+    daysTable,
+    maybeReasonsByDay,
+    currentDay,
+  );
 
   const description = formatDescription(status, daysTable);
 
@@ -144,8 +154,7 @@ export const OpeningHoursRenderer = ({ v }) => {
           `${description.timeSeparator ?? ' '}${description.time}`}
         {maybeReasons.length > 0 && (
           <>
-            <br />
-            {t('opening_hours.maybe')}: {maybeReasons.join(' or ')}
+            <br />({maybeReasons.join(' or ')})
           </>
         )}
         <ToggleButton onClick={toggle} isShown={isExpanded} />

@@ -105,19 +105,42 @@ const splitByDay = (interval: DateRange) =>
 
 const getDaysTable = (intervals: OpenInterval[], until: Date) => {
   const splittedIntervals = intervals
-    .flatMap(([openingDate, endDate]) => splitByDay([openingDate, endDate]))
-    .filter(([from]) => from < until);
+    .flatMap(([openingDate, endDate, maybe, reason]) =>
+      splitByDay([openingDate, endDate]).map((range) => ({
+        range,
+        maybe,
+        reason,
+      })),
+    )
+    .filter(({ range: [from] }) => from < until);
 
   const grouped = WEEKDAYS.map((w) => {
     const daysIntervals = splittedIntervals.filter(
-      ([from]) =>
+      ({ range: [from] }) =>
         w === weekdayMappings[from.toLocaleString('en', { weekday: 'short' })],
     );
 
-    return [w, daysIntervals.map(fmtDateRange)] as const;
+    return [
+      w,
+      {
+        times: daysIntervals.map(({ range }) => fmtDateRange(range)),
+        reasons: uniq(
+          daysIntervals
+            .filter(({ maybe }) => maybe)
+            .map(({ reason }) => reason),
+        ),
+      },
+    ] as const;
   });
 
-  return Object.fromEntries(grouped) as unknown as SimpleOpeningHoursTable;
+  return {
+    daysTable: Object.fromEntries(
+      grouped.map(([w, { times }]) => [w, times]),
+    ) as unknown as SimpleOpeningHoursTable,
+    maybeReasonsByDay: Object.fromEntries(
+      grouped.map(([w, { reasons }]) => [w, reasons]),
+    ) as unknown as SimpleOpeningHoursTable,
+  };
 };
 
 export const parseComplexOpeningHours = (
@@ -142,7 +165,10 @@ export const parseComplexOpeningHours = (
   queryEnd.setDate(queryEnd.getDate() + 1);
 
   const allIntervals = oh.getOpenIntervals(today, queryEnd);
-  const daysTable = getDaysTable(allIntervals, oneWeekLater);
+  const { daysTable, maybeReasonsByDay } = getDaysTable(
+    allIntervals,
+    oneWeekLater,
+  );
 
   // intervals are sorted from the present to the future
   // so the first one is either currently opened or the next opened slot
@@ -156,6 +182,7 @@ export const parseComplexOpeningHours = (
 
   return {
     daysTable,
+    maybeReasonsByDay,
     status: getStatus(relevantInterval),
     maybeReasons: uniq(maybeOpenedReasons),
   };

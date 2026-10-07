@@ -70,6 +70,8 @@ describe('parseComplexOpeningHours', () => {
 
     expect(result.daysTable.tu).toEqual(['11:00-17:00']);
     expect(result.daysTable.sa).toEqual(['11:00-17:00']);
+    expect(result.maybeReasonsByDay.tu).toEqual(['Bookings by email only']);
+    expect(result.maybeReasonsByDay.mo).toEqual([]);
     expect(result.status).toBe('maybe');
     expect(result.maybeReasons).toEqual(['Bookings by email only']);
   });
@@ -83,6 +85,7 @@ describe('parseComplexOpeningHours', () => {
 
     expect(result.status).toBe('opened');
     expect(result.daysTable.sa).toEqual(['opening_hours.all_day']);
+    expect(result.maybeReasonsByDay.sa).toEqual(['by appointment']);
     expect(result.maybeReasons).toEqual(['by appointment']);
   });
 });
