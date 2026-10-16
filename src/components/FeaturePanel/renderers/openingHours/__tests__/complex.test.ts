@@ -60,4 +60,32 @@ describe('parseComplexOpeningHours', () => {
     expect(daysTable('Mo-Su 19:00-01:00').tu).toEqual(['19:00-01:00']);
     expect(daysTable('Mo-Su 19:00-01:00').th).toEqual(['19:00-01:00']);
   });
+
+  it('shows unknown hours and a maybe status', () => {
+    const result = parseComplexOpeningHours(
+      'Tu-Sa 11:00-17:00 "Bookings by email only"',
+      PRAGUE,
+      ADDRESS,
+    );
+
+    expect(result.daysTable.tu).toEqual(['11:00-17:00']);
+    expect(result.daysTable.sa).toEqual(['11:00-17:00']);
+    expect(result.maybeReasonsByDay.tu).toEqual(['Bookings by email only']);
+    expect(result.maybeReasonsByDay.mo).toEqual([]);
+    expect(result.status).toBe('maybe');
+    expect(result.maybeReasons).toEqual(['Bookings by email only']);
+  });
+
+  it('keeps the known status when there is a known interval', () => {
+    const result = parseComplexOpeningHours(
+      'We 10:00-17:00; Sa "by appointment"',
+      PRAGUE,
+      ADDRESS,
+    );
+
+    expect(result.status).toBe('opened');
+    expect(result.daysTable.sa).toEqual(['opening_hours.all_day']);
+    expect(result.maybeReasonsByDay.sa).toEqual(['by appointment']);
+    expect(result.maybeReasons).toEqual(['by appointment']);
+  });
 });

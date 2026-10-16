@@ -54,13 +54,23 @@ const fmtDateRange = ([start, end]: DateRange) => {
 const getMinsDiff = (date: Date) =>
   Math.round((date.getTime() - new Date().getTime()) / 60000);
 
-export type Status = 'opens-soon' | 'closes-soon' | 'opened' | 'closed';
+export type Status =
+  | 'opens-soon'
+  | 'closes-soon'
+  | 'opened'
+  | 'closed'
+  | 'maybe';
 
 type OpenInterval = [Date, Date, boolean, string];
 
 const getStatus = (interval: OpenInterval | null): Status => {
   if (!interval) {
     return 'closed';
+  }
+
+  // the third value marks the interval state as unknown (e.g. "by appointment")
+  if (interval[2]) {
+    return 'maybe';
   }
 
   const opensInMins = getMinsDiff(interval[0]);
@@ -95,19 +105,42 @@ const splitByDay = (interval: DateRange) =>
 
 const getDaysTable = (intervals: OpenInterval[], until: Date) => {
   const splittedIntervals = intervals
-    .flatMap(([openingDate, endDate]) => splitByDay([openingDate, endDate]))
-    .filter(([from]) => from < until);
+    .flatMap(([openingDate, endDate, maybe, reason]) =>
+      splitByDay([openingDate, endDate]).map((range) => ({
+        range,
+        maybe,
+        reason,
+      })),
+    )
+    .filter(({ range: [from] }) => from < until);
 
   const grouped = WEEKDAYS.map((w) => {
     const daysIntervals = splittedIntervals.filter(
-      ([from]) =>
+      ({ range: [from] }) =>
         w === weekdayMappings[from.toLocaleString('en', { weekday: 'short' })],
     );
 
-    return [w, daysIntervals.map(fmtDateRange)] as const;
+    return [
+      w,
+      {
+        times: daysIntervals.map(({ range }) => fmtDateRange(range)),
+        reasons: uniq(
+          daysIntervals
+            .filter(({ maybe }) => maybe)
+            .map(({ reason }) => reason),
+        ),
+      },
+    ] as const;
   });
 
-  return Object.fromEntries(grouped) as unknown as SimpleOpeningHoursTable;
+  return {
+    daysTable: Object.fromEntries(
+      grouped.map(([w, { times }]) => [w, times]),
+    ) as unknown as SimpleOpeningHoursTable,
+    maybeReasonsByDay: Object.fromEntries(
+      grouped.map(([w, { reasons }]) => [w, reasons]),
+    ) as unknown as SimpleOpeningHoursTable,
+  };
 };
 
 export const parseComplexOpeningHours = (
@@ -132,12 +165,14 @@ export const parseComplexOpeningHours = (
   queryEnd.setDate(queryEnd.getDate() + 1);
 
   const allIntervals = oh.getOpenIntervals(today, queryEnd);
-  const intervals = allIntervals.filter(([_, __, maybe]) => !maybe);
-  const daysTable = getDaysTable(intervals, oneWeekLater);
+  const { daysTable, maybeReasonsByDay } = getDaysTable(
+    allIntervals,
+    oneWeekLater,
+  );
 
   // intervals are sorted from the present to the future
   // so the first one is either currently opened or the next opened slot
-  const relevantInterval = intervals.find(
+  const relevantInterval = allIntervals.find(
     ([, endDate]) => endDate > new Date(),
   );
 
@@ -147,6 +182,7 @@ export const parseComplexOpeningHours = (
 
   return {
     daysTable,
+    maybeReasonsByDay,
     status: getStatus(relevantInterval),
     maybeReasons: uniq(maybeOpenedReasons),
   };

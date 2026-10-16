@@ -56,7 +56,7 @@
     "next-codegrid": "^1.0.3",
     "next-cookies": "^2.0.3",
     "open-location-code": "^1.0.3",
-    "opening_hours": "^3.9.0",
+    "opening_hours": "^3.15.0",
     "osm-auth": "^3.0.0",
     "qrcode.react": "^4.2.0",
     "react": "^19.1.0",

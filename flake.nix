@@ -20,7 +20,7 @@
         });
   in {
     overlays.default = final: prev: rec {
-      nodejs = prev.nodejs_20;
+      nodejs = prev.nodejs_24;
       yarn = prev.yarn.override {inherit nodejs;};
     };
 
