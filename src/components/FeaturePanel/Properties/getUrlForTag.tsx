@@ -42,7 +42,7 @@ export const getUrlForTag = (k: string, v: string) => {
     return `https://www.mapillary.com/app/?pKey=${v}&focus=photo`;
   }
   if (k === 'panoramax') {
-    return `https://panoramax.xyz/#focus=pic&pic=${v}`;
+    return `https://api.panoramax.xyz/#focus=pic&pic=${v}`;
   }
   if (k.match(/^(contact:)?email$/)) {
     return `mailto:${v}`;
