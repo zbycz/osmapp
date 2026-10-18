@@ -41,7 +41,7 @@ export const getUrlForTag = (k: string, v: string) => {
   if (k === 'mapillary' && v.match(/^\d+$/)) {
     return `https://www.mapillary.com/app/?pKey=${v}&focus=photo`;
   }
-  if (k === 'panoramax') {
+  if (k.match(/^panoramax/)) {
     return `https://api.panoramax.xyz/#focus=pic&pic=${v}`;
   }
   if (k.match(/^(contact:)?email$/)) {
@@ -50,7 +50,6 @@ export const getUrlForTag = (k: string, v: string) => {
   if (v.match(urlRegExp)) {
     return v;
   }
-
   if (k === 'contact:facebook') {
     return `https://facebook.com/${v}`;
   }
