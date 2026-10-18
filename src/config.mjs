@@ -18,6 +18,7 @@ export const LANGUAGES = {
   it: 'Italiano',
   pl: 'Polski',
   ru: 'Русский',
+  sk: 'Slovensky',
   am: 'አማርኛ',
   ja: '日本語',
   zh: '中文',
