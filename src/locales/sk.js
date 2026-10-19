@@ -72,7 +72,8 @@ export default {
   'climbing.guideinfo.button': 'Viac informácií',
 
   'project.openclimbing.description': 'Bezplatná wiki mapa lezenia',
-  'project.openclimbing.serpDescription': 'Wiki mapa lezenia s topografickými udajmi s otvoreným zdrojovým kódom. Vytvorená na základe projektov OpenStreetMap a Wikipedia.',
+  'project.openclimbing.serpDescription':
+    'Wiki mapa lezenia s topografickými udajmi s otvoreným zdrojovým kódom. Vytvorená na základe projektov OpenStreetMap a Wikipedia.',
   'project.openclimbing.climbing_guide': 'Lezecký sprievodca a topografické údaje',
 
   'install.button': 'Inštalovať aplikáciu',
@@ -216,7 +217,8 @@ export default {
   'map.github_title': 'Repozitár na GitHube',
   'map.language_title': 'Zmeniť jazyk',
   'map.osm_copyright_tooltip': '(c) Prispievatelia OpenStreetMap.org<br> – voľne dostupné mapové údaje o Zemi 👌',
-  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting a mapa prírody<br>Veľká vďaka za podporu tohto projektu! 🙂',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting a mapa prírody<br>Veľká vďaka za podporu tohto projektu! 🙂',
   'map.more_button': 'viac',
   'map.more_button_title': 'Ďalšie možnosti…',
   'map.edit_link': 'Upraviť túto oblasť v editore iD',
@@ -292,8 +294,7 @@ export default {
   'editsuccess.close_button': 'Hotovo',
   'editsuccess.note.heading': 'Ďakujeme za váš návrh!',
   'editsuccess.note.subheading': 'Dobrovoľníci z OpenStreetMap ho posúdia.',
-  'editsuccess.note.body':
-    'Posúdenie zmeny zvyčajne trvá niekoľko dní. Ak v danej oblasti nepôsobia žiadni dobrovoľníci, môže to chvíľu trvať!',
+  'editsuccess.note.body': 'Posúdenie zmeny zvyčajne trvá niekoľko dní. Ak v danej oblasti nepôsobia žiadni dobrovoľníci, môže to chvíľu trvať!',
   'editsuccess.note.urlLabel': 'Tu môžete pridať informácie alebo sledovať aktualizácie:',
   'editsuccess.note.textLabel': 'Text poznámky',
   'editsuccess.edit.heading': 'Ďakujeme za vašu úpravu!',
@@ -447,7 +448,8 @@ export default {
   'crag_filter.routes': 'trasami',
   'crag_filter.reset': 'Obnoviť',
   'crag_filter.done': 'Hotovo',
-  'crag_filter.zoom_in': 'Filtrovanie na mape je vo verzii beta. Všetky filtrované výsledky sa zobrazujú od priblíženia __zoom__. <link>Viac informácií</link>',
+  'crag_filter.zoom_in':
+    'Filtrovanie na mape je vo verzii beta. Všetky filtrované výsledky sa zobrazujú od priblíženia __zoom__. <link>Viac informácií</link>',
 
   'member_features.subitems': 'Podpoložky',
   'member_features.climbing': 'Lezecké trasy',
@@ -482,10 +484,10 @@ export default {
   'climbing_badges.hazard_bad_protection_label': 'zlé istenie',
   'climbing_badges.hazard_death_fall_zone_description': 'Pád na tomto mieste by pravdepodobne spôsobil vážne zranenie alebo smrť.',
   'climbing_badges.hazard_death_fall_zone_label': 'zóna smrteľného pádu',
-  'climbing_badges.hazard_dirty_rock_description': 'Povrch skaly je zaprášený, zablatený alebo inak znečistený, čo môže zhoršiť priľnavosť alebo bezpečnosť.',
+  'climbing_badges.hazard_dirty_rock_description':
+    'Povrch skaly je zaprášený, zablatený alebo inak znečistený, čo môže zhoršiť priľnavosť alebo bezpečnosť.',
   'climbing_badges.hazard_dirty_rock_label': 'znečistená skala',
-  'climbing_badges.hazard_first_bolt_high_description':
-    'Prvý borhák je nezvyčajne vysoko, čo môže zvýšiť riziko pádu na zem pred jeho zapnutím.',
+  'climbing_badges.hazard_first_bolt_high_description': 'Prvý borhák je nezvyčajne vysoko, čo môže zvýšiť riziko pádu na zem pred jeho zapnutím.',
   'climbing_badges.hazard_first_bolt_high_label': 'vysoko umiestnený prvý borhák',
   'climbing_badges.hazard_long_runout_description':
     'Vzdialenosť medzi istiacimi bodmi je veľká, čo môže viesť k dlhým pádom alebo zvýšenému riziku medzi borhákmi.',
@@ -503,8 +505,7 @@ export default {
   'climbing_badges.hazard_wet_description': 'Šmykľavá alebo mokrá skala, aj za suchého počasia.',
   'climbing_badges.hazard_wet_label': 'mokrá skala',
   'climbing_badges.hazard_slippery_rock_label': 'šmykľavá skala',
-  'climbing_badges.hazard_slippery_rock_description':
-    'Povrch skaly je vyleštený a šmykľavý, často v dôsledku častého lezenia, najmä na vápenci.',
+  'climbing_badges.hazard_slippery_rock_description': 'Povrch skaly je vyleštený a šmykľavý, často v dôsledku častého lezenia, najmä na vápenci.',
 
   'climbing_badges.inclination_label': 'Sklon skaly',
   'climbing_badges.inclination_overhang_description': 'Stena sa vykláňa smerom von (>90°) a vyžaduje silu a výdrž.',
