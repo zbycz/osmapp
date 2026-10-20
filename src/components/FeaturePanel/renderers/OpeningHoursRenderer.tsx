@@ -45,7 +45,11 @@ const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 const formatTimes = (times: string[]) =>
   times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
 
-const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
+const formatDescription = (
+  status: Status,
+  days: SimpleOpeningHoursTable,
+  maybe: boolean,
+) => {
   const timesByDay = Object.values(days);
   const day = new Date().getDay();
   const today = timesByDay[day];
@@ -63,7 +67,9 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
         ? {
             statusText: t('opening_hours.closed_now'),
             timeSeparator: ' - ',
-            time: t('opening_hours.opens', { todayTime }),
+            time: maybe
+              ? t('opening_hours.maybe_open_today', { todayTime })
+              : t('opening_hours.opens', { todayTime }),
           }
         : { statusText: t('opening_hours.today_closed'), time: null };
     case 'opens-soon':
@@ -134,7 +140,8 @@ export const OpeningHoursRenderer = ({ v }) => {
   });
   if (!openingHours) return null;
 
-  const { daysTable, maybeReasonsByDay, status, maybeReasons } = openingHours;
+  const { daysTable, maybeReasonsByDay, status, maybe, maybeReasons } =
+    openingHours;
 
   const currentDay = new Date().getDay();
   const daysStartingToday = getDaysStartingToday(
@@ -143,7 +150,7 @@ export const OpeningHoursRenderer = ({ v }) => {
     currentDay,
   );
 
-  const description = formatDescription(status, daysTable);
+  const description = formatDescription(status, daysTable, maybe);
 
   return (
     <>

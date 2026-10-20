@@ -61,7 +61,9 @@ describe('parseComplexOpeningHours', () => {
     expect(daysTable('Mo-Su 19:00-01:00').th).toEqual(['19:00-01:00']);
   });
 
-  it('shows unknown hours and a maybe status', () => {
+  it('shows a maybe status while inside an unknown interval', () => {
+    jest.setSystemTime(new Date('2024-05-01T12:00:00Z')); // Wednesday, inside
+
     const result = parseComplexOpeningHours(
       'Tu-Sa 11:00-17:00 "Bookings by email only"',
       PRAGUE,
@@ -73,6 +75,20 @@ describe('parseComplexOpeningHours', () => {
     expect(result.maybeReasonsByDay.tu).toEqual(['Bookings by email only']);
     expect(result.maybeReasonsByDay.mo).toEqual([]);
     expect(result.status).toBe('maybe');
+    expect(result.maybe).toBe(true);
+    expect(result.maybeReasons).toEqual(['Bookings by email only']);
+  });
+
+  it('shows closed outside an unknown interval', () => {
+    // Wednesday 10:00 UTC — before the maybe interval starts
+    const result = parseComplexOpeningHours(
+      'Tu-Sa 11:00-17:00 "Bookings by email only"',
+      PRAGUE,
+      ADDRESS,
+    );
+
+    expect(result.status).toBe('closed');
+    expect(result.maybe).toBe(true);
     expect(result.maybeReasons).toEqual(['Bookings by email only']);
   });
 
@@ -84,6 +100,7 @@ describe('parseComplexOpeningHours', () => {
     );
 
     expect(result.status).toBe('opened');
+    expect(result.maybe).toBe(false);
     expect(result.daysTable.sa).toEqual(['opening_hours.all_day']);
     expect(result.maybeReasonsByDay.sa).toEqual(['by appointment']);
     expect(result.maybeReasons).toEqual(['by appointment']);
