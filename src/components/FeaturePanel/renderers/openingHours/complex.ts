@@ -68,15 +68,17 @@ const getStatus = (interval: OpenInterval | null): Status => {
     return 'closed';
   }
 
-  // the third value marks the interval state as unknown (e.g. "by appointment")
-  if (interval[2]) {
-    return 'maybe';
-  }
-
   const opensInMins = getMinsDiff(interval[0]);
   const closesInMins = getMinsDiff(interval[1]);
 
   const isOpened = opensInMins <= 0 && closesInMins >= 0;
+
+  // the third value marks the interval state as unknown (e.g. "by appointment");
+  // it is only "maybe open" while we are inside it, otherwise the usual
+  // closed/... states apply (the reason is still displayed)
+  if (interval[2]) {
+    return isOpened ? 'maybe' : 'closed';
+  }
 
   if (!isOpened && opensInMins <= 15) {
     return 'opens-soon';
@@ -184,6 +186,7 @@ export const parseComplexOpeningHours = (
     daysTable,
     maybeReasonsByDay,
     status: getStatus(relevantInterval),
+    maybe: relevantInterval?.[2] ?? false,
     maybeReasons: uniq(maybeOpenedReasons),
   };
 };
