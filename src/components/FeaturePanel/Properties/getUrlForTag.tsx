@@ -50,6 +50,7 @@ export const getUrlForTag = (k: string, v: string) => {
   if (v.match(urlRegExp)) {
     return v;
   }
+
   if (k === 'contact:facebook') {
     return `https://facebook.com/${v}`;
   }
